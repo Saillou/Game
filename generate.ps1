@@ -1,7 +1,9 @@
 # Create solution in a temporary folder
-if (-Not(Test-Path -Path "./.build")) {
+if (-Not(Test-Path -Path "./.build")) 
+{
     New-Item -ItemType Directory -Path "./.build"
 }
+
 Push-Location -Path  "./.build"
 
 # Generate it
@@ -12,6 +14,3 @@ cmake --build . --config Debug
 cmake --build . --config Release
 
 Pop-Location
-
-# Export output to root
-Copy-Item -Force -Recurse -Path "./.build/Output" -Destination "./"

@@ -9,4 +9,5 @@ add_executable (${TARGET_NAME}
 
 set_target_properties(${TARGET_NAME} PROPERTIES 
     RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_PATH}"
+    VS_STARTUP_PROJECT "Game"
 )
