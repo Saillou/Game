@@ -1,35 +1,37 @@
-cmake_minimum_required(VERSION 3.6)
+# Setup project
+cmake_minimum_required(VERSION 3.12)
 
 project ("Game")
 include(.cmake/config.cmake)
 
-# Get sources
-file(GLOB_RECURSE _config_list
-    "./CMakeLists.txt"
-)
-file(GLOB_RECURSE _source_list 
-    "${SOURCE_FOLDER}/*.c*"
-    "${SOURCE_FOLDER}/*.h*"
-)
-file(GLOB_RECURSE _external_list
-    "${EXTERNAL_FOLDER}/*.c*"
-    "${EXTERNAL_FOLDER}/*.h*"
-)
 
-# Create visual studio filters following folders
+# Get sources ..
+file(GLOB_RECURSE _config_list   CONFIGURE_DEPENDS "./CMakeLists.txt")
+file(GLOB_RECURSE _source_list   CONFIGURE_DEPENDS "${SOURCE_FOLDER}/*.c*" "${SOURCE_FOLDER}/*.h*")
+file(GLOB_RECURSE _external_list CONFIGURE_DEPENDS "${EXTERNAL_FOLDER}/*.c*" "${EXTERNAL_FOLDER}/*.h*")
+
+# .. and create visual studio filters (following folders tree)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_config_list})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_source_list})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_external_list})
 
-# Create compilation recipe
+
+# Create compilation list
 add_executable(${TARGET_NAME}
     ${_config_list}
     ${_source_list}
     ${_external_list}
 )
 
+
 # Set solution properties
 set_target_properties(${TARGET_NAME} PROPERTIES 
-    RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_PATH}"
-    VS_STARTUP_PROJECT "${TARGET_NAME}"
+    RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_PATH}
+    VS_STARTUP_PROJECT ${TARGET_NAME}
+)
+
+# Set headers search directory
+target_include_directories(${TARGET_NAME} PRIVATE 
+    "${EXTERNAL_FOLDER}/glm/"
+    "${EXTERNAL_FOLDER}/glad/include/"
 )

@@ -4,7 +4,7 @@ You lost it.
 # Build
 ## Requirements:
 - `Powershell`, enable scripts with `Set-ExecutionPolicy RemoteSigned`.
-- `CMake`, has to be in the path, version 3.6 at least.
+- `CMake`, has to be in the path, version 3.12 at least.
 - `Visual Studio` 2022.
 
 ## How to:
