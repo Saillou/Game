@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.6)
 
 project ("Game")
 include(.cmake/config.cmake)
@@ -21,8 +21,8 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_config_list})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_source_list})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_external_list})
 
-# Create executable compile recipe
-add_executable (${TARGET_NAME}
+# Create compilation recipe
+add_executable(${TARGET_NAME}
     ${_config_list}
     ${_source_list}
     ${_external_list}
@@ -31,5 +31,5 @@ add_executable (${TARGET_NAME}
 # Set solution properties
 set_target_properties(${TARGET_NAME} PROPERTIES 
     RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_PATH}"
-    VS_STARTUP_PROJECT "Game"
+    VS_STARTUP_PROJECT "${TARGET_NAME}"
 )
