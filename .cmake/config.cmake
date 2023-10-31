@@ -1,0 +1,3 @@
+set (TARGET_NAME    "${PROJECT_NAME}")
+set (SOURCE_FOLDER  "${CMAKE_BINARY_DIR}/Source")
+set (OUTPUT_PATH    "${CMAKE_BINARY_DIR}/Output/bin")
