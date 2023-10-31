@@ -14,7 +14,4 @@ cmake --build . --config Release
 Pop-Location
 
 # Export output to root
-if (Test-Path -Path "./Output") {
-    Remove-Item -ItemType Directory -Path "./.Output"
-}
-Move-Item -Path "./.build/Output" -Destination "./"
+Copy-Item -Force -Recurse -Path "./.build/Output" -Destination "./"
