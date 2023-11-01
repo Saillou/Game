@@ -1,9 +1,8 @@
 # Setup project
 cmake_minimum_required(VERSION 3.12)
 
-project ("Game")
+project("Game")
 include(.cmake/config.cmake)
-
 
 # Get sources ..
 file(GLOB_RECURSE _config_list   CONFIGURE_DEPENDS "./CMakeLists.txt")
@@ -15,7 +14,6 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_config_list})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_source_list})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_external_list})
 
-
 # Create compilation list
 add_executable(${TARGET_NAME}
     ${_config_list}
@@ -23,15 +21,21 @@ add_executable(${TARGET_NAME}
     ${_external_list}
 )
 
-
 # Set solution properties
 set_target_properties(${TARGET_NAME} PROPERTIES 
     RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_PATH}
     VS_STARTUP_PROJECT ${TARGET_NAME}
 )
 
-# Set headers search directory
+# Set search directory for headers
 target_include_directories(${TARGET_NAME} PRIVATE 
     "${EXTERNAL_FOLDER}/glm/"
     "${EXTERNAL_FOLDER}/glad/include/"
+    "${EXTERNAL_FOLDER}/GLFW/include/"
+)
+
+# Add libraries by path
+target_link_libraries(${TARGET_NAME} 
+    debug "${EXTERNAL_FOLDER}/glfw/bin/Debug/glfw3.lib"
+    optimized "${EXTERNAL_FOLDER}/glfw/bin/Release/glfw3.lib"
 )
