@@ -32,10 +32,14 @@ target_include_directories(${TARGET_NAME} PRIVATE
     "${EXTERNAL_FOLDER}/glm/"
     "${EXTERNAL_FOLDER}/glad/include/"
     "${EXTERNAL_FOLDER}/GLFW/include/"
+    "${EXTERNAL_FOLDER}/freetype/include/"
 )
 
 # Add libraries by path
 target_link_libraries(${TARGET_NAME} 
     debug "${EXTERNAL_FOLDER}/glfw/bin/Debug/glfw3.lib"
+    debug "${EXTERNAL_FOLDER}/freetype/bin/Debug/glfw3.lib"
+
     optimized "${EXTERNAL_FOLDER}/glfw/bin/Release/glfw3.lib"
+    optimized "${EXTERNAL_FOLDER}/freetype/bin/Release/glfw3.lib"
 )
