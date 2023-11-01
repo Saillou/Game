@@ -1,11 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "Engine/Graphic/Shader.hpp"
-#include "Engine/Graphic/BaseScene.hpp"
 #include "Engine/Graphic/Window.hpp"
-#include "Engine/Graphic/TextEngine.hpp"
-
 #include "Game/Scene/SimpleScene.hpp"
 
 // -- Entry point --
