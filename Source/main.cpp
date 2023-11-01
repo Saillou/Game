@@ -9,8 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
+#include <freetype/freetype.h>
 
 
 // -- Tools --
@@ -226,7 +225,7 @@ int main() {
 
     // compile and setup the shader
     glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
-    Shader shader("text.vs", "text.fs");
+    Shader shader("C:/Dev/Cpp/Project_007-Game/Shaders/Text/text.vs", "C:/Dev/Cpp/Project_007-Game/Shaders/Text/text.fs");
     shader.use();
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -237,7 +236,7 @@ int main() {
 
     // load font as face
     FT_Face face;
-    FT_New_Face(ft, "font_name.ttf", 0, &face);
+    FT_New_Face(ft, "C:/Windows/Fonts/Arial.ttf", 0, &face);
     FT_Set_Pixel_Sizes(face, 0, 48);
 
     std::unordered_map<GLchar, Character> char_map;
@@ -348,8 +347,8 @@ int main() {
 
         // ...
 
-        _renderText(shader, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-        _renderText(shader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+        _renderText(shader, "Here's another text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+        _renderText(shader, "Hello world!", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
 
         // ...
 
