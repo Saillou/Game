@@ -6,24 +6,27 @@ include(.cmake/config.cmake)
 
 # Get sources ..
 file(GLOB_RECURSE _config_list   CONFIGURE_DEPENDS "./CMakeLists.txt")
-file(GLOB_RECURSE _source_list   CONFIGURE_DEPENDS "${SOURCE_FOLDER}/*.c*" "${SOURCE_FOLDER}/*.h*")
+file(GLOB_RECURSE _shaders_list  CONFIGURE_DEPENDS "${SHADERS_FOLDER}/*.*")
+file(GLOB_RECURSE _source_list   CONFIGURE_DEPENDS "${SOURCE_FOLDER}/*.c*"   "${SOURCE_FOLDER}/*.h*")
 file(GLOB_RECURSE _external_list CONFIGURE_DEPENDS "${EXTERNAL_FOLDER}/*.c*" "${EXTERNAL_FOLDER}/*.h*")
 
 # .. and create visual studio filters (following folders tree)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_config_list})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_shaders_list})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_source_list})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_external_list})
 
 # Create compilation list
 add_executable(${TARGET_NAME}
     ${_config_list}
+    ${_shaders_list}
     ${_source_list}
     ${_external_list}
 )
 
 # Set solution properties
 set_target_properties(${TARGET_NAME} PROPERTIES 
-    RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_PATH}
+    RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_FOLDER}
     VS_STARTUP_PROJECT ${TARGET_NAME}
 )
 

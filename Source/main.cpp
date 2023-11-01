@@ -11,7 +11,6 @@
 #include <GLFW/glfw3.h>
 #include <freetype/freetype.h>
 
-
 // -- Tools --
 struct Character
 {
@@ -27,84 +26,49 @@ public:
     unsigned int ID;
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
-    Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
+    Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& geometryCode = "")
     {
-        // 1. retrieve the vertex/fragment source code from filePath
-        std::string vertexCode;
-        std::string fragmentCode;
-        std::string geometryCode;
-        std::ifstream vShaderFile;
-        std::ifstream fShaderFile;
-        std::ifstream gShaderFile;
-        // ensure ifstream objects can throw exceptions:
-        vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-        fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-        gShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-        try
-        {
-            // open files
-            vShaderFile.open(vertexPath);
-            fShaderFile.open(fragmentPath);
-            std::stringstream vShaderStream, fShaderStream;
-            // read file's buffer contents into streams
-            vShaderStream << vShaderFile.rdbuf();
-            fShaderStream << fShaderFile.rdbuf();
-            // close file handlers
-            vShaderFile.close();
-            fShaderFile.close();
-            // convert stream into string
-            vertexCode = vShaderStream.str();
-            fragmentCode = fShaderStream.str();
-            // if geometry shader path is present, also load a geometry shader
-            if (geometryPath != nullptr)
-            {
-                gShaderFile.open(geometryPath);
-                std::stringstream gShaderStream;
-                gShaderStream << gShaderFile.rdbuf();
-                gShaderFile.close();
-                geometryCode = gShaderStream.str();
-            }
-        }
-        catch (std::ifstream::failure& e)
-        {
-            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
-        }
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
+        const char* gShaderCode = geometryCode.c_str();
+
         // 2. compile shaders
-        unsigned int vertex, fragment;
+        unsigned int vertex = -1, fragment = -1, geometry = -1;
+
         // vertex shader
         vertex = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex, 1, &vShaderCode, NULL);
         glCompileShader(vertex);
         checkCompileErrors(vertex, "VERTEX");
+
         // fragment Shader
         fragment = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragment, 1, &fShaderCode, NULL);
         glCompileShader(fragment);
         checkCompileErrors(fragment, "FRAGMENT");
+
         // if geometry shader is given, compile geometry shader
-        unsigned int geometry;
-        if (geometryPath != nullptr)
-        {
-            const char* gShaderCode = geometryCode.c_str();
+        if (!geometryCode.empty()) {
             geometry = glCreateShader(GL_GEOMETRY_SHADER);
             glShaderSource(geometry, 1, &gShaderCode, NULL);
             glCompileShader(geometry);
             checkCompileErrors(geometry, "GEOMETRY");
         }
+
         // shader Program
         ID = glCreateProgram();
         glAttachShader(ID, vertex);
         glAttachShader(ID, fragment);
-        if (geometryPath != nullptr)
+        if (geometry != -1)
             glAttachShader(ID, geometry);
+
         glLinkProgram(ID);
         checkCompileErrors(ID, "PROGRAM");
+
         // delete the shaders as they're linked into our program now and no longer necessary
         glDeleteShader(vertex);
         glDeleteShader(fragment);
-        if (geometryPath != nullptr)
+        if (geometry != -1)
             glDeleteShader(geometry);
 
     }
@@ -223,25 +187,31 @@ int main() {
     glEnable(GL_PROGRAM_POINT_SIZE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // compile and setup the shader
+    // Compile and setup the shader
     glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
-    Shader shader("C:/Dev/Cpp/Project_007-Game/Shaders/Text/text.vs", "C:/Dev/Cpp/Project_007-Game/Shaders/Text/text.fs");
+
+    const std::string text_vertex = 
+        #include "../Shaders/Text/text.vs"
+    ;
+    const std::string text_fragment = 
+        #include "../Shaders/Text/text.fs"
+    ;
+
+    Shader shader(text_vertex, text_fragment);
     shader.use();
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-    // FreeType
+    // Font
     FT_Library ft;
     FT_Init_FreeType(&ft);
-    // ..
 
-    // load font as face
     FT_Face face;
     FT_New_Face(ft, "C:/Windows/Fonts/Arial.ttf", 0, &face);
     FT_Set_Pixel_Sizes(face, 0, 48);
 
     std::unordered_map<GLchar, Character> char_map;
 
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);     // disable byte-alignment restriction
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
 
     // load first 128 characters of ASCII set
     for (unsigned char c = 0; c < 128; c++) {
@@ -366,5 +336,3 @@ int main() {
     glfwTerminate();
     return 0;
 }
-
-// -----------------

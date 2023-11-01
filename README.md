@@ -11,8 +11,8 @@ You lost it.
 Use the command `./generate.ps1` and hope for the best.
 
 ## Generation:
-- Visual Studio solution in `./build/Game.sln`.
-- Binary executables in `./build/Output/{mode}/Game.exe`.
+- Visual Studio solution in `./_build/Game.sln`.
+- Binary executables in `./_build/Output/{mode}/Game.exe`.
 
 # Dependencies:
 - `GLM`  (OpenGL Mathematics)                                        | Clone: https://github.com/g-truc/glm
