@@ -1,6 +1,14 @@
 #pragma once
 
+// Include everything here so it's easier.. may be optimized
 #include "TextEngine.hpp"
+
+#include "Shape.h"
+#include "Circle.h"
+#include "Square.h"
+#include "Points.h"
+#include "Quad.h"
+#include "Icosahedron.h"
 
 struct BaseScene {
     BaseScene();
