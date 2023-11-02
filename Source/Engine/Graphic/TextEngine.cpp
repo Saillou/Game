@@ -1,32 +1,38 @@
 #include "TextEngine.hpp"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <freetype/freetype.h>
 
-// Static
+// - Public (Static)
 void TextEngine::Write(std::string text, float x, float y, float scale, glm::vec3 color) {
     _getInstance()._render(text, x, y, scale, color);
 }
 
+// - Private
 TextEngine& TextEngine::_getInstance() {
     static TextEngine engine;
     return engine;
 }
 
-// Instance
+// Instance (lazy init, hit on 1st)
 TextEngine::TextEngine() {
-    // Compile and setup the shader
-    m_shader = std::make_unique<Shader>(
+    // Setup text shader
+    m_text_shader.attachSource(GL_VERTEX_SHADER, 
 #include "../../Shaders/Text/text.vs"
-        ,
+    );
+    m_text_shader.attachSource(GL_FRAGMENT_SHADER, 
 #include "../../Shaders/Text/text.fs"
     );
 
-    m_shader->use();
+    m_text_shader.link();
+    m_text_shader.use();
 
-    glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
-    glUniformMatrix4fv(glGetUniformLocation(m_shader->ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    // TODO: 
+    //  - adapt to framesize
+    m_text_shader.set("projection", glm::ortho(0.0f, 800.0f, 0.0f, 600.0f));
 
-    // Font
+    // TODO: Font choice (here hardcoded Arial)
     FT_Library ft;
     FT_Init_FreeType(&ft);
 
@@ -34,9 +40,9 @@ TextEngine::TextEngine() {
     FT_New_Face(ft, "C:/Windows/Fonts/Arial.ttf", 0, &face);
     FT_Set_Pixel_Sizes(face, 0, 48);
 
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
+    // load first 128 characters of ASCII set and put them in gl_textures
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    // load first 128 characters of ASCII set
     for (unsigned char c = 0; c < 128; c++) {
         FT_Load_Char(face, c, FT_LOAD_RENDER);
 
@@ -89,12 +95,10 @@ TextEngine::TextEngine() {
 
 // Methods
 void TextEngine:: _render(std::string text, float x, float y, float scale, glm::vec3 color) {
-    if (!m_shader)
-        return;
-
     // activate corresponding render state	
-    m_shader->use();
-    glUniform3f(glGetUniformLocation(m_shader->ID, "textColor"), color.x, color.y, color.z);
+    m_text_shader.use();
+    m_text_shader.set("textColor", color.x, color.y, color.z);
+
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(m_VAO);
 

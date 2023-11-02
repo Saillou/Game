@@ -15,6 +15,9 @@ Window::Window(int width, int height, const char* title) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
     m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+    if (!m_window)
+        return; // Failure, will close
+
     glfwMakeContextCurrent(m_window);
 
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -25,16 +28,21 @@ Window::~Window() {
 }
 
 bool Window::update() {
+    // Can't continue states
     if (!m_window)
         return false;
 
+    if (glfwWindowShouldClose(m_window))
+        return false;
+
+    // Ok
     if (scene)
         scene->draw();
 
     glfwSwapBuffers(m_window);
     glfwPollEvents();
 
-    return !glfwWindowShouldClose(m_window);
+    return true;
 }
 
 std::vector<unsigned int> Window::keyPressed() {

@@ -1,32 +1,39 @@
 #pragma once
 
+#include <memory>
 #include <string>
+#include <glm/glm.hpp>
 
-#include <glad/glad.h>
-#include <glm/gtc/type_ptr.hpp>
-
-struct Shader
+class Shader
 {
-    Shader(const std::string& vertexCode, const std::string& fragmentCode, const std::string& geometryCode = "");
+public:
+	Shader();
+	virtual ~Shader();
 
-    void use();
+	Shader& operator=(const Shader&)	= delete;
+	Shader(const Shader&)				= delete;
+	Shader(Shader&&)					= delete;
 
-    void setBool(const std::string& name, bool value) const;
-    void setInt(const std::string& name, int value) const;
-    void setFloat(const std::string& name, float value) const;
-    void setVec2(const std::string& name, const glm::vec2& value) const;
-    void setVec2(const std::string& name, float x, float y) const;
-    void setVec3(const std::string& name, const glm::vec3& value) const;
-    void setVec3(const std::string& name, float x, float y, float z) const;
-    void setVec4(const std::string& name, const glm::vec4& value) const;
-    void setVec4(const std::string& name, float x, float y, float z, float w);
-    void setMat2(const std::string& name, const glm::mat2& mat) const;
-    void setMat3(const std::string& name, const glm::mat3& mat) const;
-    void setMat4(const std::string& name, const glm::mat4& mat) const;
+	// First, use on of these:
+	void attachSource(const unsigned int shader_type, const std::string& shaderCode);
+	void attachFile(const unsigned int shader_type, const std::string& shaderPath);
 
-    // Members
-    unsigned int ID;
+	// Then, after attached:
+	void link();
+	void use();
+
+	void set(const std::string& name, float v);
+	void set(const std::string& name, float a, float b, float c);
+	void set(const std::string& name, const glm::mat3& mat);
+	void set(const std::string& name, const glm::mat4& mat);
+	void setBlock(const std::string& name, const int layout);
+
+	unsigned int getId() const;
 
 private:
-    void checkCompileErrors(GLuint shader, std::string type);
+	static const std::string _readFromFile(const std::string& path);
+
+	unsigned int m_id;
 };
+
+typedef std::unique_ptr<Shader> UShader;

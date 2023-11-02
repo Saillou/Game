@@ -8,6 +8,7 @@
 
 #include <glad/glad.h>
 
+// (It's a hidden Singleton)
 struct TextEngine {
     static void Write(std::string text, float x, float y, float scale, glm::vec3 color);
 
@@ -29,6 +30,6 @@ private:
     // Instance members
     unsigned int m_VAO;
     unsigned int m_VBO;
-    std::unique_ptr<Shader> m_shader;
+    Shader m_text_shader;
     std::unordered_map<GLchar, _Character> m_char_map;
 };
