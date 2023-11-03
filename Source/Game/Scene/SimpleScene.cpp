@@ -12,18 +12,27 @@ SimpleScene::SimpleScene() : BaseScene(),
         { -0.5f, -0.5f, 1.0f, 1.0f, 0.0f}  // bottom-left
     }) 
 {
-    // Basic shaders for the shapes
-    m_simpleShader.attachSource(GL_VERTEX_SHADER, 
+    // Simple shader
+    m_simpleShader.attachSource(GL_VERTEX_SHADER,
+#include "../../Shaders/Base/simple.vs"
+    );
+    m_simpleShader.attachSource(GL_FRAGMENT_SHADER,
+#include "../../Shaders/Base/simple.fs"
+    );
+    m_simpleShader.link();
+
+    // Geometry shader
+    m_geomShader.attachSource(GL_VERTEX_SHADER,
 #include "../../Shaders/Base/base.vs"
     );
-    m_simpleShader.attachSource(GL_GEOMETRY_SHADER, 
+    m_geomShader.attachSource(GL_GEOMETRY_SHADER,
 #include "../../Shaders/Base/base.gs"
     );
-    m_simpleShader.attachSource(GL_FRAGMENT_SHADER, 
+    m_geomShader.attachSource(GL_FRAGMENT_SHADER,
 #include "../../Shaders/Base/base.fs"
     );
 
-    m_simpleShader.link();
+    m_geomShader.link();
 }
 
 void SimpleScene::draw() {
@@ -39,14 +48,18 @@ void SimpleScene::draw() {
     m_simpleShader.use();
 
     // Draw a circle
+    m_simpleShader.set("alpha", 0.50f);
     m_circle.bind();
     m_circle.draw();
 
     // Draw a square
+    m_simpleShader.set("alpha", 0.25f);
     m_square.bind();
     m_square.draw();
 
     // Draw points
+    m_geomShader.use();
+
     m_points.bind();
     m_points.draw();
 }

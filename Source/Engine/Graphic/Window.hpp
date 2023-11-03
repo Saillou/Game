@@ -14,11 +14,18 @@ struct Window {
     bool update();
     void close();
 
+    // Getters
+    int width() const;
+    int height() const;
     std::vector<unsigned int> keyPressed();
 
     // Members
     std::unique_ptr<BaseScene> scene = nullptr;
 
 private:
+    void _resize(int width, int height);
+
     GLFWwindow* m_window = nullptr;
+    int m_width;
+    int m_height;
 };

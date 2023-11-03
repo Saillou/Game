@@ -30,7 +30,7 @@ TextEngine::TextEngine() {
 
     // TODO: 
     //  - adapt to framesize
-    m_text_shader.set("projection", glm::ortho(0.0f, 800.0f, 0.0f, 600.0f));
+    m_text_shader.set("projection", glm::ortho(0.0f, 800.0f, 0.0f, 800.0f));
 
     // TODO: Font choice (here hardcoded Arial)
     FT_Library ft;

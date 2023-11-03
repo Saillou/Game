@@ -8,6 +8,7 @@ struct SimpleScene : public BaseScene {
     void draw() override;
 
 private:
+    Shader m_geomShader;
     Shader m_simpleShader;
 
     Circle m_circle;

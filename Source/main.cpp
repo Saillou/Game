@@ -7,7 +7,7 @@
 // -- Entry point --
 int main() {
     // Create window
-    Window window(800, 600, "The Game");
+    Window window(800, 800, "The Game");
 
     // Create scene to be displayed
     window.scene = std::make_unique<SimpleScene>();
