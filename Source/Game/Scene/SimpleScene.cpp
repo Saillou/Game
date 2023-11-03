@@ -35,6 +35,10 @@ SimpleScene::SimpleScene() : BaseScene(),
     m_geomShader.link();
 }
 
+void SimpleScene::resize(int width, int height) {
+    TextEngine::SetViewport(0, 0, width, height);
+}
+
 void SimpleScene::draw() {
     // Background
     glClearColor(0.05f, 0.05f, 0.06f, 1.0f);

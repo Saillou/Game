@@ -11,6 +11,7 @@
 // (It's a hidden Singleton)
 struct TextEngine {
     static void Write(std::string text, float x, float y, float scale, glm::vec3 color);
+    static void SetViewport(int x, int y, int width, int height);
 
 private:
     static TextEngine& _getInstance();

@@ -9,6 +9,10 @@ void TextEngine::Write(std::string text, float x, float y, float scale, glm::vec
     _getInstance()._render(text, x, y, scale, color);
 }
 
+void TextEngine::SetViewport(int x, int y, int width, int height) {
+    _getInstance().m_text_shader.set("projection", glm::ortho((float)x, (float)width, (float)y, (float)height));
+}
+
 // - Private
 TextEngine& TextEngine::_getInstance() {
     static TextEngine engine;
@@ -27,10 +31,6 @@ TextEngine::TextEngine() {
 
     m_text_shader.link();
     m_text_shader.use();
-
-    // TODO: 
-    //  - adapt to framesize
-    m_text_shader.set("projection", glm::ortho(0.0f, 800.0f, 0.0f, 800.0f));
 
     // TODO: Font choice (here hardcoded Arial)
     FT_Library ft;

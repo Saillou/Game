@@ -7,10 +7,10 @@
 // -- Entry point --
 int main() {
     // Create window
-    Window window(800, 800, "The Game");
+    Window window(800, 600, "The Game");
 
     // Create scene to be displayed
-    window.scene = std::make_unique<SimpleScene>();
+    window.scene(std::make_unique<SimpleScene>());
 
     // Main loop
     do {
@@ -31,7 +31,6 @@ int main() {
 
         // Compute physics before redrawing
         // ..
-
     } while (window.update());
 
     // Clean up

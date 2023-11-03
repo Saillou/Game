@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include "BaseScene.hpp"
 
 struct Window {
@@ -19,13 +20,15 @@ struct Window {
     int height() const;
     std::vector<unsigned int> keyPressed();
 
-    // Members
-    std::unique_ptr<BaseScene> scene = nullptr;
+    // Setters
+    void scene(std::unique_ptr<BaseScene> scene);
 
 private:
     void _resize(int width, int height);
 
+    // Members
     GLFWwindow* m_window = nullptr;
     int m_width;
     int m_height;
+    std::unique_ptr<BaseScene> m_scene = nullptr;
 };

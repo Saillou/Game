@@ -6,6 +6,7 @@ struct SimpleScene : public BaseScene {
     SimpleScene();
 
     void draw() override;
+    void resize(int width, int height) override;
 
 private:
     Shader m_geomShader;

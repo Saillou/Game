@@ -50,8 +50,8 @@ bool Window::update() {
         return false;
 
     // Ok
-    if (scene)
-        scene->draw();
+    if (m_scene)
+        m_scene->draw();
 
     glfwSwapBuffers(m_window);
     glfwPollEvents();
@@ -91,8 +91,17 @@ std::vector<unsigned int> Window::keyPressed() {
     return keys;
 }
 
+// Setters
+void Window::scene(std::unique_ptr<BaseScene> scene) {
+    m_scene.swap(scene);
+    m_scene->resize(width(), height());
+}
+
 // Private
 void Window::_resize(int width, int height) {
     glViewport(0, 0, width, height);
+    if (m_scene)
+        m_scene->resize(width, height);
+
     update();
 }
