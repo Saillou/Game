@@ -9,6 +9,10 @@ BaseScene::BaseScene() {
 BaseScene::~BaseScene() {
 }
 
+void BaseScene::resize(int width, int height) {
+    // to be overrided
+}
+
 void BaseScene::_init_gl_config() {
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);

@@ -3,6 +3,7 @@
 
 #include "Engine/Graphic/Window.hpp"
 #include "Game/Scene/SimpleScene.hpp"
+#include "Game/Scene/ExperimentalScene.hpp"
 
 // -- Entry point --
 int main() {
@@ -10,7 +11,8 @@ int main() {
     Window window(800, 600, "The Game");
 
     // Create scene to be displayed
-    window.scene(std::make_unique<SimpleScene>());
+    //window.scene(std::make_unique<SimpleScene>());
+    window.scene(std::make_unique<ExperimentalScene>());
 
     // Main loop
     do {

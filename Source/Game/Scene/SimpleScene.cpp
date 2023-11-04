@@ -36,7 +36,7 @@ SimpleScene::SimpleScene() : BaseScene(),
 }
 
 void SimpleScene::resize(int width, int height) {
-    TextEngine::SetViewport(0, 0, width, height);
+    // Could do something or delete the method
 }
 
 void SimpleScene::draw() {

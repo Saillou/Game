@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Array.h"
-#include "Buffer.h"
+#include "../Utils/Array.h"
+#include "../Utils/Buffer.h"
 
 #include <vector>
 #include <iostream>

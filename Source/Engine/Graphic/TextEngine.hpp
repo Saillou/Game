@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Shader.hpp"
+#include "Shaders/Shader.hpp"
 
 #include <string>
 #include <memory>

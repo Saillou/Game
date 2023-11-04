@@ -94,12 +94,15 @@ std::vector<unsigned int> Window::keyPressed() {
 // Setters
 void Window::scene(std::unique_ptr<BaseScene> scene) {
     m_scene.swap(scene);
-    m_scene->resize(width(), height());
+
+    _resize(width(), height());
 }
 
 // Private
 void Window::_resize(int width, int height) {
     glViewport(0, 0, width, height);
+    TextEngine::SetViewport(0, 0, width, height);
+
     if (m_scene)
         m_scene->resize(width, height);
 
