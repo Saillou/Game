@@ -1,5 +1,10 @@
 #include "Rectangle.hpp"
 
+#include <sstream>
+#include <vector>
+#include <utility>
+#include <unordered_map>
+
 // -------- Public Rectangle Helper - Static --------
 void Rectangle::Draw(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
     // Get the needed shape

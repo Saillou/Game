@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include "../Utils/Array.h"
 #include "../Utils/Buffer.h"
 

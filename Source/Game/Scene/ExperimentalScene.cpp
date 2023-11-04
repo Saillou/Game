@@ -4,7 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <utility>
-#include <glm/glm.hpp>
+
 
 // Scene instance
 ExperimentalScene::ExperimentalScene() : BaseScene() {

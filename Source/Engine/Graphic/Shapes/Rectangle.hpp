@@ -1,12 +1,5 @@
 #pragma once
 
-#include <sstream>
-#include <vector>
-#include <unordered_map>
-#include <utility>
-
-#include <glm/glm.hpp>
-
 #include "BaseShape.hpp"
 #include "../Shaders/Shader.hpp"
 

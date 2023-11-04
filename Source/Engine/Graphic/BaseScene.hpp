@@ -1,6 +1,6 @@
 #pragma once
 
-// Include everything here so it's easier.. to be optimized
+// Include stuff there so it's easier.. to be optimized
 #include "TextEngine.hpp"
 
 #include "Shapes/BaseShape.hpp"
