@@ -20,8 +20,8 @@ protected:
 	virtual void _setAttributes() = 0;
 
 	void _addPoint(float x, float y, float z);
-	void _addTriangle(unsigned int i0, unsigned int i1, unsigned int i2);
-	void _addQuad(unsigned int i0, unsigned int i1, unsigned int i2, unsigned int i3);
+	void _addAsTriangle(unsigned int i0, unsigned int i1, unsigned int i2);
+	void _addAsQuad(unsigned int i0, unsigned int i1, unsigned int i2, unsigned int i3);
 
 	Array m_vao;
 	Buffer m_vbo;

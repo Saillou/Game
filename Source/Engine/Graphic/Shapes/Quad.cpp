@@ -11,7 +11,7 @@ Quad::Quad() : Shape()
     _addPoint(+0.95f, +0.95f, 0.0f);
     _addPoint(+0.95f, -0.95f, 0.0f);
 
-    _addQuad(0, 1, 2, 3);
+    _addAsQuad(0, 1, 2, 3);
 
     // Bind
     _bindArray();

@@ -14,8 +14,8 @@ Square::Square(float side) :
     _addPoint( side,  side, 0.0f);
     _addPoint(-side, -side, 0.0f);
 
-    _addTriangle(1, 2, 3);
-    _addTriangle(3, 2, 0);
+    _addAsTriangle(1, 2, 3);
+    _addAsTriangle(3, 2, 0);
 
     // Bind
     _bindArray();

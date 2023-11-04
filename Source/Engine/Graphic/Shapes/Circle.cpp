@@ -21,7 +21,7 @@ Circle::Circle(float radius) :
         xi = radius * glm::cos(dtheta * i);
         yi = radius * glm::sin(dtheta * i);
         _addPoint(xi, yi, 0);
-        _addTriangle(0, i+1, i+2);
+        _addAsTriangle(0, i+1, i+2);
     }
 
     // Bind

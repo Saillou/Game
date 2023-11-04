@@ -4,6 +4,8 @@
 #include <string>
 #include <glm/glm.hpp>
 
+#include "ShaderSource.hpp"
+
 class Shader
 {
 public:
