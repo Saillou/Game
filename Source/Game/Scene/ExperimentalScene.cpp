@@ -20,14 +20,14 @@ void ExperimentalScene::draw() {
     glClearColor(0.05f, 0.05f, 0.06f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Draw shapes
-    const int N = 5;
+    // Draw background
+    const int N = 20;
     const glm::vec4 COLOR_1 = glm::vec4(0x1E, 0x1E, 0x1E, 0xFF) / 255.0f;
-    const glm::vec4 COLOR_2 = glm::vec4(0x49, 0x49, 0x49, 0xFF) / 255.0f;
+    const glm::vec4 COLOR_2 = glm::vec4(0x69, 0x69, 0x69, 0xFF) / 255.0f;
 
     for (int x = -N; x < N; x++) {
         for (int y = -N; y < N; y++) {
-            const glm::vec3 POS   = glm::vec3(x, y, 0.2f) / (float)N;
+            const glm::vec3 POS   = glm::vec3(x, y, 0.f) / (float)N;
             const glm::vec2 SIZE  = glm::vec2(1, 1) / (float)N;
             const glm::vec4 COLOR = (x + y) % 2 ? COLOR_1 : COLOR_2;
 
