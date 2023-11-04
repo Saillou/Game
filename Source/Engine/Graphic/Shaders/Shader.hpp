@@ -17,18 +17,18 @@ public:
 	Shader(Shader&&)					= delete;
 
 	// First, use on of these:
-	void attachSource(const unsigned int shader_type, const std::string& shaderCode);
-	void attachFile(const unsigned int shader_type, const std::string& shaderPath);
+	Shader& attachSource(const unsigned int shader_type, const std::string& shaderCode);
+	Shader& attachFile(const unsigned int shader_type, const std::string& shaderPath);
 
 	// Then, after attached:
-	void link();
-	void use();
+	Shader& link();
+	Shader& use();
 
-	void set(const std::string& name, float v);
-	void set(const std::string& name, float a, float b, float c);
-	void set(const std::string& name, const glm::mat3& mat);
-	void set(const std::string& name, const glm::mat4& mat);
-	void setBlock(const std::string& name, const int layout);
+	Shader& set(const std::string& name, float v);
+	Shader& set(const std::string& name, float a, float b, float c);
+	Shader& set(const std::string& name, const glm::mat3& mat);
+	Shader& set(const std::string& name, const glm::mat4& mat);
+	Shader& setBlock(const std::string& name, const int layout);
 
 	unsigned int getId() const;
 

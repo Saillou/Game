@@ -22,15 +22,28 @@ TextEngine& TextEngine::_getInstance() {
 // Instance (lazy init, hit on 1st)
 TextEngine::TextEngine() {
     // Setup text shader
-    m_text_shader.attachSource(GL_VERTEX_SHADER, 
-#include "../../Shaders/Text/text.vs"
-    );
-    m_text_shader.attachSource(GL_FRAGMENT_SHADER, 
-#include "../../Shaders/Text/text.fs"
-    );
-
-    m_text_shader.link();
-    m_text_shader.use();
+    m_text_shader
+        .attachSource(GL_VERTEX_SHADER, ShaderSource{}
+            .add_var("out",     "vec2", "TexCoords")
+            .add_var("in",      "vec4", "vertex")
+            .add_var("uniform", "mat4", "projection")
+            .add_func("void", "main", "", R"_main_(
+                TexCoords   = vertex.zw;
+                gl_Position = projection * vec4(vertex.xy, 0.5f, 1.0);
+            )_main_").str()
+        )
+        .attachSource(GL_FRAGMENT_SHADER, ShaderSource{}
+            .add_var("out", "vec4", "FragColor")
+            .add_var("in",  "vec2", "TexCoords")
+            .add_var("uniform", "sampler2D", "text")
+            .add_var("uniform", "vec3", "textColor")
+            .add_func("void", "main", "", R"_main_(
+                vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);
+                FragColor    = vec4(textColor, 1.0) * sampled;
+            )_main_").str()
+        )
+        .link()
+        .use();
 
     // TODO: Font choice (here hardcoded Arial)
     FT_Library ft;

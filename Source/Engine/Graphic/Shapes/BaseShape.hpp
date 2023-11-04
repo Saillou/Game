@@ -6,11 +6,11 @@
 #include <vector>
 #include <iostream>
 
-class Shape
+class BaseShape
 {
 public:
-	Shape();
-	virtual ~Shape() = default;
+	BaseShape();
+	virtual ~BaseShape() = default;
 
 	virtual void bind();
 	virtual void draw() = 0;

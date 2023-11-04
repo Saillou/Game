@@ -1,14 +1,10 @@
 #pragma once
 
-// Include everything here so it's easier.. may be optimized
+// Include everything here so it's easier.. to be optimized
 #include "TextEngine.hpp"
 
-#include "Shapes/Shape.h"
-#include "Shapes/Circle.h"
-#include "Shapes/Square.h"
-#include "Shapes/Points.h"
-#include "Shapes/Quad.h"
-#include "Shapes/Icosahedron.h"
+#include "Shapes/BaseShape.hpp"
+#include "Shapes/Rectangle.hpp"
 
 struct BaseScene {
     BaseScene();
