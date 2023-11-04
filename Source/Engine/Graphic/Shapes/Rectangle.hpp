@@ -6,15 +6,15 @@
 // Shape 
 struct Rectangle {
     // -------- Helper --------
-    static void Draw(glm::vec2 pos, glm::vec2 size, glm::vec4 color);
+    static void Draw(glm::vec3 pos, glm::vec2 size, glm::vec4 color);
 
 private:
     // ---- Rectangle data ----
-    Rectangle(glm::vec2 pos_, glm::vec2 size_, glm::vec4 color_);
+    Rectangle(glm::vec3 pos_, glm::vec2 size_, glm::vec4 color_);
 
     std::string _id() const;
 
-    glm::vec2 m_pos;
+    glm::vec3 m_pos;
     glm::vec2 m_size;
     glm::vec4 m_color;
 

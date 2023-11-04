@@ -27,7 +27,7 @@ void ExperimentalScene::draw() {
 
     for (int x = -N; x < N; x++) {
         for (int y = -N; y < N; y++) {
-            const glm::vec2 POS   = glm::vec2(x, y) / (float)N;
+            const glm::vec3 POS   = glm::vec3(x, y, 0.2f) / (float)N;
             const glm::vec2 SIZE  = glm::vec2(1, 1) / (float)N;
             const glm::vec4 COLOR = (x + y) % 2 ? COLOR_1 : COLOR_2;
 

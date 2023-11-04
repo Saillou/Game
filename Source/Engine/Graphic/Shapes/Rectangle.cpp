@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 // -------- Public Rectangle Helper - Static --------
-void Rectangle::Draw(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
+void Rectangle::Draw(glm::vec3 pos, glm::vec2 size, glm::vec4 color) {
     // Get the needed shape
     Rectangle rectangle(pos, size, color);
     const auto& shape = _Get_Or_Create(rectangle);
@@ -14,9 +14,9 @@ void Rectangle::Draw(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
     // Draw it
     _Shape::s_shader()
         .use()
-        .set("offset", rectangle.m_pos.x, rectangle.m_pos.y, .0f)
-        .set("color", rectangle.m_color.r, rectangle.m_color.g, rectangle.m_color.b)
-        .set("alpha", rectangle.m_color.a);
+        .set("offset", rectangle.m_pos.x, rectangle.m_pos.y, rectangle.m_pos.z)
+        .set("color",  rectangle.m_color.r, rectangle.m_color.g, rectangle.m_color.b)
+        .set("alpha",  rectangle.m_color.a);
 
     shape->bind();
     shape->draw();
@@ -24,7 +24,7 @@ void Rectangle::Draw(glm::vec2 pos, glm::vec2 size, glm::vec4 color) {
 
 
 // ---- Rectangle data ----
-Rectangle::Rectangle(glm::vec2 pos_, glm::vec2 size_, glm::vec4 color_) :
+Rectangle::Rectangle(glm::vec3 pos_, glm::vec2 size_, glm::vec4 color_) :
     m_pos(pos_), m_size(size_), m_color(color_)
 { }
 
@@ -34,7 +34,7 @@ std::string Rectangle::_id() const {
 
 // Creating and caching shapes
 std::unique_ptr<BaseShape>& Rectangle::_Get_Or_Create(const Rectangle& rectangle) {
-    // Cache all rectangles' shape ever created (may need to clean it up, some LFU's cache shit)
+    // Cache all rectangles' shape ever created (may need to clean it up with LFU's cache)
     static std::unordered_map<std::string, std::unique_ptr<BaseShape>> s_shapes;
     const auto shape_key = rectangle._id();
 

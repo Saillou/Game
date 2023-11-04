@@ -2,11 +2,6 @@
 
 #include <sstream>
 
-
-ShaderSource::ShaderSource() {
-
-}
-
 ShaderSource& ShaderSource::add_var(const std::string& dir, const std::string& type, const std::string& name) {
     std::stringstream ss;
     ss << dir << " ";

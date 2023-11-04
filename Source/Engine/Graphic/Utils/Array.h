@@ -5,7 +5,7 @@
 
 class Array {
 public:
-	explicit Array();
+	Array();
 	virtual ~Array();
 
 	Array& operator=(const Array&) = delete;
