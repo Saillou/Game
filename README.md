@@ -3,9 +3,9 @@ You lost it.
 
 # Build
 ## Requirements:
-- `Powershell`, enable scripts with `Set-ExecutionPolicy RemoteSigned`.
-- `CMake`, has to be in the path, version 3.12 at least.
-- `Visual Studio` 2022.
+- `Powershell`       | need to enable scripts with `Set-ExecutionPolicy RemoteSigned`.
+- `CMake`               | need to be in the path, version 3.12 at least.
+- `Visual Studio`  | with MSbuild 2022.
 
 ## How to:
 Use the command `./generate.ps1` and hope for the best.
