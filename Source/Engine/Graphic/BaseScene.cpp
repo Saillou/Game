@@ -13,6 +13,10 @@ void BaseScene::resize(int width, int height) {
     // to be overrided
 }
 
+void BaseScene::set_expected_ratio_width_height(float ratio) {
+    m_ratio = ratio;
+}
+
 void BaseScene::_init_gl_config() {
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);

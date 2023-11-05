@@ -42,6 +42,10 @@ bool Window::update() {
     // To be called in the same thread as the m_window constructor
     glfwMakeContextCurrent(m_window);
 
+    // Cleanup previous draws
+    glClearColor(0.05f, 0.05f, 0.06f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     // Can't continue states
     if (!m_window)
         return false;
@@ -94,7 +98,14 @@ std::vector<unsigned int> Window::keyPressed() {
 // Setters
 void Window::scene(std::unique_ptr<BaseScene> scene) {
     m_scene.swap(scene);
+    if (!m_scene)
+        return;
 
+    // Adjust viewport
+    if (height() <= 0)
+        return;
+
+    m_scene->set_expected_ratio_width_height(width() / height());
     _resize(width(), height());
 }
 

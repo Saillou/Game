@@ -16,10 +16,6 @@ void ExperimentalScene::resize(int width, int height) {
 }
 
 void ExperimentalScene::draw() {
-    // Background
-    glClearColor(0.05f, 0.05f, 0.06f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     // Draw damier
     const int N = 20;
     const int N_2 = N*N;
@@ -32,7 +28,7 @@ void ExperimentalScene::draw() {
             const glm::vec3 POS   = glm::vec3(x, y, 0.f) / (float)N;
             const glm::vec2 SIZE  = glm::vec2(1, 1)      / (float)N;
             const glm::vec4 COLOR = std::abs(x + y) % 2 ? COLOR_1 : COLOR_2;
-            float alpha = (N_2 - x*x) * (N_2 - y*y) / float(N_2*N_2);
+            const float alpha = (N_2 - x*x) * (N_2 - y*y) / float(N_2*N_2);
 
             Rectangle::Draw(POS, SIZE, alpha*COLOR);
         }
@@ -41,7 +37,7 @@ void ExperimentalScene::draw() {
     // Draw half-ellipse
     Ellipse::Draw(
         glm::vec3(-0.5f, -0.5f, -0.25f),
-        glm::vec2(0.50f, 0.45f),
+        glm::vec2(0.40f, 0.30f),
         glm::vec2(0.0f, glm::pi<float>()),
         glm::vec4(1.0f, 0.5f, 0.2f, 1.0f)
     );
@@ -49,7 +45,7 @@ void ExperimentalScene::draw() {
     // Circle
     Ellipse::Draw(
         glm::vec3(0.0f, 0.0f, -0.40f),
-        glm::vec2(0.15f, 0.20f),
+        glm::vec2(0.10f, 0.10f),
         glm::vec2(0.0f, 2.0f*glm::pi<float>()),
         glm::vec4(0.4f, 0.7f, 0.2f, 1.0f)
     );
