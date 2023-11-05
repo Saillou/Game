@@ -21,9 +21,9 @@ Window::Window(int width, int height, const char* title) :
     if (!m_window)
         return; // Failure, will close
 
-    // Load gl entry points
     glfwMakeContextCurrent(m_window);
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress); // Load gl entry points
+    glfwSwapInterval(1);                                // Enable v-sync
 
     // Events
     glfwSetWindowUserPointer(m_window, this); // store `this` in m_window's userdata
