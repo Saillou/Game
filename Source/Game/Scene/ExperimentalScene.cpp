@@ -22,6 +22,8 @@ void ExperimentalScene::draw() {
 
     // Draw damier
     const int N = 20;
+    const int N_2 = N*N;
+
     const glm::vec4 COLOR_1 = glm::vec4(0x1E, 0x1E, 0x1E, 0xFF) / 255.0f;
     const glm::vec4 COLOR_2 = glm::vec4(0x69, 0x69, 0x69, 0xFF) / 255.0f;
 
@@ -29,16 +31,17 @@ void ExperimentalScene::draw() {
         for (int y = -N; y < N; y++) {
             const glm::vec3 POS   = glm::vec3(x, y, 0.f) / (float)N;
             const glm::vec2 SIZE  = glm::vec2(1, 1)      / (float)N;
-            const glm::vec4 COLOR = (x + y) % 2 ? COLOR_1 : COLOR_2;
+            const glm::vec4 COLOR = std::abs(x + y) % 2 ? COLOR_1 : COLOR_2;
+            float alpha = (N_2 - x*x) * (N_2 - y*y) / float(N_2*N_2);
 
-            Rectangle::Draw(POS, SIZE, COLOR);
+            Rectangle::Draw(POS, SIZE, alpha*COLOR);
         }
     }
 
     // Draw half-ellipse
     Ellipse::Draw(
         glm::vec3(-0.5f, -0.5f, -0.25f),
-        glm::vec2(0.45f, 0.45f),
+        glm::vec2(0.50f, 0.45f),
         glm::vec2(0.0f, glm::pi<float>()),
         glm::vec4(1.0f, 0.5f, 0.2f, 1.0f)
     );
