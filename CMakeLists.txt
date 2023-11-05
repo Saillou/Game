@@ -5,7 +5,7 @@ project("Game")
 include(.cmake/config.cmake)
 
 # Get sources ..
-file(GLOB_RECURSE _cmake_list    CONFIGURE_DEPENDS "./CMakeLists.txt" "./.cmake/.*")
+file(GLOB_RECURSE _cmake_list    CONFIGURE_DEPENDS "${CMAKE_FOLDER}/*.cmake" "./CMakeLists.txt")
 file(GLOB_RECURSE _source_list   CONFIGURE_DEPENDS "${SOURCE_FOLDER}/*.c*"   "${SOURCE_FOLDER}/*.h*")
 file(GLOB_RECURSE _external_list CONFIGURE_DEPENDS "${EXTERNAL_FOLDER}/*.c*" "${EXTERNAL_FOLDER}/*.h*")
 

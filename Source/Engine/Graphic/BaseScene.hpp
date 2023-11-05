@@ -3,8 +3,8 @@
 // Include stuff there so it's easier.. to be optimized
 #include "TextEngine.hpp"
 
-#include "Shapes/Rectangle.hpp"
-#include "Shapes/Ellipse.hpp"
+#include "Drawables/Rectangle.hpp"
+#include "Drawables/Ellipse.hpp"
 
 struct BaseScene {
     BaseScene();
@@ -12,9 +12,6 @@ struct BaseScene {
 
     virtual void draw() = 0;                        // called by an instance of a `Window::update()`
     virtual void resize(int width, int height);     // called by an event `Window::resize()`
-
-    // Setters
-    virtual void set_expected_ratio_width_height(float ratio);
 
 protected:
     virtual void _init_gl_config(); // Override this to enable or disable some opengl functionalities. (eg PENCIL_TEST)

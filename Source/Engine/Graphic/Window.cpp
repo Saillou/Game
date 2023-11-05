@@ -105,7 +105,6 @@ void Window::scene(std::unique_ptr<BaseScene> scene) {
     if (height() <= 0)
         return;
 
-    m_scene->set_expected_ratio_width_height(width() / height());
     _resize(width(), height());
 }
 

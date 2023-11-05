@@ -7,7 +7,6 @@
 #include "../Utils/Buffer.h"
 
 #include <vector>
-#include <iostream>
 
 class BaseShape
 {
