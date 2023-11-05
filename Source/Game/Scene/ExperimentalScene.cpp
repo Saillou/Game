@@ -20,7 +20,7 @@ void ExperimentalScene::draw() {
     glClearColor(0.05f, 0.05f, 0.06f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Draw background
+    // Draw damier
     const int N = 20;
     const glm::vec4 COLOR_1 = glm::vec4(0x1E, 0x1E, 0x1E, 0xFF) / 255.0f;
     const glm::vec4 COLOR_2 = glm::vec4(0x69, 0x69, 0x69, 0xFF) / 255.0f;
@@ -28,13 +28,29 @@ void ExperimentalScene::draw() {
     for (int x = -N; x < N; x++) {
         for (int y = -N; y < N; y++) {
             const glm::vec3 POS   = glm::vec3(x, y, 0.f) / (float)N;
-            const glm::vec2 SIZE  = glm::vec2(1, 1) / (float)N;
+            const glm::vec2 SIZE  = glm::vec2(1, 1)      / (float)N;
             const glm::vec4 COLOR = (x + y) % 2 ? COLOR_1 : COLOR_2;
 
             Rectangle::Draw(POS, SIZE, COLOR);
         }
     }
 
+    // Draw half-ellipse
+    Ellipse::Draw(
+        glm::vec3(-0.5f, -0.5f, -0.25f),
+        glm::vec2(0.45f, 0.45f),
+        glm::vec2(0.0f, glm::pi<float>()),
+        glm::vec4(1.0f, 0.5f, 0.2f, 1.0f)
+    );
+
+    // Circle
+    Ellipse::Draw(
+        glm::vec3(0.0f, 0.0f, -0.40f),
+        glm::vec2(0.15f, 0.20f),
+        glm::vec2(0.0f, 2.0f*glm::pi<float>()),
+        glm::vec4(0.4f, 0.7f, 0.2f, 1.0f)
+    );
+
     // Draw texts
-    TextEngine::Write("Yo world!", 10.0f, 10.0f, 0.5f, glm::vec3(0.7f, 0.7f, 0.7f));
+    TextEngine::Write("Yo world!", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 }

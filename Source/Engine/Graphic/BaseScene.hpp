@@ -3,8 +3,8 @@
 // Include stuff there so it's easier.. to be optimized
 #include "TextEngine.hpp"
 
-#include "Shapes/BaseShape.hpp"
 #include "Shapes/Rectangle.hpp"
+#include "Shapes/Ellipse.hpp"
 
 struct BaseScene {
     BaseScene();

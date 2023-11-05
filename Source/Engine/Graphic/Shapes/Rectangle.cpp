@@ -33,9 +33,9 @@ std::string Rectangle::_id() const {
 }
 
 // Creating and caching shapes
-std::unique_ptr<BaseShape>& Rectangle::_Get_Or_Create(const Rectangle& rectangle) {
+std::unique_ptr<Rectangle::_Shape>& Rectangle::_Get_Or_Create(const Rectangle& rectangle) {
     // Cache all rectangles' shape ever created (may need to clean it up with LFU's cache)
-    static std::unordered_map<std::string, std::unique_ptr<BaseShape>> s_shapes;
+    static std::unordered_map<std::string, std::unique_ptr<_Shape>> s_shapes;
     const auto shape_key = rectangle._id();
 
     const auto it_shape = s_shapes.find(shape_key);

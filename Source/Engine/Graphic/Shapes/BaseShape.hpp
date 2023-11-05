@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 
 #include "../Utils/Array.h"
 #include "../Utils/Buffer.h"
