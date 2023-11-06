@@ -17,6 +17,9 @@ public:
 	virtual void bind();
 	virtual void draw() = 0;
 
+	int indicesLength() const;
+	int verticesLength() const;
+
 protected:
 	virtual void _bindArray();
 	virtual void _setAttributes() = 0;

@@ -9,6 +9,14 @@ void BaseShape::bind() {
     m_vao.bind();
 }
 
+int BaseShape::indicesLength() const {
+    return (int)m_indices.size();
+}
+
+int BaseShape::verticesLength() const {
+    return (int)m_vertices.size();
+}
+
 void BaseShape::_bindArray() {
     bind();
 

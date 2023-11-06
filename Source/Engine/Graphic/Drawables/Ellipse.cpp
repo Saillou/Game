@@ -3,13 +3,19 @@
 #include <sstream>
 #include <vector>
 #include <utility>
+#include <memory>
 #include <unordered_map>
 
 // -------- Public Ellipse Helper - Static --------
 void Ellipse::Draw(glm::vec3 pos, glm::vec2 size, glm::vec2 angles, glm::vec4 color) {
-    // Get the needed shape
     Ellipse ellipse(pos, size, color);
-    const auto& shape = _Get_Or_Create(ellipse);
+
+    // Need casting to override basic draw() method of BaseShape
+    const auto& ellipseShape = std::dynamic_pointer_cast<Ellipse::_Shape>(
+        _Get_Or_Create([=] {
+            return std::make_shared<Ellipse::_Shape>(ellipse.m_size.s, ellipse.m_size.t);
+        }, ellipse.id())
+    );
 
     // Draw it
     _Shape::s_shader()
@@ -19,9 +25,12 @@ void Ellipse::Draw(glm::vec3 pos, glm::vec2 size, glm::vec2 angles, glm::vec4 co
         .set("alpha",  ellipse.m_color.a);
 
     // Angle limit
-    const auto N_pts = shape->m_indices.size() * std::abs(angles.s - angles.t) / (2.0f*glm::pi<float>());
-    shape->bind();
-    shape->draw(0, (int)N_pts + 3);
+    const int N_pts = glm::min(int(
+        ellipseShape->indicesLength() * std::abs(angles.s - angles.t) / (2.0f*glm::pi<float>())) + 3,
+        ellipseShape->indicesLength()
+    );
+    ellipseShape->bind();
+    ellipseShape->draw(0, N_pts);
 }
 
 
@@ -30,21 +39,8 @@ Ellipse::Ellipse(glm::vec3 pos_, glm::vec2 size_, glm::vec4 color_) :
     m_pos(pos_), m_size(size_), m_color(color_)
 { }
 
-std::string Ellipse::_id() const {
-    return std::to_string(m_size.x) + "." + std::to_string(m_size.y);
-}
-
-// Creating and caching shapes
-std::unique_ptr<Ellipse::_Shape>& Ellipse::_Get_Or_Create(const Ellipse& ellipse) {
-    // Cache all ellipses' shape ever created (may need to clean it up with LFU's cache)
-    static std::unordered_map<std::string, std::unique_ptr<_Shape>> s_shapes;
-    const auto shape_key = ellipse._id();
-
-    const auto it_shape = s_shapes.find(shape_key);
-    if (it_shape == s_shapes.cend())
-        s_shapes[shape_key] = std::make_unique<Ellipse::_Shape>(ellipse.m_size.s, ellipse.m_size.t);
-
-    return s_shapes.at(shape_key);
+std::string Ellipse::id() const {
+    return "Ellipse#" + std::to_string(m_size.x) + "." + std::to_string(m_size.y);
 }
 
 // Creating ellipse shape

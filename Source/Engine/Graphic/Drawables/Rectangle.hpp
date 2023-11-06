@@ -1,18 +1,21 @@
 #pragma once
 
 #include "BaseShape.hpp"
+#include "BaseDrawable.hpp"
 #include "../Shaders/Shader.hpp"
 
 // Shape 
-struct Rectangle {
+struct Rectangle : public BaseDrawable {
     // -------- Helper --------
     static void Draw(glm::vec3 pos, glm::vec2 size, glm::vec4 color);
+
+protected:
+    std::string id() const override;
 
 private:
     // ---- Rectangle data ----
     Rectangle(glm::vec3 pos_, glm::vec2 size_, glm::vec4 color_);
 
-    std::string _id() const;
 
     glm::vec3 m_pos;
     glm::vec2 m_size;
@@ -20,7 +23,6 @@ private:
 
     // Creating rectangle shape
     struct _Shape : public BaseShape {
-        friend Rectangle;
         _Shape(float width, float height);
 
         void draw() override;
@@ -30,7 +32,4 @@ private:
         static Shader& s_shader();
         static void _createShader();
     };
-
-    // Creating and caching shapes
-    static std::unique_ptr<_Shape>& _Get_Or_Create(const Rectangle& rectangle);
 };
