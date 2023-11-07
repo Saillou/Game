@@ -17,7 +17,8 @@ protected:
 	BaseDrawable() = default;
 	virtual std::string id() const = 0; // Define an identifier for the shape created
 
-	// Creating and caching shapes
+	// Creating and caching shapes 
+	// Note: unique_ptr would do good too, but shared_ptr are easier to cast
 	typedef std::function<std::shared_ptr<BaseShape>(void)> ShapeCreator;
 
 	static std::shared_ptr<BaseShape> _Get_Or_Create(ShapeCreator creator, const std::string& id);

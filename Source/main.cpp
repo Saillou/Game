@@ -1,16 +1,17 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "Engine/Graphic/Window.hpp"
+
 #include "Game/Scene/ExperimentalScene.hpp"
+#include "Game/Scene/TesselScene.hpp"
 
 // -- Entry point --
 int main() {
     // Create window
     Window window(1024, 768, "The Game");
-
-    // Create scene to be displayed
-    window.scene(std::make_unique<ExperimentalScene>());
+    window.scene(std::make_unique<TesselScene>());
 
     // Main loop
     do {
@@ -19,6 +20,10 @@ int main() {
             switch (key) {
                 case GLFW_KEY_ESCAPE: 
                     window.close(); 
+                    break;
+
+                case GLFW_KEY_SPACE: // change scene
+                    window.scene(std::make_unique<ExperimentalScene>());
                     break;
 
                 default: 

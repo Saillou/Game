@@ -5,6 +5,7 @@
 
 #include "Drawables/Rectangle.hpp"
 #include "Drawables/Ellipse.hpp"
+#include "Drawables/Quad.hpp"
 
 struct BaseScene {
     BaseScene();

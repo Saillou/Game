@@ -7,17 +7,20 @@ include(.cmake/config.cmake)
 # Get sources ..
 file(GLOB_RECURSE _cmake_list    CONFIGURE_DEPENDS "${CMAKE_FOLDER}/*.cmake" "./CMakeLists.txt")
 file(GLOB_RECURSE _source_list   CONFIGURE_DEPENDS "${SOURCE_FOLDER}/*.c*"   "${SOURCE_FOLDER}/*.h*")
+file(GLOB_RECURSE _resource_list CONFIGURE_DEPENDS "${RESOURCES_FOLDER}/*")
 file(GLOB_RECURSE _external_list CONFIGURE_DEPENDS "${EXTERNAL_FOLDER}/*.c*" "${EXTERNAL_FOLDER}/*.h*")
 
 # .. and create visual studio filters (following folders tree)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_cmake_list})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_source_list})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_resource_list})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${_external_list})
 
 # Create compilation list
 add_executable(${TARGET_NAME}
     ${_cmake_list}
     ${_source_list}
+    ${_resource_list}
     ${_external_list}
 )
 
@@ -29,6 +32,7 @@ set_target_properties(${TARGET_NAME} PROPERTIES
 
 # Set search directory for headers
 target_include_directories(${TARGET_NAME} PRIVATE 
+    "${RESOURCES_FOLDER}/"
     "${EXTERNAL_FOLDER}/glm/"
     "${EXTERNAL_FOLDER}/glad/include/"
     "${EXTERNAL_FOLDER}/GLFW/include/"

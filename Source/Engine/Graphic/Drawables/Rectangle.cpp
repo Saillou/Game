@@ -90,4 +90,3 @@ void Rectangle::_Shape::_createShader() {
         )
         .link();
 }
-
