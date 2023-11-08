@@ -42,13 +42,13 @@ TesselScene::TesselScene() :
 
     // Create program shaders
     m_shaders["tessPoints"].attachSource(GL_GEOMETRY_SHADER,    
-        #include "../../Resources/Waves/WaveGeomPoints.glsl"
+        #include "Waves/WaveGeomPoints.glsl"
     );
     m_shaders["tessLines"].attachSource(GL_GEOMETRY_SHADER, 
-        #include "../../Resources/Waves/WaveGeomLines.glsl"
+        #include "Waves/WaveGeomLines.glsl"
     );
     m_shaders["tessTriangles"].attachSource(GL_GEOMETRY_SHADER, 
-        #include "../../Resources/Waves/WaveGeomTriangles.glsl"
+        #include "Waves/WaveGeomTriangles.glsl"
     );
 
     // Commons shaders attached and params bound
@@ -56,13 +56,13 @@ TesselScene::TesselScene() :
         auto& shader = itShader.second;
 
         shader.attachSource(GL_VERTEX_SHADER,          
-                #include "../../Resources/Waves/WaveVert.glsl"
+                #include "Waves/WaveVert.glsl"
             ).attachSource(GL_TESS_CONTROL_SHADER,    
-                #include "../../Resources/Waves/WaveTControl.glsl"
+                #include "Waves/WaveTControl.glsl"
             ).attachSource(GL_TESS_EVALUATION_SHADER, 
-                #include "../../Resources/Waves/WaveTEval.glsl"
+                #include "Waves/WaveTEval.glsl"
             ).attachSource(GL_FRAGMENT_SHADER,        
-                #include "../../Resources/Waves/WaveFrag.glsl"
+                #include "Waves/WaveFrag.glsl"
             ).link();
 
         shader.set("Projection", m_projection);
@@ -100,6 +100,7 @@ void TesselScene::draw() {
     m_output.bind(1);
 
     m_physx.use();
+    m_physx.set("time", time);
     m_physx.compute(1, 1, 1);
     m_physx.syncStorage();
 
@@ -111,10 +112,9 @@ void TesselScene::draw() {
         auto& shader = itShader.second;
         auto& name = itShader.first;
 
-        if (name != "tessTriangles")
-            continue;
-
         shader.set("time", time);
+        shader.set("TessLevelInner", 2.0f + time);
+        shader.set("TessLevelOuter", 2.0f + time);
         shader.setBlock("Normals", 0);
 
         shader.use();
