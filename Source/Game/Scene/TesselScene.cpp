@@ -1,9 +1,11 @@
 #include "TesselScene.hpp"
 
+#include <algorithm>
+#include <random>
 #include <sstream>
-#include <vector>
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -13,6 +15,9 @@ TesselScene::TesselScene() :
     m_input(GL_STATIC_DRAW),
     m_output(GL_DYNAMIC_COPY) 
 {
+    // Magic size of something
+    const int N = 10*10;
+
     // Camera
     m_projection = glm::perspective(glm::radians<float>(25.0f), 1400.0f / 800.0f, 0.1f, 100.0f);
     m_modelview  = glm::lookAt(glm::vec3(1.0f, 3.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -21,24 +26,26 @@ TesselScene::TesselScene() :
     m_physx
         .attachSource(GL_COMPUTE_SHADER, ShaderSource{}
             .add_cp_layout("in", { "1", "1", "1" })
-            .add_struct("buffer InputMatrix", { "float matrix_input[9]" }, "0")
-            .add_struct("buffer OutputMatrix", { "float matrix_output[9]" }, "1")
+            .add_struct("buffer InputMatrix",  { "float matrix_input["  + std::to_string(N) + "]"},  "0")
+            .add_struct("buffer OutputMatrix", { "float matrix_output[" + std::to_string(N) + "]" }, "1")
             .add_var("uniform", "float", "time")
-            .add_func("void", "main", "", R"_main_(
-                for(int i = 0; i < 9; i++) {
-                    matrix_output[i] = matrix_input[i] * cos(time + i*20);
-                }
-            )_main_").str()
+            .add_func("void", "main", "", "                                    \
+                for(int i = 0; i < " + std::to_string(N) + "; i++) {"          \
+                    "matrix_output[i] = matrix_input[i] * cos(time + i * 20);" \
+                "}").str()
         )
         .link();
 
     // Input
-    m_input.bindData(std::vector<float>{
-        1.5f, 0.5f, 1.0f,
-        0.2f, 1.0f, 1.5f,
-        1.0f, 0.3f, 1.0f
-    });
-    m_output.bindData(9);
+    std::random_device rnd_device;
+    std::knuth_b e2(rnd_device());
+    std::uniform_real_distribution<float> dist{ -2.0f, 2.0f};
+    std::vector<float> inputDistrib(N);
+
+    std::generate(inputDistrib.begin(), inputDistrib.end(), [&dist, &e2]() { return dist(e2); });
+
+    m_input.bindData(inputDistrib);
+    m_output.bindData(N);
 
     // Create program shaders
     m_shaders["tessPoints"].attachSource(GL_GEOMETRY_SHADER,    
@@ -60,17 +67,61 @@ TesselScene::TesselScene() :
             ).attachSource(GL_TESS_CONTROL_SHADER,    
                 #include "Waves/WaveTControl.glsl"
             ).attachSource(GL_TESS_EVALUATION_SHADER, 
-                #include "Waves/WaveTEval.glsl"
+                R"_(
+                    #version 460
+
+                    /* Possible:
+                        triangles,
+                        quads
+                    */
+                    layout(quads, equal_spacing, ccw) in;
+
+                    in vec3 tcCoord[];
+                    out float rho;
+
+                    uniform mat4 Projection;
+                    uniform mat4 Modelview;
+                    uniform float time;
+
+                    uniform Normals {
+                        float matrix[)_" + std::to_string(N) + R"_(];
+                    } Output;
+
+                    void main() {
+                        // With quads
+                        float u = gl_TessCoord.x;
+                        vec3 p0 = mix(tcCoord[0], tcCoord[3], u);
+                        vec3 p1 = mix(tcCoord[1], tcCoord[2], u);
+
+                        float v = gl_TessCoord.y;
+                        vec3 p  = mix(p0, p1, v);
+    
+                        // Heights
+                        int N = int(sqrt()_" + std::to_string(N) + R"_());
+                        float rx = (N-1) * (p.x + 1.0) * 0.5; rx = clamp(0, N-1, rx); // 0 - N-1
+                        float ry = (N-1) * (p.y + 1.0) * 0.5; ry = clamp(0, N-1, ry); // 0 - N-1
+
+                        int i0 = int(round(rx));
+                        int j0 = int(round(ry));
+                        float dr = 1.0 - sqrt(pow(i0-rx, 2) + pow(j0-ry, 2));
+
+                        float oz = 0.20 * Output.matrix[i0 + N*j0] * dr;
+                        rho = 0.5*(1.0 + oz / 0.15);
+                        time;
+
+                        gl_Position = Projection * Modelview * vec4(p.xy, p.z + oz, 1.0);
+                    }
+                    )_"
             ).attachSource(GL_FRAGMENT_SHADER,        
                 #include "Waves/WaveFrag.glsl"
             ).link();
 
-        shader.set("Projection", m_projection);
-        shader.set("Modelview", m_modelview);
-
-        shader.set("TessLevelInner", 2.0f);
-        shader.set("TessLevelOuter", 2.0f);
-        shader.set("time", 0.0f);
+        shader
+            .set("Projection", m_projection)
+            .set("Modelview", m_modelview)
+            .set("TessLevelInner", 2.0f)
+            .set("TessLevelOuter", 2.0f)
+            .set("time", 0.0f);
     }
 
     // Different params bound
@@ -93,7 +144,7 @@ void TesselScene::resize(int width, int height) {
 
 void TesselScene::draw() {
     static float time = 0.0f;
-    time += 1.0f / 60.0f;
+    time += 1e-1f;
 
     // Compute physics
     m_input.bind(0);
@@ -113,8 +164,8 @@ void TesselScene::draw() {
         auto& name = itShader.first;
 
         shader.set("time", time);
-        shader.set("TessLevelInner", 2.0f + time);
-        shader.set("TessLevelOuter", 2.0f + time);
+        shader.set("TessLevelInner", 2.0f + time / 10);
+        shader.set("TessLevelOuter", 2.0f + time / 10);
         shader.setBlock("Normals", 0);
 
         shader.use();

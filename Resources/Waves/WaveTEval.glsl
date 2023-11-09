@@ -13,6 +13,7 @@ out float rho;
 uniform mat4 Projection;
 uniform mat4 Modelview;
 uniform float time;
+uniform float n_cells;
 
 uniform Normals {
     float matrix[9];

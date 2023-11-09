@@ -72,7 +72,7 @@ Shader& Shader::set(const std::string& name, float v) {
 
     int varLoc = glGetUniformLocation(m_id, name.c_str());
     if (varLoc == -1)
-        std::cerr << "[warning] Uniform location not found" << std::endl;
+        std::cerr << "[warning] Uniform location not found for `" << name << "`" << std::endl;
     glUniform1f(varLoc, v);
 
     return *this;
@@ -83,7 +83,7 @@ Shader& Shader::set(const std::string& name, float a, float b, float c) {
 
     int varLoc = glGetUniformLocation(m_id, name.c_str());
     if (varLoc == -1)
-        std::cerr << "[warning] Uniform location not found" << std::endl;
+        std::cerr << "[warning] Uniform location not found for `" << name << "`" << std::endl;
     glUniform3f(varLoc, a, b, c);
 
     return *this;
@@ -94,7 +94,7 @@ Shader& Shader::set(const std::string& name, const glm::mat3& mat) {
 
     int varLoc = glGetUniformLocation(m_id, name.c_str());
     if (varLoc == -1)
-        std::cerr << "[warning] Uniform location not found" << std::endl;
+        std::cerr << "[warning] Uniform location not found for `" << name << "`" << std::endl;
 
     glUniformMatrix3fv(varLoc, 1, GL_FALSE, &mat[0][0]);
 
@@ -106,7 +106,7 @@ Shader& Shader::set(const std::string& name, const glm::mat4& mat) {
 
     int varLoc = glGetUniformLocation(m_id, name.c_str());
     if (varLoc == -1)
-        std::cerr << "[warning] Uniform location not found" << std::endl;
+        std::cerr << "[warning] Uniform location not found for `" << name << "`" << std::endl;
     glUniformMatrix4fv(varLoc, 1, GL_FALSE, &mat[0][0]);
 
     return *this;
@@ -117,7 +117,7 @@ Shader& Shader::setBlock(const std::string& name, const int layout) {
 
     int blockIndex = glGetUniformBlockIndex(m_id, name.c_str());
     if (blockIndex == -1)
-        std::cerr << "[warning] Uniform location not found" << std::endl;
+        std::cerr << "[warning] Uniform location not found for `" << name << "`" << std::endl;
     glUniformBlockBinding(m_id, blockIndex, layout);
 
     return *this;
