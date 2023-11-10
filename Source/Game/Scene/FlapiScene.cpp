@@ -1,4 +1,4 @@
-#include "TesselScene.hpp"
+#include "FlapiScene.hpp"
 
 #include <algorithm>
 #include <random>
@@ -10,7 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 // Scene instance
-TesselScene::TesselScene() : 
+FlapiScene::FlapiScene() : 
     BaseScene(), 
     m_input(GL_STATIC_DRAW),
     m_output(GL_DYNAMIC_COPY) 
@@ -138,11 +138,11 @@ TesselScene::TesselScene() :
         .set("zIndex", 0.0f);
 }
 
-void TesselScene::resize(int width, int height) {
+void FlapiScene::resize(int width, int height) {
     // ..
 }
 
-void TesselScene::draw() {
+void FlapiScene::draw() {
     static float time = 0.0f;
     time += 1e-1f;
 

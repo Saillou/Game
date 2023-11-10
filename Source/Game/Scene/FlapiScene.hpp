@@ -6,8 +6,8 @@
 
 #include "Objects/Quad.hpp"
 
-struct TesselScene : public BaseScene {
-    TesselScene();
+struct FlapiScene : public BaseScene {
+    FlapiScene();
 
     void draw() override;
     void resize(int width, int height) override;

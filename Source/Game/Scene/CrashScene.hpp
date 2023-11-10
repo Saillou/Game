@@ -2,8 +2,8 @@
 
 #include "../../Engine/Graphic/BaseScene.hpp"
 
-struct ExperimentalScene : public BaseScene {
-    ExperimentalScene();
+struct CrashScene : public BaseScene {
+    CrashScene();
 
     void draw() override;
     void resize(int width, int height) override;

@@ -1,4 +1,4 @@
-#include "ExperimentalScene.hpp"
+#include "CrashScene.hpp"
 
 #include <sstream>
 #include <vector>
@@ -9,15 +9,15 @@
 #include "Objects/Ellipse.hpp"
 
 // Scene instance
-ExperimentalScene::ExperimentalScene() : BaseScene() {
+CrashScene::CrashScene() : BaseScene() {
     // ..
 }
 
-void ExperimentalScene::resize(int width, int height) {
+void CrashScene::resize(int width, int height) {
     // ..
 }
 
-void ExperimentalScene::draw() {
+void CrashScene::draw() {
     // Draw damier
     const int N = 20;
     const int N_2 = N*N;
@@ -53,5 +53,5 @@ void ExperimentalScene::draw() {
     );
 
     // Draw texts
-    TextEngine::Write("Experimental scene", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+    TextEngine::Write("Crash scene", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 }

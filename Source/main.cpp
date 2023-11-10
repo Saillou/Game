@@ -3,20 +3,23 @@
 #include <vector>
 
 #include "Engine/Graphic/Window.hpp"
-#include "Game/Scene/FruitScene.hpp"
-#include "Game/Scene/ExperimentalScene.hpp"
-#include "Game/Scene/TesselScene.hpp"
+
 #include "Game/Game.hpp"
+#include "Game/Scene/FruitScene.hpp"
+#include "Game/Scene/SlimeScene.hpp"
+#include "Game/Scene/CrashScene.hpp"
+#include "Game/Scene/FlapiScene.hpp"
 
 // -- Entry point --
 int main() {
     // Create window
     Window window(1024, 768, "The Game");
+
+    // Open menu
     window.scene(std::make_unique<FruitScene>());
 
     // Main loop
     GameState gamestate;
-
     do {
         // Read keyboard inputs
         for (auto key : window.keyPressed()) {
@@ -29,7 +32,21 @@ int main() {
                     gamestate.spacePressed = true;
                     break;
 
-                default: 
+                // All scene
+                case GLFW_KEY_1:
+                    window.scene(std::make_unique<FruitScene>());
+                    break;
+
+                case GLFW_KEY_2:
+                    window.scene(std::make_unique<SlimeScene>());
+                    break;
+
+                case GLFW_KEY_3:
+                    window.scene(std::make_unique<CrashScene>());
+                    break;
+
+                case GLFW_KEY_4:
+                    window.scene(std::make_unique<FlapiScene>());
                     break;
             }
         }
