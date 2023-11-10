@@ -35,6 +35,11 @@ void BaseShape::_addPoint(float x, float y, float z) {
     m_vertices.push_back(z);
 }
 
+void BaseShape::_addAsLine(unsigned int i0, unsigned int i1) {
+    m_indices.push_back(i0);
+    m_indices.push_back(i1);
+}
+
 void BaseShape::_addAsTriangle(unsigned int i0, unsigned int i1, unsigned int i2) {
     m_indices.push_back(i0);
     m_indices.push_back(i1);

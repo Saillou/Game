@@ -10,35 +10,19 @@
 
 // Helper
 struct Camera {
-    glm::mat4 m_projection;
-    glm::mat4 m_modelview;
+    glm::mat4 projection;
+    glm::mat4 modelview;
 };
 
 
 // Object wrapper
 struct SceneObject {
-    SceneObject(std::unique_ptr<BaseShape> uShape) : 
-        m_shape(nullptr), 
-        m_shader() 
-    {
-        m_shape.swap(uShape);
-    }
+    SceneObject() = default;
     virtual ~SceneObject() = default;
-
-    virtual void draw() {
-        m_shader.use();
-
-        m_shape->bind();
-        m_shape->draw();
-    }
 
     template<typename T> inline T* as() {  
         return reinterpret_cast<T*>(this); 
     }
-
-protected:
-    std::unique_ptr<BaseShape> m_shape;
-    Shader m_shader;
 };
 
 
@@ -54,5 +38,5 @@ private:
     typedef std::shared_ptr<SceneObject> sSceneObject;
 
     std::unordered_map<std::string, sSceneObject> m_shapes;
-    Camera camera;
+    Camera m_camera;
 };

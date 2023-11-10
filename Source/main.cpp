@@ -4,6 +4,7 @@
 
 #include "Engine/Graphic/Window.hpp"
 #include "Game/Scene/FruitScene.hpp"
+#include "Game/Scene/ExperimentalScene.hpp"
 #include "Game/Scene/TesselScene.hpp"
 #include "Game/Game.hpp"
 
@@ -11,7 +12,7 @@
 int main() {
     // Create window
     Window window(1024, 768, "The Game");
-    window.scene(std::make_unique<TesselScene>());
+    window.scene(std::make_unique<FruitScene>());
 
     // Main loop
     GameState gamestate;
