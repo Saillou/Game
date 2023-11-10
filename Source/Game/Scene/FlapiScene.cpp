@@ -13,7 +13,8 @@
 FlapiScene::FlapiScene() : 
     BaseScene(), 
     m_input(GL_STATIC_DRAW),
-    m_output(GL_DYNAMIC_COPY) 
+    m_output(GL_DYNAMIC_COPY),
+    m_time(0.0f)
 {
     // Magic size of something
     const int N = 10*10;
@@ -143,15 +144,14 @@ void FlapiScene::resize(int width, int height) {
 }
 
 void FlapiScene::draw() {
-    static float time = 0.0f;
-    time += 1e-1f;
+    m_time += 1e-1f;
 
     // Compute physics
     m_input.bind(0);
     m_output.bind(1);
 
     m_physx.use();
-    m_physx.set("time", time);
+    m_physx.set("time", m_time);
     m_physx.compute(1, 1, 1);
     m_physx.syncStorage();
 
@@ -163,9 +163,9 @@ void FlapiScene::draw() {
         auto& shader = itShader.second;
         auto& name = itShader.first;
 
-        shader.set("time", time);
-        shader.set("TessLevelInner", 2.0f + time / 10);
-        shader.set("TessLevelOuter", 2.0f + time / 10);
+        shader.set("time", m_time);
+        shader.set("TessLevelInner", 2.0f + m_time / 10);
+        shader.set("TessLevelOuter", 2.0f + m_time / 10);
         shader.setBlock("Normals", 0);
 
         shader.use();
@@ -174,5 +174,5 @@ void FlapiScene::draw() {
     }
 
     // Draw texts
-    TextEngine::Write("Tesselation baby", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+    TextEngine::Write("Flapi scene", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 }

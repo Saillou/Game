@@ -21,3 +21,14 @@ dynamic_unique_ptr_cast(std::unique_ptr<Base, Del>&& p)
     }
     return std::unique_ptr<Derived, Del>(nullptr, p.get_deleter());
 }
+
+// -- Objects --
+struct Object {
+    Object() = default;
+    virtual ~Object() = default;
+
+    template<typename T> inline T* as() {
+        return reinterpret_cast<T*>(this);
+    }
+};
+typedef std::shared_ptr<Object> sObject;

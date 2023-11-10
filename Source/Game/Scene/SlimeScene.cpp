@@ -53,5 +53,5 @@ void SlimeScene::draw() {
     );
 
     // Draw texts
-    TextEngine::Write("Experimental scene", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+    TextEngine::Write("Slime scene", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 }

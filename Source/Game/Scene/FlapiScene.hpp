@@ -21,4 +21,5 @@ private:
     glm::mat4 m_projection;
     glm::mat4 m_modelview;
     Quad m_shapeGround;
+    float m_time;
 };
