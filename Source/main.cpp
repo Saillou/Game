@@ -4,13 +4,14 @@
 
 #include "Engine/Graphic/Window.hpp"
 #include "Game/Scene/FruitScene.hpp"
+#include "Game/Scene/TesselScene.hpp"
 #include "Game/Game.hpp"
 
 // -- Entry point --
 int main() {
     // Create window
     Window window(1024, 768, "The Game");
-    window.scene(std::make_unique<FruitScene>());
+    window.scene(std::make_unique<TesselScene>());
 
     // Main loop
     GameState gamestate;

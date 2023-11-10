@@ -8,6 +8,13 @@
 #include <unordered_map>
 #include <memory>
 
+// Helper
+struct Camera {
+    glm::mat4 m_projection;
+    glm::mat4 m_modelview;
+};
+
+
 // Object wrapper
 struct SceneObject {
     SceneObject(std::unique_ptr<BaseShape> uShape) : 
@@ -25,6 +32,10 @@ struct SceneObject {
         m_shape->draw();
     }
 
+    template<typename T> inline T* as() {  
+        return reinterpret_cast<T*>(this); 
+    }
+
 protected:
     std::unique_ptr<BaseShape> m_shape;
     Shader m_shader;
@@ -40,7 +51,8 @@ struct FruitScene : public BaseScene {
     void resize(int width, int height) override;
 
 private:
-    typedef std::unique_ptr<SceneObject> uSceneObject;
+    typedef std::shared_ptr<SceneObject> sSceneObject;
 
-    std::unordered_map<std::string, uSceneObject> m_shapes;
+    std::unordered_map<std::string, sSceneObject> m_shapes;
+    Camera camera;
 };

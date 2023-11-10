@@ -7,8 +7,6 @@
 #include <utility>
 #include <vector>
 
-#include "../../Utils/Caster.hpp"
-
 #include <glm/gtc/matrix_transform.hpp>
 
 // Objects
@@ -29,10 +27,11 @@ class Field : public SceneObject {
         }
 
         void draw() override {
-
+            glDrawElements(GL_TRIANGLES, (int)m_indices.size(), GL_UNSIGNED_INT, 0);
         }
         void _setAttributes() override {
-
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+            glEnableVertexAttribArray(0);
         }
     };
 
@@ -63,8 +62,10 @@ public:
         m_shader
             .use()
             .set("offset", x, y, z)
-            .set("color",  1.0f, 0.9f, 0.8f)
-            .set("alpha",  1.0f);
+            .set("color", 1.0f, 0.9f, 0.8f)
+            .set("alpha", 1.0f);
+            //.set("Projection", m_projection)
+            //.set("Modelview", m_modelview);
 
         SceneObject::draw();
     }
@@ -111,8 +112,13 @@ public:
 FruitScene::FruitScene() :
     BaseScene()
 {
-    m_shapes["Field"] = std::make_unique<Field>();
-    m_shapes["Fruit"] = std::make_unique<Fruit>();
+    // Shapes
+    m_shapes["Field"] = std::make_shared<Field>();
+    m_shapes["Fruit"] = std::make_shared<Fruit>();
+
+    //// Camera
+    //m_projection = glm::perspective(glm::radians<float>(25.0f), 1400.0f / 800.0f, 0.1f, 100.0f);
+    //m_modelview  = glm::lookAt(glm::vec3(1.0f, 3.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void FruitScene::resize(int width, int height) {
@@ -121,7 +127,9 @@ void FruitScene::resize(int width, int height) {
 
 void FruitScene::draw() {
     // Draw objects
-    dynamic_unique_ptr_cast<Field, SceneObject>(std::move(m_shapes["Field"]));
+    m_shapes["Field"]
+        ->as<Field>()
+        ->draw(0.0f, 0.0f);
 
     // Draw texts
     TextEngine::Write("Fruits", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
