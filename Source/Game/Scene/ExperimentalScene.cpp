@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <utility>
 
+#include "Objects/Rectangle.hpp"
+#include "Objects/Ellipse.hpp"
 
 // Scene instance
 ExperimentalScene::ExperimentalScene() : BaseScene() {

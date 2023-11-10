@@ -3,17 +3,18 @@
 #include <vector>
 
 #include "Engine/Graphic/Window.hpp"
-
-#include "Game/Scene/ExperimentalScene.hpp"
-#include "Game/Scene/TesselScene.hpp"
+#include "Game/Scene/FruitScene.hpp"
+#include "Game/Game.hpp"
 
 // -- Entry point --
 int main() {
     // Create window
     Window window(1024, 768, "The Game");
-    window.scene(std::make_unique<TesselScene>());
+    window.scene(std::make_unique<FruitScene>());
 
     // Main loop
+    GameState gamestate;
+
     do {
         // Read keyboard inputs
         for (auto key : window.keyPressed()) {
@@ -22,8 +23,8 @@ int main() {
                     window.close(); 
                     break;
 
-                case GLFW_KEY_SPACE: // change scene
-                    window.scene(std::make_unique<ExperimentalScene>());
+                case GLFW_KEY_SPACE:
+                    gamestate.isJumping = true;
                     break;
 
                 default: 
@@ -31,11 +32,9 @@ int main() {
             }
         }
 
-        // Update game state
-        // ..
-
         // Compute physics before redrawing
-        // ..
+        Game::UpdateState(gamestate);
+
     } while (window.update());
 
     // Clean up

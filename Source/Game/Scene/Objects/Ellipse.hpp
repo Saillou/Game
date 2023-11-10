@@ -1,8 +1,8 @@
 #pragma once
 
-#include "BaseShape.hpp"
-#include "BaseDrawable.hpp"
-#include "../Shaders/Shader.hpp"
+#include "../../../Engine/Graphic/Drawables/BaseDrawable.hpp"
+#include "../../../Engine/Graphic/Drawables/BaseShape.hpp"
+#include "../../../Engine/Graphic/Shaders/Shader.hpp"
 
 // Shape 
 struct Ellipse : public BaseDrawable {

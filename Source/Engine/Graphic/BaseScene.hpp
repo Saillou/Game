@@ -3,10 +3,6 @@
 // Include stuff there so it's easier.. to be optimized
 #include "TextEngine.hpp"
 
-#include "Drawables/Rectangle.hpp"
-#include "Drawables/Ellipse.hpp"
-#include "Drawables/Quad.hpp"
-
 struct BaseScene {
     BaseScene();
     virtual ~BaseScene();

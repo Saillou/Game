@@ -4,6 +4,8 @@
 #include "../../Engine/Graphic/Shaders/ComputeShader.hpp"
 #include "../../Engine/Graphic/Utils/StorageBuffer.h"
 
+#include "Objects/Quad.hpp"
+
 struct TesselScene : public BaseScene {
     TesselScene();
 

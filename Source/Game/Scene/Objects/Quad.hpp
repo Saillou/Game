@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BaseShape.hpp"
+#include "../../../Engine/Graphic/Drawables/BaseShape.hpp"
 
 struct Quad : public BaseShape {
     Quad();
