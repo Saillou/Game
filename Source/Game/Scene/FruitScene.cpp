@@ -41,16 +41,16 @@ class Field : public SceneObject {
     };
 
     struct _FieldShape : public BaseShape {
-        _FieldShape(float width, float height) {
-            _addPoint(-width, +width, -height);
-            _addPoint(+width, +width, -height);
-            _addPoint(+width, -width, -height);
-            _addPoint(-width, -width, -height);
+        _FieldShape(float width, float depth, float height) {
+            _addPoint(-width, +depth, -height);
+            _addPoint(+width, +depth, -height);
+            _addPoint(+width, -depth, -height);
+            _addPoint(-width, -depth, -height);
 
-            _addPoint(-width, +width, +height);
-            _addPoint(+width, +width, +height);
-            _addPoint(+width, -width, +height);
-            _addPoint(-width, -width, +height);
+            _addPoint(-width, +depth, +height);
+            _addPoint(+width, +depth, +height);
+            _addPoint(+width, -depth, +height);
+            _addPoint(-width, -depth, +height);
 
             _addAsLine(0, 1);
             _addAsLine(1, 2);
@@ -81,29 +81,29 @@ class Field : public SceneObject {
     };
 
     Shader m_shaderGeom;
-    _FieldShape m_borderBack;
+    std::shared_ptr<_FieldShape> m_borderBack;
 
     Shader m_shaderSolid;
     std::vector<std::shared_ptr<_FaceShape>> m_surfaceBack;
 
 public:
-    Field() :
-        m_borderBack(0.5f, 0.5f),
-        m_surfaceBack() 
+    Field(float width, float depth, float height)
     {
+        m_borderBack = std::make_shared<_FieldShape>(width, depth, height);
+
         const glm::vec3 
-            A(-0.5f, +0.5f, -0.5f),
-            B(+0.5f, +0.5f, -0.5f),
-            C(+0.5f, -0.5f, -0.5f),
-            D(-0.5f, -0.5f, -0.5f),
-            E(-0.5f, +0.5f, +0.5f),
-            F(+0.5f, +0.5f, +0.5f),
-            G(+0.5f, -0.5f, +0.5f),
-            H(-0.5f, -0.5f, +0.5f);
+            A(-width, +depth, -height),
+            B(+width, +depth, -height),
+            C(+width, -depth, -height),
+            D(-width, -depth, -height),
+            E(-width, +depth, +height),
+            F(+width, +depth, +height),
+            G(+width, -depth, +height),
+            H(-width, -depth, +height);
 
         // Create surfaces
         m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {A, B, C, D}));
-        m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {B, C, G, F}));
+        m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {C, B, F, G}));
         m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {A, D, H, E}));
         m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {C, G, H, D}));
         m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {B, F, E, A}));
@@ -164,18 +164,18 @@ public:
             .use()
             .set("offset", x, y, z)
             .set("color", 1.0f, 0.9f, 0.8f)
-            .set("alpha", 1.0f)
+            .set("alpha", 0.5f)
             .set("Projection", camera.projection)
             .set("Modelview", camera.modelview);
 
-        m_borderBack.bind();
-        m_borderBack.draw();
+        m_borderBack->bind();
+        m_borderBack->draw();
 
         m_shaderSolid
             .use()
             .set("offset", x, y, z)
             .set("color", 0.2f, 0.9f, 0.8f)
-            .set("alpha", 0.2f)
+            .set("alpha", 0.05f)
             .set("Projection", camera.projection)
             .set("Modelview", camera.modelview);
 
@@ -191,15 +191,14 @@ FruitScene::FruitScene() :
     BaseScene()
 {
     // Shapes
-    m_shapes["Field"] = std::make_shared<Field>();
+    m_shapes["Field"] = std::make_shared<Field>(0.6f, 0.25f, 0.5f);
 
     // Camera
-    m_camera.projection = glm::perspective(glm::radians<float>(25.0f), 1400.0f / 800.0f, 0.1f, 100.0f);
-    m_camera.modelview  = glm::lookAt(glm::vec3(1.0f, 3.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    m_camera.modelview  = glm::lookAt(glm::vec3(0.0f, 3.0f, 0.75F), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void FruitScene::resize(int width, int height) {
-    // ..
+    m_camera.projection = glm::perspective(glm::radians<float>(30.0f), (float)width / height, 0.1f, 100.0f);
 }
 
 void FruitScene::draw() {
