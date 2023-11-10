@@ -19,9 +19,13 @@ void Game::UpdateState(GameState& state) {
 		return;
 
 	// Do actions ..
-	if (state.isJumping)
-		state.isJumping = false;
+	if (state.spacePressed) {
+
+	}
 
 	// Save
 	game.m_state.previous = state;
+
+	// Reset
+	state.spacePressed = false;
 }

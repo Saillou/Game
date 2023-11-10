@@ -1,4 +1,4 @@
-#include "Buffer.h"
+#include "Buffer.hpp"
 
 Buffer::Buffer(unsigned int glBufferType, unsigned int glMemoryType) :
 	m_bufferId(0),

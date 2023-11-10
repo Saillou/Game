@@ -2,7 +2,7 @@
 
 // Data
 struct GameState {
-    bool isJumping;
+    bool spacePressed;
 };
 
 // Singleton

@@ -2,6 +2,7 @@
 
 // Include stuff there so it's easier.. to be optimized
 #include "TextEngine.hpp"
+#include "Drawables/BaseShape.hpp"
 
 struct BaseScene {
     BaseScene();

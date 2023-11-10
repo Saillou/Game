@@ -24,7 +24,7 @@ int main() {
                     break;
 
                 case GLFW_KEY_SPACE:
-                    gamestate.isJumping = true;
+                    gamestate.spacePressed = true;
                     break;
 
                 default: 

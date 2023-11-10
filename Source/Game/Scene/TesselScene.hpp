@@ -2,7 +2,7 @@
 
 #include "../../Engine/Graphic/BaseScene.hpp"
 #include "../../Engine/Graphic/Shaders/ComputeShader.hpp"
-#include "../../Engine/Graphic/Utils/StorageBuffer.h"
+#include "../../Engine/Graphic/Utils/StorageBuffer.hpp"
 
 #include "Objects/Quad.hpp"
 

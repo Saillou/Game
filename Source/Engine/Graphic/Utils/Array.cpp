@@ -1,4 +1,4 @@
-#include "Array.h"
+#include "Array.hpp"
 
 #include "glad/glad.h"
 
