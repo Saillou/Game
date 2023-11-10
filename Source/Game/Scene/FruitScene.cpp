@@ -5,23 +5,19 @@
 #include <sstream>
 #include <unordered_map>
 #include <utility>
+#include <array>
 #include <vector>
 
 #include <glm/gtc/matrix_transform.hpp>
 
 // Objects
 class Field : public SceneObject {
-    struct _BoxShape : public BaseShape {
-        _BoxShape(float width, float height) {
-            _addPoint(-width, +width, -height);
-            _addPoint(+width, +width, -height);
-            _addPoint(+width, -width, -height);
-            _addPoint(-width, -width, -height);
-
-            _addPoint(-width, +width, +height);
-            _addPoint(+width, +width, +height);
-            _addPoint(+width, -width, +height);
-            _addPoint(-width, -width, +height);
+    struct _FaceShape : public BaseShape {
+        _FaceShape(const std::array<glm::vec3, 4>& quad) {
+            _addPoint(quad[0].x, quad[0].y, quad[0].z);
+            _addPoint(quad[1].x, quad[1].y, quad[1].z);
+            _addPoint(quad[2].x, quad[2].y, quad[2].z);
+            _addPoint(quad[3].x, quad[3].y, quad[3].z);
 
             auto __face = [=](int a, int b, int c, int d) {
                 _addAsTriangle(c, b, d);
@@ -29,10 +25,6 @@ class Field : public SceneObject {
             };
 
             __face(0, 1, 2, 3);
-            __face(1, 2, 6, 5);
-            __face(0, 3, 7, 4);
-            __face(2, 6, 7, 3);
-            __face(1, 5, 4, 0);
 
             // Bind
             _bindArray();
@@ -92,13 +84,31 @@ class Field : public SceneObject {
     _FieldShape m_borderBack;
 
     Shader m_shaderSolid;
-    _BoxShape m_surfaceBack;
+    std::vector<std::shared_ptr<_FaceShape>> m_surfaceBack;
 
 public:
-    Field(): 
-        m_borderBack(0.3f, 0.4f),
-        m_surfaceBack(0.3f, 0.4f)
+    Field() :
+        m_borderBack(0.5f, 0.5f),
+        m_surfaceBack() 
     {
+        const glm::vec3 
+            A(-0.5f, +0.5f, -0.5f),
+            B(+0.5f, +0.5f, -0.5f),
+            C(+0.5f, -0.5f, -0.5f),
+            D(-0.5f, -0.5f, -0.5f),
+            E(-0.5f, +0.5f, +0.5f),
+            F(+0.5f, +0.5f, +0.5f),
+            G(+0.5f, -0.5f, +0.5f),
+            H(-0.5f, -0.5f, +0.5f);
+
+        // Create surfaces
+        m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {A, B, C, D}));
+        m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {B, C, G, F}));
+        m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {A, D, H, E}));
+        m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {C, G, H, D}));
+        m_surfaceBack.push_back(std::make_shared<_FaceShape>(std::array<glm::vec3, 4> {B, F, E, A}));
+
+        // Create shaders
         m_shaderGeom
             .attachSource(GL_VERTEX_SHADER, ShaderSource{}
                 .add_var("in", "vec3", "aPos")
@@ -150,17 +160,6 @@ public:
     }
 
     void draw(const Camera& camera, float x, float y, float z = 0.0f) {
-        m_shaderSolid
-            .use()
-            .set("offset", x, y, z)
-            .set("color", 0.2f, 0.9f, 0.8f)
-            .set("alpha", 0.2f)
-            .set("Projection", camera.projection)
-            .set("Modelview", camera.modelview);
-
-        m_surfaceBack.bind();
-        m_surfaceBack.draw();
-
         m_shaderGeom
             .use()
             .set("offset", x, y, z)
@@ -171,6 +170,19 @@ public:
 
         m_borderBack.bind();
         m_borderBack.draw();
+
+        m_shaderSolid
+            .use()
+            .set("offset", x, y, z)
+            .set("color", 0.2f, 0.9f, 0.8f)
+            .set("alpha", 0.2f)
+            .set("Projection", camera.projection)
+            .set("Modelview", camera.modelview);
+
+        for (auto& surface : m_surfaceBack) {
+            surface->bind();
+            surface->draw();
+        }
     }
 };
 
