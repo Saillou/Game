@@ -116,5 +116,8 @@ void Window::_resize(int width, int height) {
     if (m_scene)
         m_scene->resize(width, height);
 
+    m_width  = width;
+    m_height = height;
+
     update();
 }

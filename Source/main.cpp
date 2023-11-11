@@ -15,7 +15,7 @@
 // -- Entry point --
 int main() {
     // Create window
-    Window window(1024, 768, "The Game");
+    Window window(1600, 900, "The Game");
 
     // Open menu
     window.scene(std::make_unique<SlimeScene>());
