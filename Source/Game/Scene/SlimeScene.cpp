@@ -79,8 +79,8 @@ void SlimeScene::_create_shapes() {
     m_shapes["westGoal_r"] = std::make_shared<Facette>(pWestGoal - goalDepth*uDirect + goalWidth*uNormal, goalDepth * uDirect, goalHeight * uHeight);
     m_shapes["westGoal_f"] = std::make_shared<Facette>(pWestGoal, goalWidth*uNormal, goalHeight*uHeight);
 
-    m_shapes["eastGoal_r"] = std::make_shared<Facette>(pEastGoal + goalDepth*uDirect - goalWidth*uNormal, goalDepth * uDirect, goalHeight * uHeight);
-    m_shapes["eastGoal_l"] = std::make_shared<Facette>(pEastGoal + goalDepth*uDirect + goalWidth*uNormal, goalDepth * uDirect, goalHeight * uHeight);
+    m_shapes["eastGoal_l"] = std::make_shared<Facette>(pEastGoal + goalDepth*uDirect - goalWidth*uNormal, goalDepth * uDirect, goalHeight * uHeight);
+    m_shapes["eastGoal_r"] = std::make_shared<Facette>(pEastGoal + goalDepth*uDirect + goalWidth*uNormal, goalDepth * uDirect, goalHeight * uHeight);
     m_shapes["eastGoal_f"] = std::make_shared<Facette>(pEastGoal, goalWidth*uNormal, goalHeight*uHeight);
 
     m_shapes["ball"] = std::make_shared<Sphere>(pOrigin, fruitRadius);

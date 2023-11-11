@@ -39,7 +39,7 @@ void CrashScene::_create_shapes() {
     const float infinity = 1e+1f;
 
     // Create
-    m_shapes["sceneGround"] = std::make_shared<Facette>(pOrigin - cst_plank * uHeight, infinity * uDirect, infinity * uNormal);
+    m_shapes["sceneGround"] = std::make_shared<Facette>(pOrigin - cst_plank*uHeight, uDirect, uNormal);
 }
 
 void CrashScene::_cook_shapes() {
