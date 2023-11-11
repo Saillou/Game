@@ -18,7 +18,7 @@ int main() {
     Window window(1600, 900, "The Game");
 
     // Open menu
-    window.scene(std::make_unique<SlimeScene>());
+    window.scene(std::make_unique<CrashScene>());
 
     // Main loop
     GameState gamestate;
@@ -26,15 +26,17 @@ int main() {
         // Read keyboard inputs
         for (auto key : window.keyPressed()) {
             switch (key) {
+                // Window control
                 case GLFW_KEY_ESCAPE: 
                     window.close(); 
                     break;
 
+                // Game inputs
                 case GLFW_KEY_SPACE:
                     gamestate.spacePressed = true;
                     break;
 
-                // All scene
+                // All scenes
                 case GLFW_KEY_1:
                     window.scene(std::make_unique<FruitScene>());
                     break;
