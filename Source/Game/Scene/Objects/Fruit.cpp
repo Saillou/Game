@@ -63,8 +63,8 @@ Fruit::Fruit(float radius) {
 void Fruit::draw(const Camera& camera, const glm::vec3& pos) {
     m_shader
         .use()
-        .set("offset", pos.x, pos.y, pos.z)
-        .set("color", 0.2f, 0.9f, 0.8f)
+        .set("offset", pos)
+        .set("color", glm::vec3(0.2f, 0.9f, 0.8f))
         .set("alpha", 1.0f)
         .set("Projection", camera.projection)
         .set("Modelview", camera.modelview);

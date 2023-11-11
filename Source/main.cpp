@@ -5,6 +5,8 @@
 #include "Engine/Graphic/Window.hpp"
 
 #include "Game/Game.hpp"
+#include "Game/Scene/TestScene.hpp"
+
 #include "Game/Scene/FruitScene.hpp"
 #include "Game/Scene/SlimeScene.hpp"
 #include "Game/Scene/CrashScene.hpp"
@@ -16,7 +18,7 @@ int main() {
     Window window(1024, 768, "The Game");
 
     // Open menu
-    window.scene(std::make_unique<FruitScene>());
+    window.scene(std::make_unique<TestScene>());
 
     // Main loop
     GameState gamestate;

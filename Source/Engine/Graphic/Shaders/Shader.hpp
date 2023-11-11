@@ -25,7 +25,10 @@ public:
 	Shader& use();
 
 	Shader& set(const std::string& name, float v);
-	Shader& set(const std::string& name, float a, float b, float c);
+
+	Shader& set(const std::string& name, const glm::vec3& vec);
+	Shader& set(const std::string& name, const glm::vec4& vec);
+
 	Shader& set(const std::string& name, const glm::mat3& mat);
 	Shader& set(const std::string& name, const glm::mat4& mat);
 	Shader& setBlock(const std::string& name, const int layout);

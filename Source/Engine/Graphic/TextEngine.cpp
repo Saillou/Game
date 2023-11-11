@@ -110,7 +110,7 @@ TextEngine::TextEngine() {
 void TextEngine:: _render(std::string text, float x, float y, float scale, glm::vec3 color) {
     // activate corresponding render state	
     m_text_shader.use();
-    m_text_shader.set("textColor", color.x, color.y, color.z);
+    m_text_shader.set("textColor", color);
 
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(m_VAO);

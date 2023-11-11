@@ -20,8 +20,8 @@ void Ellipse::Draw(glm::vec3 pos, glm::vec2 size, glm::vec2 angles, glm::vec4 co
     // Draw it
     _Shape::s_shader()
         .use()
-        .set("offset", ellipse.m_pos.x,   ellipse.m_pos.y,   ellipse.m_pos.z)
-        .set("color",  ellipse.m_color.r, ellipse.m_color.g, ellipse.m_color.b)
+        .set("offset", ellipse.m_pos)
+        .set("color", glm::vec3(ellipse.m_color.r, ellipse.m_color.g, ellipse.m_color.b))
         .set("alpha",  ellipse.m_color.a);
 
     // Angle limit

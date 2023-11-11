@@ -6,8 +6,8 @@
 
 
 // -- Scene --
-struct FruitScene : public BaseScene {
-    FruitScene();
+struct TestScene : public BaseScene {
+    TestScene();
 
     void draw() override;
     void resize(int width, int height) override;

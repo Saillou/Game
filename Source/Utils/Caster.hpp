@@ -1,6 +1,8 @@
 #pragma once
 
+#include <string>
 #include <memory>
+#include <unordered_map>
 
 // -- Helper --
 template <typename Derived, typename Base, typename Del>
@@ -32,3 +34,4 @@ struct Object {
     }
 };
 typedef std::shared_ptr<Object> sObject;
+typedef std::unordered_map<std::string, sObject> Collection;

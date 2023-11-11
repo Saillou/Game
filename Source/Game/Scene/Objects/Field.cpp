@@ -145,8 +145,8 @@ Field::Field(float width, float depth, float height)
 void Field::draw(const Camera& camera, const glm::vec3& pos) {
     m_shaderGeom
         .use()
-        .set("offset", pos.x, pos.y, pos.z)
-        .set("color", 1.0f, 0.9f, 0.8f)
+        .set("offset", pos)
+        .set("color", glm::vec3(1.0f, 0.9f, 0.8f))
         .set("alpha", 0.5f)
         .set("Projection", camera.projection)
         .set("Modelview", camera.modelview);
@@ -156,8 +156,8 @@ void Field::draw(const Camera& camera, const glm::vec3& pos) {
 
     m_shaderSolid
         .use()
-        .set("offset", pos.x, pos.y, pos.z)
-        .set("color", 0.2f, 0.9f, 0.8f)
+        .set("offset", pos)
+        .set("color", glm::vec3(0.2f, 0.9f, 0.8f))
         .set("alpha", 0.05f)
         .set("Projection", camera.projection)
         .set("Modelview", camera.modelview);

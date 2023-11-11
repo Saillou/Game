@@ -16,8 +16,8 @@ void Rectangle::Draw(glm::vec3 pos, glm::vec2 size, glm::vec4 color) {
     // Draw it
     _Shape::s_shader()
         .use()
-        .set("offset", rectangle.m_pos.x,   rectangle.m_pos.y,   rectangle.m_pos.z)
-        .set("color",  rectangle.m_color.r, rectangle.m_color.g, rectangle.m_color.b)
+        .set("offset", rectangle.m_pos)
+        .set("color", glm::vec3(rectangle.m_color.r, rectangle.m_color.g, rectangle.m_color.b))
         .set("alpha",  rectangle.m_color.a);
 
     shape->bind();

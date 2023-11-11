@@ -3,16 +3,6 @@
 #include "Objects/Field.hpp"
 #include "Objects/Fruit.hpp"
 
-#include <algorithm>
-#include <random>
-#include <sstream>
-#include <unordered_map>
-#include <utility>
-#include <array>
-#include <vector>
-
-#include <glm/gtc/matrix_transform.hpp>
-
 
 // Scene instance
 FruitScene::FruitScene() :

@@ -127,15 +127,15 @@ FlapiScene::FlapiScene() :
 
     // Different params bound
     m_shaders["tessLines"]
-        .set("Color", 0.0f, 1.0f, 0.0f)
+        .set("Color", glm::vec3(0.0f, 1.0f, 0.0f))
         .set("zIndex", 0.02f);
 
     m_shaders["tessPoints"]
-        .set("Color", 1.0f, 0.0f, 0.0f)
+        .set("Color", glm::vec3(1.0f, 0.0f, 0.0f))
         .set("zIndex", 0.01f);
 
     m_shaders["tessTriangles"]
-        .set("Color", 0.0f, 0.0f, 1.0f)
+        .set("Color", glm::vec3(0.0f, 0.0f, 1.0f))
         .set("zIndex", 0.0f);
 }
 

@@ -78,13 +78,24 @@ Shader& Shader::set(const std::string& name, float v) {
     return *this;
 }
 
-Shader& Shader::set(const std::string& name, float a, float b, float c) {
+Shader& Shader::set(const std::string& name, const glm::vec3& vec) {
     use();
 
     int varLoc = glGetUniformLocation(m_id, name.c_str());
     if (varLoc == -1)
         std::cerr << "[warning] Uniform location not found for `" << name << "`" << std::endl;
-    glUniform3f(varLoc, a, b, c);
+    glUniform3f(varLoc, vec.x, vec.y, vec.z);
+
+    return *this;
+}
+
+Shader& Shader::set(const std::string& name, const glm::vec4& vec) {
+    use();
+
+    int varLoc = glGetUniformLocation(m_id, name.c_str());
+    if (varLoc == -1)
+        std::cerr << "[warning] Uniform location not found for `" << name << "`" << std::endl;
+    glUniform4f(varLoc, vec.x, vec.y, vec.z, vec.w);
 
     return *this;
 }
