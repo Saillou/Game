@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "../../../Utils/Caster.hpp"
-#include "../../../Engine/Graphic/Drawables/BaseShape.hpp"
+#include "../../../Engine/Graphic/BaseShape.hpp"
 #include "../../../Engine/Graphic/Shaders/Shader.hpp"
 #include "../../../Engine/Graphic/Camera.hpp"
 

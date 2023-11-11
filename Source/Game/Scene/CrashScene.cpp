@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <utility>
 
-#include "Objects/Rectangle.hpp"
-#include "Objects/Ellipse.hpp"
+#include "Objects/Facette.hpp"
+#include "Objects/Sphere.hpp"
 
 // Scene instance
 CrashScene::CrashScene() : BaseScene() {
@@ -32,25 +32,25 @@ void CrashScene::draw() {
             const glm::vec4 COLOR = std::abs(x + y) % 2 ? COLOR_1 : COLOR_2;
             const float alpha = (N_2 - x*x) * (N_2 - y*y) / float(N_2*N_2);
 
-            Rectangle::Draw(POS, SIZE, alpha*COLOR);
+            //Rectangle::Draw(POS, SIZE, alpha*COLOR);
         }
     }
 
     // Draw half-ellipse
-    Ellipse::Draw(
-        glm::vec3(-0.5f, -0.5f, -0.25f),
-        glm::vec2(0.40f, 0.30f),
-        glm::vec2(0.0f, glm::pi<float>()),
-        glm::vec4(1.0f, 0.5f, 0.2f, 1.0f)
-    );
+    //Ellipse::Draw(
+    //    glm::vec3(-0.5f, -0.5f, -0.25f),
+    //    glm::vec2(0.40f, 0.30f),
+    //    glm::vec2(0.0f, glm::pi<float>()),
+    //    glm::vec4(1.0f, 0.5f, 0.2f, 1.0f)
+    //);
 
     // Circle
-    Ellipse::Draw(
-        glm::vec3(0.0f, 0.0f, -0.40f),
-        glm::vec2(0.10f, 0.10f),
-        glm::vec2(0.0f, 2.0f*glm::pi<float>()),
-        glm::vec4(0.4f, 0.7f, 0.2f, 1.0f)
-    );
+    //Ellipse::Draw(
+    //    glm::vec3(0.0f, 0.0f, -0.40f),
+    //    glm::vec2(0.10f, 0.10f),
+    //    glm::vec2(0.0f, 2.0f*glm::pi<float>()),
+    //    glm::vec4(0.4f, 0.7f, 0.2f, 1.0f)
+    //);
 
     // Draw texts
     TextEngine::Write("Crash scene", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
