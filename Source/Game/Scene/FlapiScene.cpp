@@ -17,7 +17,7 @@ FlapiScene::FlapiScene() :
     m_time(0.0f)
 {
     // Magic size of something
-    const int N = 10*10;
+    const int N = 15*15;
 
     // Camera
     m_projection = glm::perspective(glm::radians<float>(25.0f), 1400.0f / 800.0f, 0.1f, 100.0f);

@@ -19,9 +19,9 @@ struct SphereShape : public BaseShape {
                 float ySegment = (float)y / (float)Y_SEGMENTS;
                 
                 _addPoint(
-                    radius * std::cos(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
-                    radius * std::cos(ySegment * 1.0f * glm::pi<float>()),
-                    radius * std::sin(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>())
+                    center.x + radius * std::cos(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
+                    center.y + radius * std::cos(ySegment * 1.0f * glm::pi<float>()),
+                    center.z + radius * std::sin(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>())
                 );
             }
         }
