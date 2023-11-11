@@ -45,12 +45,12 @@ FlapiScene::FlapiScene() :
     m_output.bindData(N);
 
     // Create program shaders
-    m_shaders["tessPoints"].attachSource(GL_GEOMETRY_SHADER,    
-        #include "Waves/WaveGeomPoints.glsl"
-    );
-    m_shaders["tessLines"].attachSource(GL_GEOMETRY_SHADER, 
-        #include "Waves/WaveGeomLines.glsl"
-    );
+    //m_shaders["tessPoints"].attachSource(GL_GEOMETRY_SHADER,    
+    //    #include "Waves/WaveGeomPoints.glsl"
+    //);
+    //m_shaders["tessLines"].attachSource(GL_GEOMETRY_SHADER, 
+    //    #include "Waves/WaveGeomLines.glsl"
+    //);
     m_shaders["tessTriangles"].attachSource(GL_GEOMETRY_SHADER, 
         #include "Waves/WaveGeomTriangles.glsl"
     );
@@ -120,13 +120,13 @@ FlapiScene::FlapiScene() :
     }
 
     // Different params bound
-    m_shaders["tessLines"]
-        .set("Color", glm::vec3(0.0f, 1.0f, 0.0f))
-        .set("zIndex", 0.02f);
+    //m_shaders["tessLines"]
+    //    .set("Color", glm::vec3(0.0f, 1.0f, 0.0f))
+    //    .set("zIndex", 0.02f);
 
-    m_shaders["tessPoints"]
-        .set("Color", glm::vec3(1.0f, 0.0f, 0.0f))
-        .set("zIndex", 0.01f);
+    //m_shaders["tessPoints"]
+    //    .set("Color", glm::vec3(1.0f, 0.0f, 0.0f))
+    //    .set("zIndex", 0.01f);
 
     m_shaders["tessTriangles"]
         .set("Color", glm::vec3(0.0f, 0.0f, 1.0f))
@@ -139,7 +139,7 @@ void FlapiScene::resize(int width, int height) {
 
     // Camera
     m_camera.projection = glm::perspective(glm::radians<float>(25.0f), (float)width / height, 0.1f, 100.0f);
-    m_camera.modelview = glm::lookAt(glm::vec3(1.0f, 3.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    m_camera.modelview  = glm::lookAt(glm::vec3(1.0f, 3.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void FlapiScene::draw() {

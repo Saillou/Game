@@ -6,10 +6,10 @@
 Quad::Quad() : BaseShape()
 {
     // Create 4 points
-    _addPoint(-0.95f, -0.95f, 0.0f);
-    _addPoint(-0.95f, +0.95f, 0.0f);
-    _addPoint(+0.95f, +0.95f, 0.0f);
-    _addPoint(+0.95f, -0.95f, 0.0f);
+    _addPoint(-1.95f, -1.95f, 0.0f);
+    _addPoint(-1.95f, +1.95f, 0.0f);
+    _addPoint(+1.95f, +1.95f, 0.0f);
+    _addPoint(+1.95f, -1.95f, 0.0f);
 
     _addAsQuad(0, 1, 2, 3);
 
