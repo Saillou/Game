@@ -18,7 +18,7 @@ int main() {
     Window window(1024, 768, "The Game");
 
     // Open menu
-    window.scene(std::make_unique<FruitScene>());
+    window.scene(std::make_unique<SlimeScene>());
 
     // Main loop
     GameState gamestate;
@@ -49,6 +49,10 @@ int main() {
 
                 case GLFW_KEY_4:
                     window.scene(std::make_unique<FlapiScene>());
+                    break;
+
+                case GLFW_KEY_5:
+                    window.scene(std::make_unique<TestScene>());
                     break;
             }
         }

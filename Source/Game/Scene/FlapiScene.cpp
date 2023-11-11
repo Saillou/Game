@@ -19,10 +19,6 @@ FlapiScene::FlapiScene() :
     // Magic size of something
     const int N = 15*15;
 
-    // Camera
-    m_projection = glm::perspective(glm::radians<float>(25.0f), 1400.0f / 800.0f, 0.1f, 100.0f);
-    m_modelview  = glm::lookAt(glm::vec3(1.0f, 3.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
     // Physx
     m_physx
         .attachSource(GL_COMPUTE_SHADER, ShaderSource{}
@@ -118,8 +114,6 @@ FlapiScene::FlapiScene() :
             ).link();
 
         shader
-            .set("Projection", m_projection)
-            .set("Modelview", m_modelview)
             .set("TessLevelInner", 2.0f)
             .set("TessLevelOuter", 2.0f)
             .set("time", 0.0f);
@@ -140,7 +134,12 @@ FlapiScene::FlapiScene() :
 }
 
 void FlapiScene::resize(int width, int height) {
-    // ..
+    // Update scene internal
+    BaseScene::resize(width, height);
+
+    // Camera
+    m_camera.projection = glm::perspective(glm::radians<float>(25.0f), (float)width / height, 0.1f, 100.0f);
+    m_camera.modelview = glm::lookAt(glm::vec3(1.0f, 3.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void FlapiScene::draw() {
@@ -166,6 +165,8 @@ void FlapiScene::draw() {
         shader.set("time", m_time);
         shader.set("TessLevelInner", 2.0f + m_time / 10);
         shader.set("TessLevelOuter", 2.0f + m_time / 10);
+        shader.set("Projection", m_camera.projection);
+        shader.set("Modelview", m_camera.modelview);
         shader.setBlock("Normals", 0);
 
         shader.use();

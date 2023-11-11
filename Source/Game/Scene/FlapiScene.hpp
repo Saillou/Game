@@ -18,8 +18,6 @@ private:
     StorageBuffer<float> m_output;
 
     std::unordered_map<std::string, Shader> m_shaders;
-    glm::mat4 m_projection;
-    glm::mat4 m_modelview;
     Quad m_shapeGround;
     float m_time;
 };
