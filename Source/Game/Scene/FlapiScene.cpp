@@ -45,12 +45,12 @@ FlapiScene::FlapiScene() :
     m_output.bindData(N);
 
     // Create program shaders
-    //m_shaders["tessPoints"].attachSource(GL_GEOMETRY_SHADER,    
-    //    #include "Waves/WaveGeomPoints.glsl"
-    //);
-    //m_shaders["tessLines"].attachSource(GL_GEOMETRY_SHADER, 
-    //    #include "Waves/WaveGeomLines.glsl"
-    //);
+    m_shaders["tessPoints"].attachSource(GL_GEOMETRY_SHADER,    
+        #include "Waves/WaveGeomPoints.glsl"
+    );
+    m_shaders["tessLines"].attachSource(GL_GEOMETRY_SHADER, 
+        #include "Waves/WaveGeomLines.glsl"
+    );
     m_shaders["tessTriangles"].attachSource(GL_GEOMETRY_SHADER, 
         #include "Waves/WaveGeomTriangles.glsl"
     );
@@ -120,13 +120,13 @@ FlapiScene::FlapiScene() :
     }
 
     // Different params bound
-    //m_shaders["tessLines"]
-    //    .set("Color", glm::vec3(0.0f, 1.0f, 0.0f))
-    //    .set("zIndex", 0.02f);
+    m_shaders["tessLines"]
+        .set("Color", glm::vec3(0.0f, 1.0f, 0.0f))
+        .set("zIndex", 0.02f);
 
-    //m_shaders["tessPoints"]
-    //    .set("Color", glm::vec3(1.0f, 0.0f, 0.0f))
-    //    .set("zIndex", 0.01f);
+    m_shaders["tessPoints"]
+        .set("Color", glm::vec3(1.0f, 0.0f, 0.0f))
+        .set("zIndex", 0.01f);
 
     m_shaders["tessTriangles"]
         .set("Color", glm::vec3(0.0f, 0.0f, 1.0f))
