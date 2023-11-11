@@ -1,8 +1,7 @@
 #include "TestScene.hpp"
 
 #include "Objects/Facette.hpp"
-#include "Objects/Field.hpp"
-#include "Objects/Fruit.hpp"
+#include "Objects/Sphere.hpp"
 
 
 // Scene instance
@@ -25,21 +24,28 @@ TestScene::TestScene() :
         G(+width, -depth, +height),
         H(-width, -depth, +height);
 
+    const glm::vec3
+        O(+0.0f, +0.0f, +0.0f),
+        n(+0.0f, +1.0f, +0.0f),
+        u(+1.0f, +0.0f, +0.0f);
+
     const glm::vec4 
-        color_solid( 1.0f, 0.0f, 0.0f, 0.2f),
+        color_solid( 1.0f, 0.0f, 0.0f, 1.0f),
         color_border(0.0f, 1.0f, 0.0f, 1.0f),
         color_point( 1.0f, 1.0f, 1.0f, 1.0f);
 
     // Create objects
     m_shapes["Ground"] = std::make_shared<Facette>(Facette::Quad{ A,B,C,D });
+    m_shapes["Ball"]   = std::make_shared<Sphere>(O, 0.25f);
 
     // Cook style
     m_shapes["Ground"]
         ->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid,  color_solid)
-        ->addRecipe(Facette::CookType::Point,  color_point)
-        ->addRecipe(Facette::CookType::Border, color_border)
-    ;
+        ->addRecipe(Facette::CookType::Solid, color_solid);
+
+    m_shapes["Ball"]
+        ->as<Sphere>()
+        ->addRecipe(Sphere::CookType::Solid,  color_solid);
 }
 
 void TestScene::resize(int width, int height) {
@@ -61,7 +67,11 @@ void TestScene::draw() {
     // Draw objects
     m_shapes["Ground"]
         ->as<Facette>()
-        ->draw(m_camera, glm::vec3(0.0f, -1.0f, 0.0f));
+        ->draw(m_camera);
+
+    m_shapes["Ball"]
+        ->as<Sphere>()
+        ->draw(m_camera, glm::vec3(0.0f, 0.0f, 0.0f));
 
     // Draw texts
     TextEngine::Write("Test Scene", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));

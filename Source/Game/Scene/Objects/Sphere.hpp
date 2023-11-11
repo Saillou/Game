@@ -9,7 +9,7 @@
 #include "../../../Engine/Graphic/Camera.hpp"
 
 // Objects
-struct Facette : public Object {
+struct Sphere : public Object {
     // Enums and type
     typedef std::array<glm::vec3, 4> Quad;
 
@@ -18,10 +18,10 @@ struct Facette : public Object {
     };
 
     // Instance
-    Facette(const Quad& points);
-    virtual ~Facette() = default;
+    Sphere(const glm::vec3& center, float radius);
+    virtual ~Sphere() = default;
 
-    Facette* addRecipe(const CookType& type, const glm::vec4& color);
+    Sphere* addRecipe(const CookType& type, const glm::vec4& color);
     void draw(const Camera& camera, const glm::vec3& position = glm::vec3());
 
 private:

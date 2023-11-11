@@ -1,4 +1,4 @@
-#include "Facette.hpp"
+#include "Sphere.hpp"
 
 // - Helpers -
 static void s_set_shader_common(UShader&);
@@ -7,55 +7,60 @@ static void s_set_shader_border(UShader&);
 static void s_set_shader_point(UShader&);
 
 // - Shape
-struct FacetteShape : public BaseShape {
-    FacetteShape(const Facette::Quad& points) {
-        _addPoint(points[0]);
-        _addPoint(points[1]);
-        _addPoint(points[2]);
-        _addPoint(points[3]);
+struct SphereShape : public BaseShape {
+    SphereShape(const glm::vec3& center, float radius) 
+    {
+        const unsigned int X_SEGMENTS = 16;
+        const unsigned int Y_SEGMENTS = 16;
 
-        _createVertices();
-    }
+        for (unsigned int x = 0; x <= X_SEGMENTS; ++x) {
+            for (unsigned int y = 0; y <= Y_SEGMENTS; ++y) {
+                float xSegment = (float)x / (float)X_SEGMENTS;
+                float ySegment = (float)y / (float)Y_SEGMENTS;
+                
+                _addPoint(
+                    radius * std::cos(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
+                    radius * std::cos(ySegment * 1.0f * glm::pi<float>()),
+                    radius * std::sin(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>())
+                );
+            }
+        }
 
-    FacetteShape(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n, float radius) {
-        _addPoint(center + radius * (-u + n));
-        _addPoint(center + radius * (+u + n));
-        _addPoint(center + radius * (+u - n));
-        _addPoint(center + radius * (-u - n));
-
-        _createVertices();
-    }
-
-    void draw() override {
-        glDrawElements(GL_TRIANGLES, (int)m_indices.size(), GL_UNSIGNED_INT, 0);
-    }
-
-private:
-    void _setAttributes() override {
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-        glEnableVertexAttribArray(0);
-    }
-
-    void _createVertices() {
-        auto __face = [=](int a, int b, int c, int d) {
-            _addAsTriangle(a, b, c);
-            _addAsTriangle(c, d, a);
-        };
-
-        __face(0, 1, 2, 3);
+        for (unsigned int y = 0; y < Y_SEGMENTS; ++y) {
+            if (y%2 == 0) {
+                for (unsigned int x = 0; x <= X_SEGMENTS; ++x) {
+                    m_indices.push_back(y * (X_SEGMENTS + 1) + x);
+                    m_indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                }
+            }
+            else {
+                for (int x = X_SEGMENTS; x >= 0; --x) {
+                    m_indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                    m_indices.push_back(y * (X_SEGMENTS + 1) + x);
+                }
+            }
+        }
 
         // Bind
         _bindArray();
     }
+
+    void draw() override {
+        glDrawElements(GL_TRIANGLE_STRIP, (int)m_indices.size(), GL_UNSIGNED_INT, 0);
+    }
+    void _setAttributes() override {
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+        glEnableVertexAttribArray(0);
+    }
 };
 
 // - Constructor
-Facette::Facette(const Quad& points) :
-    m_shape(std::make_shared<FacetteShape>(points))
+Sphere::Sphere(const glm::vec3& center, float radius) :
+    m_shape(std::make_shared<SphereShape>(center, radius))
 {
 }
 
-Facette* Facette::addRecipe(const CookType& type, const glm::vec4& color) {
+Sphere* Sphere::addRecipe(const CookType& type, const glm::vec4& color) {
     m_shaders.push_back(std::make_unique<Shader>());
     UShader& recipe = m_shaders.back();
 
@@ -83,7 +88,7 @@ Facette* Facette::addRecipe(const CookType& type, const glm::vec4& color) {
     return this;
 }
 
-void Facette::draw(const Camera& camera, const glm::vec3& position) {
+void Sphere::draw(const Camera& camera, const glm::vec3& position) {
     for (auto& recipe: m_shaders) {
         recipe->
             use().
@@ -91,8 +96,8 @@ void Facette::draw(const Camera& camera, const glm::vec3& position) {
             set("Projection",   camera.projection).
             set("Modelview",    camera.modelview);
 
-        ((FacetteShape*)m_shape.get())->bind();
-        ((FacetteShape*)m_shape.get())->draw();
+        ((SphereShape*)m_shape.get())->bind();
+        ((SphereShape*)m_shape.get())->draw();
     }
 }
 

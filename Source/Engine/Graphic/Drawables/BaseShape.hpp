@@ -25,6 +25,7 @@ protected:
 	virtual void _setAttributes() = 0;
 
 	void _addPoint(float x, float y, float z);
+	void _addPoint(const glm::vec3& vec);
 
 	void _addAsLine(unsigned int i0, unsigned int i1);
 	void _addAsTriangle(unsigned int i0, unsigned int i1, unsigned int i2);
