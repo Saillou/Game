@@ -18,7 +18,7 @@ int main() {
     Window window(1024, 768, "The Game");
 
     // Open menu
-    window.scene(std::make_unique<TestScene>());
+    window.scene(std::make_unique<FruitScene>());
 
     // Main loop
     GameState gamestate;

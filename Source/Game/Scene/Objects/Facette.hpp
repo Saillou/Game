@@ -19,6 +19,8 @@ struct Facette : public Object {
 
     // Instance
     Facette(const Quad& points);
+    Facette(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n);
+
     virtual ~Facette() = default;
 
     Facette* addRecipe(const CookType& type, const glm::vec4& color);

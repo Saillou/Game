@@ -3,6 +3,9 @@
 // Include stuff there so it's easier.. to be optimized
 #include "TextEngine.hpp"
 #include "BaseShape.hpp"
+#include "Camera.hpp"
+
+#include "../../Utils/Caster.hpp"
 
 struct BaseScene {
     BaseScene();
@@ -15,5 +18,9 @@ protected:
     virtual void _init_gl_config(); // Override this to enable or disable some opengl functionalities. (eg PENCIL_TEST)
 
     // Members
-    float m_ratio = 1.0f;
+    Collection m_shapes;
+    Camera m_camera = {};
+
+    int m_width  = 0;
+    int m_height = 0;
 };

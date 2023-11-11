@@ -10,7 +10,8 @@ BaseScene::~BaseScene() {
 }
 
 void BaseScene::resize(int width, int height) {
-    // to be overrided
+    m_width = width;
+    m_height = height;
 }
 
 void BaseScene::_init_gl_config() {

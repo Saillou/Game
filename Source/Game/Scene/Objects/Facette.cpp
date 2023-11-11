@@ -17,11 +17,11 @@ struct FacetteShape : public BaseShape {
         _createVertices();
     }
 
-    FacetteShape(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n, float radius) {
-        _addPoint(center + radius * (-u + n));
-        _addPoint(center + radius * (+u + n));
-        _addPoint(center + radius * (+u - n));
-        _addPoint(center + radius * (-u - n));
+    FacetteShape(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n) {
+        _addPoint(center + (-u + n));
+        _addPoint(center + (+u + n));
+        _addPoint(center + (+u - n));
+        _addPoint(center + (-u - n));
 
         _createVertices();
     }
@@ -52,6 +52,11 @@ private:
 // - Constructor
 Facette::Facette(const Quad& points) :
     m_shape(std::make_shared<FacetteShape>(points))
+{
+}
+
+Facette::Facette(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n) :
+    m_shape(std::make_shared<FacetteShape>(center, u, n))
 {
 }
 
