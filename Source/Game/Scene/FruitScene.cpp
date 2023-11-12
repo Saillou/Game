@@ -107,3 +107,7 @@ void FruitScene::_cook_shapes() {
         ->addRecipe(Facette::CookType::Border, borderColor)
         ;
 }
+
+void FruitScene::_on_key_pressed(const Event::KeyPressed& evt) {
+    std::cout << "FruitScene::OnKeyPressed: " << evt.key << std::endl;
+}
