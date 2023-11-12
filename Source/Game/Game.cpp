@@ -52,23 +52,26 @@ void Game::Refresh(Window& window) {
 	Game& game = _get();
 
 	// Change view
-	window.scene(([&]() -> std::unique_ptr<BaseScene> {
-		switch (game._curr_state.sceneId) {
-			case SceneId::FruitScene: return std::make_unique<FruitScene>();
-			case SceneId::SlimeScene: return std::make_unique<SlimeScene>();
-			case SceneId::CrashScene: return std::make_unique<CrashScene>();
-			case SceneId::FlapiScene: return std::make_unique<FlapiScene>();
+	window.scene(([&]() -> std::shared_ptr<BaseScene> {
+		switch (game._curr_state.sceneId) 
+		{
+			case SceneId::FruitScene: return std::make_shared<FruitScene>();
+			case SceneId::SlimeScene: return std::make_shared<SlimeScene>();
+			case SceneId::CrashScene: return std::make_shared<CrashScene>();
+			case SceneId::FlapiScene: return std::make_shared<FlapiScene>();
 			default: 
-				return std::make_unique<TestScene>();
+				return std::make_shared<TestScene>();
 		}})()
 	);
 
 	// Change commander
 	game._commander = ([&]() -> std::unique_ptr<BaseCommander> {
-		switch (game._curr_state.sceneId) {
-		case SceneId::FruitScene: return std::make_unique<FruitCommander>();
-		case SceneId::SlimeScene: return std::make_unique<SlimeCommander>();
-		default:
-			return std::make_unique<BaseCommander>();
-	}})();
+		switch (game._curr_state.sceneId) 
+		{
+			case SceneId::FruitScene: return std::make_unique<FruitCommander>(window.scene());
+			case SceneId::SlimeScene: return std::make_unique<SlimeCommander>(window.scene());
+			default:
+				return std::make_unique<BaseCommander>(window.scene());
+		}
+	})();
 }

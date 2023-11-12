@@ -12,7 +12,6 @@ enum class SceneId {
     FruitScene, SlimeScene, CrashScene, FlapiScene
 };
 
-
 // Singleton
 class Game {
 public:

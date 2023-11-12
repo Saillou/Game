@@ -95,17 +95,24 @@ std::vector<unsigned int> Window::keyPressed() {
     return keys;
 }
 
+std::shared_ptr<BaseScene> Window::scene() const {
+    return m_scene;
+}
+
 // Setters
-void Window::scene(std::unique_ptr<BaseScene> scene) {
+std::shared_ptr<BaseScene> Window::scene(std::shared_ptr<BaseScene> scene) {
     m_scene.swap(scene);
     if (!m_scene)
-        return;
+        return nullptr;
 
     // Adjust viewport
     if (height() <= 0)
-        return;
+        return nullptr;
 
     _resize(width(), height());
+
+    // Get if needed
+    return m_scene;
 }
 
 // Private

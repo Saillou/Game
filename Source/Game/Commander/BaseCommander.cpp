@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-BaseCommander::BaseCommander() {
+BaseCommander::BaseCommander(std::shared_ptr<BaseScene> scene) : m_scene(scene) {
     // Root events
     _subscribe(&BaseCommander::_on_key_pressed);
 }

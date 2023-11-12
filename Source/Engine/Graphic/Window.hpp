@@ -19,9 +19,10 @@ struct Window {
     int width() const;
     int height() const;
     std::vector<unsigned int> keyPressed();
+    std::shared_ptr<BaseScene> scene() const;
 
     // Setters
-    void scene(std::unique_ptr<BaseScene> scene);
+    std::shared_ptr<BaseScene> scene(std::shared_ptr<BaseScene> scene);
 
 private:
     void _resize(int width, int height);
@@ -30,5 +31,5 @@ private:
     GLFWwindow* m_window = nullptr;
     int m_width;
     int m_height;
-    std::unique_ptr<BaseScene> m_scene = nullptr;
+    std::shared_ptr<BaseScene> m_scene = nullptr;
 };

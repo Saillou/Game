@@ -6,6 +6,8 @@
 #include <vector>
 #include <functional>
 
+#include "Common.hpp"
+
 class Event {
 protected:
 	// List possibilities
