@@ -1,11 +1,10 @@
 #pragma once
 
-// Include stuff there so it's easier.. to be optimized
-#include "TextEngine.hpp"
-#include "BaseShape.hpp"
-#include "Camera.hpp"
+#include "../../../Utils/Caster.hpp"
+#include "../TextEngine.hpp"
+#include "../Camera.hpp"
 
-#include "../../Utils/Caster.hpp"
+#include "BaseShape.hpp"
 
 struct BaseScene {
     BaseScene();

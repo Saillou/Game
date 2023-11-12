@@ -4,9 +4,9 @@
 #include <glm/glm.hpp>
 
 #include "../../../Utils/Caster.hpp"
-#include "../../../Engine/Graphic/BaseShape.hpp"
 #include "../../../Engine/Graphic/Shaders/Shader.hpp"
 #include "../../../Engine/Graphic/Camera.hpp"
+#include "../../../Engine/Graphic/Base/BaseShape.hpp"
 
 // Objects
 struct Facette : public Object {

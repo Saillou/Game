@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BaseCommander.hpp"
+#include "../../Engine/Graphic/Base/BaseCommander.hpp"
 #include "../Scene/SlimeScene.hpp"
 
 struct SlimeCommander : public BaseCommander {

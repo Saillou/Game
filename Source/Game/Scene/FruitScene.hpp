@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Engine/Graphic/BaseScene.hpp"
+#include "../../Engine/Graphic/Base/BaseScene.hpp"
 
 // -- Scene --
 struct FruitScene : public BaseScene {

@@ -6,7 +6,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "BaseScene.hpp"
+#include "Base/BaseScene.hpp"
 
 struct Window {
     Window(int width, int height, const char* title);

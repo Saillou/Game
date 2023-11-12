@@ -3,8 +3,6 @@
 #include <vector>
 #include <memory>
 
-#include "BaseScene.hpp"
-
 Window::Window(int width, int height, const char* title) : 
     m_width(width), 
     m_height(height)

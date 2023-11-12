@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "../../Engine/Events/Events.hpp"
-#include "../../Engine/Graphic/BaseScene.hpp"
+#include "BaseScene.hpp"
+#include "../../Events/Events.hpp"
 
 // -- Scene --
 struct BaseCommander : public Event::Subscriber {
