@@ -3,7 +3,8 @@
 #include <memory>
 #include <queue>
 
-#include "../Engine/Graphic/BaseScene.hpp"
+#include "../Engine/Graphic/Window.hpp"
+#include "Commander/BaseCommander.hpp"
 
 // Data
 enum class SceneId {
@@ -25,17 +26,18 @@ public:
     };
 
     static ActionCode UpdateState(Game::State& state);
-    static std::unique_ptr<BaseScene> Game::MakeScene();
+    static void Refresh(Window& window);
 
 private:
     static Game& _get();
-    ActionCode _validateState(const Game::State& state);
 
-    struct _HiddenGameState {
-        Game::State previous;
-    } m_state;
+    // Instance members
+    Game::State _curr_state;
+    std::unique_ptr<BaseCommander> _commander;
+
+    ActionCode _validateState(const Game::State& state);
 	
-    // No copy with private builder pattern
+    // -- No copy --
     Game() = default;
 
     Game& operator=(const Game&) = delete;

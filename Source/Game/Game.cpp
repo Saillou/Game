@@ -2,16 +2,20 @@
 
 #include "../Engine/Events/Events.hpp"
 
+// Command
+#include "Commander/FruitCommander.hpp"
+#include "Commander/SlimeCommander.hpp"
+
+// Scene
 #include "Scene/FruitScene.hpp"
 #include "Scene/SlimeScene.hpp"
 #include "Scene/CrashScene.hpp"
 #include "Scene/FlapiScene.hpp"
-
 #include "Scene/TestScene.hpp"
 
 // Private
 Game::ActionCode Game::_validateState(const Game::State& state) {
-	if (state.sceneId != m_state.previous.sceneId)
+	if (state.sceneId != _curr_state.sceneId)
 		return ActionCode::Refresh;
 
 	return ActionCode::Ok;
@@ -40,20 +44,31 @@ Game::ActionCode Game::UpdateState(Game::State& state) {
 	}
 
 Result:
-	game.m_state.previous = state;
+	game._curr_state = state;
 	return action;
 }
 
-
-std::unique_ptr<BaseScene> Game::MakeScene() {
+void Game::Refresh(Window& window) {
 	Game& game = _get();
 
-	switch (game.m_state.previous.sceneId) {
-		case SceneId::FruitScene: return std::make_unique<FruitScene>();
-		case SceneId::SlimeScene: return std::make_unique<SlimeScene>();
-		case SceneId::CrashScene: return std::make_unique<CrashScene>();
-		case SceneId::FlapiScene: return std::make_unique<FlapiScene>();
+	// Change view
+	window.scene(([&]() -> std::unique_ptr<BaseScene> {
+		switch (game._curr_state.sceneId) {
+			case SceneId::FruitScene: return std::make_unique<FruitScene>();
+			case SceneId::SlimeScene: return std::make_unique<SlimeScene>();
+			case SceneId::CrashScene: return std::make_unique<CrashScene>();
+			case SceneId::FlapiScene: return std::make_unique<FlapiScene>();
+			default: 
+				return std::make_unique<TestScene>();
+		}})()
+	);
 
-		default: return std::make_unique<TestScene>();
-	}
+	// Change commander
+	game._commander = ([&]() -> std::unique_ptr<BaseCommander> {
+		switch (game._curr_state.sceneId) {
+		case SceneId::FruitScene: return std::make_unique<FruitCommander>();
+		case SceneId::SlimeScene: return std::make_unique<SlimeCommander>();
+		default:
+			return std::make_unique<BaseCommander>();
+	}})();
 }

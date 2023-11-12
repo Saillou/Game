@@ -5,10 +5,9 @@
 #include "BaseShape.hpp"
 #include "Camera.hpp"
 
-#include "../Events/Events.hpp"
 #include "../../Utils/Caster.hpp"
 
-struct BaseScene : public Event::Subscriber {
+struct BaseScene {
     BaseScene();
     virtual ~BaseScene();
 
@@ -17,8 +16,6 @@ struct BaseScene : public Event::Subscriber {
 
 protected:
     virtual void _init_gl_config(); // Override this to enable or disable some opengl functionalities. (eg PENCIL_TEST)
-
-    virtual void _on_key_pressed(const Event::KeyPressed&);
 
     // Members
     Collection m_shapes;

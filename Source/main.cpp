@@ -43,9 +43,9 @@ int main() {
             case Game::ActionCode::Ok:
                 break;
 
-            // Create or change the scene
+            // Create (or change) the scene
             case Game::ActionCode::Refresh:
-                window.scene(Game::MakeScene());
+                Game::Refresh(window);
                 break;
 
             // Stop
