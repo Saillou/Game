@@ -114,46 +114,9 @@ void FruitScene::_cook_shapes() {
 void FruitScene::_camera_update() {
     float aspect = (float)m_width / m_height;
 
-    static bool init = false;
-    static glm::mat4 camStart;
-    static glm::mat4 camTarget;
+    const auto camStart = m_camera.perspective(aspect);
+    const auto camTarget = m_camera.ortho(aspect);
 
-    if (!init) {
-        camStart    = m_camera.perspective(aspect);
-        camTarget   = m_camera.ortho(aspect);
-
-        init = true;
-
-        m_camera.modelview  = m_camera.lookAt(glm::vec3(0, 0, 1));
-        m_camera.projection = camTarget;
-    }
-    return;
-
-    // Test: Change progressively to identity
-    static float speed = 0.001f;
-    speed += speed / 20.0f;
-
-    bool ended = true;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            float target = camStart[i][j];
-
-            if (abs(m_camera.projection[i][j] - target) < speed) {
-                m_camera.projection[i][j] = target;
-            }
-            else {
-                m_camera.projection[i][j] += (m_camera.projection[i][j] < target ? +speed : -speed);
-                ended = false;
-            }
-        }
-    }
-
-    if (ended) {
-        auto tmp = camStart;
-
-        camStart = camTarget;
-        camTarget = tmp;
-
-        speed = 0.001f;
-    }
+    m_camera.modelview = m_camera.lookAt(glm::vec3(0, 0, 1));
+    m_camera.projection = camTarget;
 }

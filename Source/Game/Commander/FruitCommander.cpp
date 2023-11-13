@@ -11,23 +11,15 @@ FruitCommander::FruitCommander(std::shared_ptr<BaseScene> scene):
 
     // Data
     const glm::vec4 wallColor(0.3f, 0.7f, 1.0f, 1.0f);
-
     const glm::vec3 pOrigin(0.f, 0.f, 0.f);
 
-    const glm::vec3 uDirect(1.f, 0.f, 0.f);
-    const glm::vec3 uNormal(0.f, 1.f, 0.f);
-    const glm::vec3 uHeight(0.f, 0.f, 1.f);
-
-    const float cst_plank = 1e-3f;
-    const float infinity = 1e+1f;
-
-    const float bucketWidth = 0.50f;
+    const float bucketWidth  = 0.50f;
     const float bucketHeight = 0.50f;
-    const float bucketDepth = 0.10f;
+    const float bucketDepth  = 0.10f;
 
-    const auto udDirect = bucketWidth  * uDirect;
-    const auto udNormal = bucketDepth  * uNormal;
-    const auto udHeight = bucketHeight * uHeight;
+    const auto udDirect = bucketWidth  * glm::vec3(1.f, 0.f, 0.f);
+    const auto udNormal = bucketDepth  * glm::vec3(0.f, 1.f, 0.f);
+    const auto udHeight = bucketHeight * glm::vec3(0.f, 0.f, 1.f);
 
     // Add walls
     m_scene->addWall(std::make_shared<Wall>(pOrigin + (udHeight - udDirect)/2.0f, udNormal, udHeight, wallColor)); // West
