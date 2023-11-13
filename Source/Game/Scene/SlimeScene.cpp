@@ -8,18 +8,25 @@
 SlimeScene::SlimeScene() : BaseScene() {
     _create_shapes();
     _cook_shapes();
+
+    // Camera
+    m_camera.position = glm::vec3(0.0f, 3.0f, 0.5f);
+    m_camera.direction = glm::vec3(0.0f, 0.0f, 0.5f);
+    m_camera.fieldOfView = 30.0f;
 }
 
 void SlimeScene::resize(int width, int height) {
     // Update scene internal
     BaseScene::resize(width, height);
 
-    // Camera
-    m_camera.modelview  = glm::lookAt(glm::vec3(0.0f, 3.0f, 0.5f), glm::vec3(0.0f, 0.0f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f));
-    m_camera.projection = glm::perspective(glm::radians<float>(30.0f), (float)width / height, 0.1f, 100.0f);
+    // Pop camera
+    _camera_update();
 }
 
 void SlimeScene::draw() {
+    // Get camera
+    _camera_update();
+
     // Static objects
     m_shapes["sceneGround"]->as<Facette>()->draw(m_camera);
 
@@ -139,4 +146,10 @@ void SlimeScene::_cook_shapes() {
     m_shapes["ball"]->as<Facette>()
         ->addRecipe(Facette::CookType::Border, ballColor*0.7f)
         ->addRecipe(Facette::CookType::Solid, ballColor);
+}
+
+void SlimeScene::_camera_update() {
+    // Camera
+    m_camera.modelview  = m_camera.lookAt(glm::vec3(0.0f, 0.0f, 1.0f));
+    m_camera.projection = m_camera.perspective(float(m_width)/m_height);
 }

@@ -11,4 +11,5 @@ struct SlimeScene : public BaseScene {
 private:
     void _create_shapes();
     void _cook_shapes();
+    void _camera_update();
 };

@@ -13,9 +13,9 @@ FruitScene::FruitScene() :
     _cook_shapes();
 
     // Camera
-    _camPos = glm::vec3(0.0f, 3.0f, 0.5f);
-    _camDir = glm::vec3(0.0f, 0.0f, 0.5f);
-    _angle  = 30.0f;
+    m_camera.position = glm::vec3(0.0f, 3.0f, 0.5f);
+    m_camera.direction = glm::vec3(0.0f, 0.0f, 0.5f);
+    m_camera.fieldOfView = 30.0f;
 }
 
 void FruitScene::resize(int width, int height) {
@@ -26,23 +26,8 @@ void FruitScene::resize(int width, int height) {
     _camera_update();
 }
 
-void FruitScene::moveCameraPosition(float dx, float dy, float dz) {
-    _camPos.x += dx;
-    _camPos.y += dy;
-    _camPos.z += dz;
-}
-void FruitScene::moveCameraDirection(float dx, float dy, float dz) {
-    _camDir.x += dx;
-    _camDir.y += dy;
-    _camDir.z += dz;
-}
-
-void FruitScene::changeCameraPerspective(float dfov) {
-    _angle += dfov;
-}
-
 void FruitScene::draw() {
-    // Position camera
+    // Get camera
     _camera_update();
 
     // Static objects
@@ -139,12 +124,12 @@ void FruitScene::_camera_update() {
     static glm::mat4 camTarget;
 
     if (!init) {
-        camStart    = glm::perspective(glm::radians<float>(_angle), aspect, 0.1f, 100.0f);
-        camTarget   = glm::ortho(-aspect, +aspect, -1.0f, 1.0f, 0.1f, 100.0f);
+        camStart    = m_camera.perspective(aspect);
+        camTarget   = m_camera.ortho(aspect);
 
         init = true;
 
-        m_camera.modelview  = glm::lookAt(_camPos, _camDir, glm::vec3(0.0f, 0.0f, 1.0f));
+        m_camera.modelview = m_camera.lookAt(glm::vec3(0, 0, 1));
         m_camera.projection = camTarget;
     }
 

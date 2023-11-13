@@ -7,6 +7,6 @@ struct SlimeCommander : public BaseCommander {
     SlimeCommander(std::shared_ptr<BaseScene> scene);
 
 protected:
-    void _on_key_pressed(const Event::KeyPressed& evt) override;
+    //void _on_key_pressed(const Event::KeyPressed& evt) override;
     std::shared_ptr<SlimeScene> m_scene;
 };

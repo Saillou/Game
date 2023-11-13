@@ -10,9 +10,7 @@ BaseCommander::BaseCommander(std::shared_ptr<BaseScene> scene) : m_scene(scene) 
 void BaseCommander::_on_key_pressed(const Event::KeyPressed& evt) {
     std::cout << "BaseCommander::OnKeyPressed: " << evt.key << std::endl;
 
-    /*
     // Test camera position/direction
-
     const float speed = 0.01f;
 
     switch (evt.key) {
@@ -77,5 +75,4 @@ void BaseCommander::_on_key_pressed(const Event::KeyPressed& evt) {
             m_scene->changeCameraPerspective(-speed*10);
             break;
     }
-    */
 }
