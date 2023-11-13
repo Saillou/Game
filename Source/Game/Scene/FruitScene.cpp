@@ -5,11 +5,18 @@
 #include <glm/gtx/string_cast.hpp>
 
 // Object instances
-Fruit::Fruit(float radius_, const glm::vec3& pos_, const glm::vec4& color_) :
+Fruit::Fruit(float radius_, const glm::vec3& pos_, const glm::vec4& color_):
     SphereBody(radius_, pos_, color_)
 {
     // ..
 }
+
+Wall::Wall(const glm::vec3& pos, const glm::vec3& u, const glm::vec3& n, const glm::vec4& color_):
+    FacetteBody(pos, u, n, color_)
+{
+    // ..
+}
+
 
 // Scene instance
 FruitScene::FruitScene() :
@@ -32,6 +39,10 @@ void FruitScene::resize(int width, int height) {
     _camera_update();
 }
 
+void FruitScene::addWall(std::shared_ptr<Wall> wall) {
+    m_walls.push_back(wall);
+}
+
 void FruitScene::addFruit(std::shared_ptr<Fruit> fruit) {
     m_fruits.push_back(fruit);
 }
@@ -40,16 +51,17 @@ void FruitScene::draw() {
     // Get camera
     _camera_update();
 
-    // Static objects
+    // Static objects - No physx
     m_shapes["sceneGround"]->as<Facette>()->draw(m_camera);
-    m_shapes["sceneGround2D"]->as<Facette>()->draw(m_camera);
-
-    m_shapes["bucketBack"]->as<Facette>()->draw(m_camera);
-    m_shapes["bucketWest"]->as<Facette>()->draw(m_camera);
-    m_shapes["bucketEast"]->as<Facette>()->draw(m_camera);
+    m_shapes["sceneFrame"]->as<Facette>()->draw(m_camera);
     m_shapes["bucketFace"]->as<Facette>()->draw(m_camera);
 
-    // Dynamic objects
+    // Static objects - With physx
+    for (auto& wall : m_walls) {
+        wall->draw(m_camera);
+    }
+
+    // Dynamic objects - With physx
     for (auto& fruit: m_fruits) {
         fruit->draw(m_camera);
     }
@@ -75,16 +87,10 @@ void FruitScene::_create_shapes() {
     const float bucketHeight = 0.50f;
     const float bucketDepth  = 0.10f;
 
-    const float fruitRadius = 0.15f;
-
     // Create
-    m_shapes["sceneGround"]   = std::make_shared<Facette>(pOrigin - cst_plank * uHeight, infinity * uDirect, infinity * uNormal);
-    m_shapes["sceneGround2D"] = std::make_shared<Facette>(pOrigin - uNormal, infinity*uDirect, infinity*uHeight);
-
-    m_shapes["bucketWest"] = std::make_shared<Facette>(pOrigin - bucketWidth * uDirect + bucketHeight * uHeight, bucketDepth * uNormal, bucketHeight * uHeight);
-    m_shapes["bucketEast"] = std::make_shared<Facette>(pOrigin + bucketWidth * uDirect + bucketHeight * uHeight, bucketDepth * uNormal, bucketHeight * uHeight);
-    m_shapes["bucketFace"] = std::make_shared<Facette>(pOrigin - 0.9f*bucketDepth * uNormal + bucketHeight * uHeight, bucketWidth * uDirect, bucketHeight * uHeight);
-    m_shapes["bucketBack"] = std::make_shared<Facette>(pOrigin, bucketWidth  * uDirect, bucketDepth * uNormal);
+    m_shapes["sceneGround"] = std::make_shared<Facette>(pOrigin - cst_plank * uHeight, infinity * uDirect, infinity * uNormal);
+    m_shapes["sceneFrame"]  = std::make_shared<Facette>(pOrigin - uNormal, infinity*uDirect, infinity*uHeight);
+    m_shapes["bucketFace"]  = std::make_shared<Facette>(pOrigin - 0.9f*bucketDepth * uNormal + bucketHeight * uHeight, bucketWidth * uDirect, bucketHeight * uHeight);
 }
 
 void FruitScene::_cook_shapes() {
@@ -97,20 +103,8 @@ void FruitScene::_cook_shapes() {
     m_shapes["sceneGround"]->as<Facette>()
         ->addRecipe(Facette::CookType::Solid, groundColor);
 
-    m_shapes["sceneGround2D"]->as<Facette>()
+    m_shapes["sceneFrame"]->as<Facette>()
         ->addRecipe(Facette::CookType::Solid, groundColor * 0.5f);
-
-    m_shapes["bucketBack"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid, bucketColor)
-        ->addRecipe(Facette::CookType::Border, borderColor);
-
-    m_shapes["bucketWest"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid, bucketColor)
-        ->addRecipe(Facette::CookType::Border, borderColor);
-
-    m_shapes["bucketEast"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid, bucketColor)
-        ->addRecipe(Facette::CookType::Border, borderColor);
 
     m_shapes["bucketFace"]->as<Facette>()
         ->addRecipe(Facette::CookType::Solid, bucketColor * 0.5f)
@@ -133,7 +127,7 @@ void FruitScene::_camera_update() {
         m_camera.modelview  = m_camera.lookAt(glm::vec3(0, 0, 1));
         m_camera.projection = camTarget;
     }
-    return;
+    //return;
 
     // Change progressively to identity
     static float speed = 0.001f;
