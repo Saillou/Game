@@ -32,6 +32,7 @@ void FruitScene::draw() {
 
     // Static objects
     m_shapes["sceneGround"]->as<Facette>()->draw(m_camera);
+    m_shapes["sceneGround2D"]->as<Facette>()->draw(m_camera);
 
     m_shapes["bucketBack"]->as<Facette>()->draw(m_camera);
     m_shapes["bucketWest"]->as<Facette>()->draw(m_camera);
@@ -39,11 +40,7 @@ void FruitScene::draw() {
     m_shapes["bucketFace"]->as<Facette>()->draw(m_camera);
 
     // Dynamic objects
-    static float a = 0.0f;
-    a += 0.01f;
-    m_shapes["fruitCurrent"]->as<Sphere>()->draw(m_camera, glm::vec3(0.0f, 0.0f, 0.5f), glm::vec3(a, 0.0f, 0.0f));
-
-    m_shapes["sceneGround2D"]->as<Facette>()->draw(m_camera);
+    m_shapes["fruitCurrent"]->as<Sphere>()->draw(m_camera);
 
     // Texts
     int score = 0;
@@ -69,16 +66,16 @@ void FruitScene::_create_shapes() {
     const float fruitRadius = 0.50f;
 
     // Create
-    m_shapes["sceneGround"] = std::make_shared<Facette>(pOrigin - cst_plank * uHeight, infinity * uDirect, infinity * uNormal);
+    m_shapes["sceneGround"]   = std::make_shared<Facette>(pOrigin - cst_plank * uHeight, infinity * uDirect, infinity * uNormal);
+    m_shapes["sceneGround2D"] = std::make_shared<Facette>(pOrigin - uNormal, infinity*uDirect, infinity*uHeight);
 
     m_shapes["bucketWest"] = std::make_shared<Facette>(pOrigin - bucketWidth * uDirect + bucketHeight * uHeight, bucketDepth * uNormal, bucketHeight * uHeight);
     m_shapes["bucketEast"] = std::make_shared<Facette>(pOrigin + bucketWidth * uDirect + bucketHeight * uHeight, bucketDepth * uNormal, bucketHeight * uHeight);
     m_shapes["bucketFace"] = std::make_shared<Facette>(pOrigin - bucketDepth * uNormal + bucketHeight * uHeight, bucketWidth * uDirect, bucketHeight * uHeight);
-    m_shapes["bucketBack"] = std::make_shared<Facette>(pOrigin, bucketWidth * uDirect, bucketDepth * uNormal);
+    m_shapes["bucketBack"] = std::make_shared<Facette>(pOrigin, bucketWidth  * uDirect, bucketDepth * uNormal);
 
     m_shapes["fruitCurrent"] = std::make_shared<Sphere>(pOrigin, fruitRadius);
 
-    m_shapes["sceneGround2D"] = std::make_shared<Facette>(pOrigin - uNormal, infinity*uDirect, infinity*uHeight);
 }
 
 void FruitScene::_cook_shapes() {

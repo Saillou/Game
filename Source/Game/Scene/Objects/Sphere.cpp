@@ -90,10 +90,10 @@ Sphere* Sphere::addRecipe(const CookType& type, const glm::vec4& color) {
 
 void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation) {
     glm::mat4 model(1.0f);
+    model = glm::translate(model, position);
     model = glm::rotate(model, orientation.x, glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::rotate(model, orientation.y, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::rotate(model, orientation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-    model = glm::translate(model, position);
 
     for (auto& recipe: m_shaders) {
         recipe->
