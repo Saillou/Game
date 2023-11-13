@@ -53,7 +53,6 @@ int SphereBody::id() const {
 	return ((_SphereBodyImpl*)_impl)->id();
 }
 
-void SphereBody::draw(const Camera& camera) const
-{
+void SphereBody::draw(const Camera& camera) const {
 	((_SphereBodyImpl*)_impl)->draw(camera, position, orientation);
 }
