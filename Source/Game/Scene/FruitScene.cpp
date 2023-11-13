@@ -1,9 +1,15 @@
 #include "FruitScene.hpp"
 
 #include "Objects/Facette.hpp"
-#include "Objects/Sphere.hpp"
 
 #include <glm/gtx/string_cast.hpp>
+
+// Object instances
+Fruit::Fruit(float radius_, const glm::vec3& pos_, const glm::vec4& color_) :
+    SphereBody(radius_, pos_, color_)
+{
+    // ..
+}
 
 // Scene instance
 FruitScene::FruitScene() :
@@ -26,6 +32,10 @@ void FruitScene::resize(int width, int height) {
     _camera_update();
 }
 
+void FruitScene::addFruit(std::shared_ptr<Fruit> fruit) {
+    m_fruits.push_back(fruit);
+}
+
 void FruitScene::draw() {
     // Get camera
     _camera_update();
@@ -40,7 +50,9 @@ void FruitScene::draw() {
     m_shapes["bucketFace"]->as<Facette>()->draw(m_camera);
 
     // Dynamic objects
-    m_shapes["fruitCurrent"]->as<Sphere>()->draw(m_camera);
+    for (auto& fruit: m_fruits) {
+        fruit->draw(m_camera);
+    }
 
     // Texts
     int score = 0;
@@ -63,7 +75,7 @@ void FruitScene::_create_shapes() {
     const float bucketHeight = 0.50f;
     const float bucketDepth  = 0.10f;
 
-    const float fruitRadius = 0.50f;
+    const float fruitRadius = 0.15f;
 
     // Create
     m_shapes["sceneGround"]   = std::make_shared<Facette>(pOrigin - cst_plank * uHeight, infinity * uDirect, infinity * uNormal);
@@ -71,11 +83,8 @@ void FruitScene::_create_shapes() {
 
     m_shapes["bucketWest"] = std::make_shared<Facette>(pOrigin - bucketWidth * uDirect + bucketHeight * uHeight, bucketDepth * uNormal, bucketHeight * uHeight);
     m_shapes["bucketEast"] = std::make_shared<Facette>(pOrigin + bucketWidth * uDirect + bucketHeight * uHeight, bucketDepth * uNormal, bucketHeight * uHeight);
-    m_shapes["bucketFace"] = std::make_shared<Facette>(pOrigin - bucketDepth * uNormal + bucketHeight * uHeight, bucketWidth * uDirect, bucketHeight * uHeight);
+    m_shapes["bucketFace"] = std::make_shared<Facette>(pOrigin - 0.9f*bucketDepth * uNormal + bucketHeight * uHeight, bucketWidth * uDirect, bucketHeight * uHeight);
     m_shapes["bucketBack"] = std::make_shared<Facette>(pOrigin, bucketWidth  * uDirect, bucketDepth * uNormal);
-
-    m_shapes["fruitCurrent"] = std::make_shared<Sphere>(pOrigin, fruitRadius);
-
 }
 
 void FruitScene::_cook_shapes() {
@@ -113,12 +122,6 @@ void FruitScene::_cook_shapes() {
         ;
 
 
-    m_shapes["fruitCurrent"]->as<Sphere>()
-        ->addRecipe(Sphere::CookType::Solid, fruitColor)
-        ->addRecipe(Sphere::CookType::Border, borderColor)
-        ;
-
-
     m_shapes["sceneGround2D"]->as<Facette>()
         ->addRecipe(Facette::CookType::Solid, groundColor * 0.5f)
         ;
@@ -137,15 +140,16 @@ void FruitScene::_camera_update() {
 
         init = true;
 
-        m_camera.modelview = m_camera.lookAt(glm::vec3(0, 0, 1));
+        m_camera.modelview  = m_camera.lookAt(glm::vec3(0, 0, 1));
         m_camera.projection = camTarget;
-    }        
+    }
     return;
 
     // Change progressively to identity
     static float speed = 0.001f;
     speed += speed / 20.0f;
 
+    bool ended = true;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             float target = camStart[i][j];
@@ -155,7 +159,17 @@ void FruitScene::_camera_update() {
             }
             else {
                 m_camera.projection[i][j] += (m_camera.projection[i][j] < target ? +speed : -speed);
+                ended = false;
             }
         }
+    }
+
+    if (ended) {
+        auto tmp = camStart;
+
+        camStart = camTarget;
+        camTarget = tmp;
+
+        speed = 0.001f;
     }
 }

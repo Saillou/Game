@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../Engine/Graphic/Base/BaseCommander.hpp"
+
 #include "../Scene/FruitScene.hpp"
 
 struct FruitCommander : public BaseCommander {
@@ -8,5 +9,9 @@ struct FruitCommander : public BaseCommander {
 
 protected:
     void _on_key_pressed(const Event::KeyPressed& evt) override;
+
+private:
     std::shared_ptr<FruitScene> m_scene;
+
+    int m_last_add_ms = 0;
 };
