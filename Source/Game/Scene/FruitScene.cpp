@@ -3,12 +3,19 @@
 #include "Objects/Facette.hpp"
 #include "Objects/Sphere.hpp"
 
+#include <glm/gtx/string_cast.hpp>
+
 // Scene instance
 FruitScene::FruitScene() :
     BaseScene()
 {
     _create_shapes();
     _cook_shapes();
+
+    // Camera
+    _camPos = glm::vec3(0.0f, 3.0f, 0.5f);
+    _camDir = glm::vec3(0.0f, 0.0f, 0.5f);
+    _angle  = 30.0f;
 }
 
 void FruitScene::resize(int width, int height) {
@@ -16,15 +23,28 @@ void FruitScene::resize(int width, int height) {
     BaseScene::resize(width, height);
 
     // Camera
-    m_camera.modelview  = glm::lookAt(glm::vec3(0.0f, 3.0f, 0.5f), glm::vec3(0.0f, 0.0f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f));
-    m_camera.projection = glm::perspective(glm::radians<float>(30.0f), (float)width / height, 0.1f, 100.0f);
+    _camera_update();
 }
 
-void FruitScene::test() {
-    std::cout << "Test::Fruit" << std::endl;
+void FruitScene::moveCameraPosition(float dx, float dy, float dz) {
+    _camPos.x += dx;
+    _camPos.y += dy;
+    _camPos.z += dz;
+}
+void FruitScene::moveCameraDirection(float dx, float dy, float dz) {
+    _camDir.x += dx;
+    _camDir.y += dy;
+    _camDir.z += dz;
+}
+
+void FruitScene::changeCameraPerspective(float dfov) {
+    _angle += dfov;
 }
 
 void FruitScene::draw() {
+    // Position camera
+    _camera_update();
+
     // Static objects
     m_shapes["sceneGround"]->as<Facette>()->draw(m_camera);
 
@@ -109,4 +129,39 @@ void FruitScene::_cook_shapes() {
         ->addRecipe(Facette::CookType::Solid, fruitColor)
         ->addRecipe(Facette::CookType::Border, borderColor)
         ;
+}
+
+void FruitScene::_camera_update() {
+    float aspect = (float)m_width / m_height;
+
+    static bool init = false;
+    static glm::mat4 camStart;
+    static glm::mat4 camTarget;
+
+    if (!init) {
+        camStart    = glm::perspective(glm::radians<float>(_angle), aspect, 0.1f, 100.0f);
+        camTarget   = glm::ortho(-aspect, +aspect, -1.0f, 1.0f, 0.1f, 100.0f);
+
+        init = true;
+
+        m_camera.modelview  = glm::lookAt(_camPos, _camDir, glm::vec3(0.0f, 0.0f, 1.0f));
+        m_camera.projection = camTarget;
+    }
+
+    // Change progressively to identity
+    static float speed = 0.001f;
+    speed += speed / 20.0f;
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            float target = camStart[i][j];
+
+            if (abs(m_camera.projection[i][j] - target) < speed) {
+                m_camera.projection[i][j] = target;
+            }
+            else {
+                m_camera.projection[i][j] += (m_camera.projection[i][j] < target ? +speed : -speed);
+            }
+        }
+    }
 }

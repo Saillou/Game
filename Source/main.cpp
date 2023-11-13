@@ -21,19 +21,17 @@ int main() {
                     window.close(); 
                     break;
 
-                // Game inputs
-                case GLFW_KEY_SPACE:
-                case GLFW_KEY_LEFT:
-                case GLFW_KEY_RIGHT:
-                    gamestate.keyPressed.push(key);
-                    break;
-
                 // All scenes
                 case GLFW_KEY_1: gamestate.sceneId = SceneId::FruitScene; break;
                 case GLFW_KEY_2: gamestate.sceneId = SceneId::SlimeScene; break;
                 case GLFW_KEY_3: gamestate.sceneId = SceneId::CrashScene; break;
                 case GLFW_KEY_4: gamestate.sceneId = SceneId::FlapiScene; break;
                 case GLFW_KEY_5: gamestate.sceneId = SceneId::Other;      break;
+
+                // Game inputs
+                default:
+                    gamestate.keyPressed.push(key);
+                    break;
             }
         }
 
