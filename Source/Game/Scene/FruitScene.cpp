@@ -93,38 +93,28 @@ void FruitScene::_cook_shapes() {
     const glm::vec4 groundColor(1.0f, 0.7f, 0.3f, 1.0f);
     const glm::vec4 bucketColor(0.3f, 0.7f, 1.0f, 1.0f);
 
-    const glm::vec4 fruitColor(1.0f, 0.4f, 0.1f, 1.0f);
-
     // Cook
     m_shapes["sceneGround"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid, groundColor)
-        ;
+        ->addRecipe(Facette::CookType::Solid, groundColor);
 
+    m_shapes["sceneGround2D"]->as<Facette>()
+        ->addRecipe(Facette::CookType::Solid, groundColor * 0.5f);
 
     m_shapes["bucketBack"]->as<Facette>()
         ->addRecipe(Facette::CookType::Solid, bucketColor)
-        ->addRecipe(Facette::CookType::Border, borderColor)
-        ;
+        ->addRecipe(Facette::CookType::Border, borderColor);
 
     m_shapes["bucketWest"]->as<Facette>()
         ->addRecipe(Facette::CookType::Solid, bucketColor)
-        ->addRecipe(Facette::CookType::Border, borderColor)
-        ;
+        ->addRecipe(Facette::CookType::Border, borderColor);
 
     m_shapes["bucketEast"]->as<Facette>()
         ->addRecipe(Facette::CookType::Solid, bucketColor)
-        ->addRecipe(Facette::CookType::Border, borderColor)
-        ;
+        ->addRecipe(Facette::CookType::Border, borderColor);
 
     m_shapes["bucketFace"]->as<Facette>()
         ->addRecipe(Facette::CookType::Solid, bucketColor * 0.5f)
-        ->addRecipe(Facette::CookType::Border, borderColor)
-        ;
-
-
-    m_shapes["sceneGround2D"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid, groundColor * 0.5f)
-        ;
+        ->addRecipe(Facette::CookType::Border, borderColor);
 }
 
 void FruitScene::_camera_update() {
