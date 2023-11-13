@@ -30,8 +30,8 @@ FruitCommander::FruitCommander(std::shared_ptr<BaseScene> scene):
     const auto udHeight = bucketHeight * uHeight;
 
     // Add walls
-    m_scene->addWall(std::make_shared<Wall>(pOrigin - udDirect + udHeight, udNormal, udHeight, wallColor)); // West
-    m_scene->addWall(std::make_shared<Wall>(pOrigin + udDirect + udHeight, udNormal, udHeight, wallColor)); // East
+    m_scene->addWall(std::make_shared<Wall>(pOrigin + (udHeight - udDirect)/2.0f, udNormal, udHeight, wallColor)); // West
+    m_scene->addWall(std::make_shared<Wall>(pOrigin + (udHeight + udDirect)/2.0f, udNormal, udHeight, wallColor)); // East
     m_scene->addWall(std::make_shared<Wall>(pOrigin, udDirect, udNormal, wallColor)); // Bottom
 }
 

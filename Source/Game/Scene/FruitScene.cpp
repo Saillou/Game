@@ -127,9 +127,9 @@ void FruitScene::_camera_update() {
         m_camera.modelview  = m_camera.lookAt(glm::vec3(0, 0, 1));
         m_camera.projection = camTarget;
     }
-    //return;
+    return;
 
-    // Change progressively to identity
+    // Test: Change progressively to identity
     static float speed = 0.001f;
     speed += speed / 20.0f;
 
