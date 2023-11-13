@@ -88,13 +88,19 @@ Sphere* Sphere::addRecipe(const CookType& type, const glm::vec4& color) {
     return this;
 }
 
-void Sphere::draw(const Camera& camera, const glm::vec3& position) {
+void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation) {
+    glm::mat4 model(1.0f);
+    model = glm::rotate(model, orientation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, orientation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, orientation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::translate(model, position);
+
     for (auto& recipe: m_shaders) {
         recipe->
             use().
-            set("offset",       position).
-            set("Projection",   camera.projection).
-            set("Modelview",    camera.modelview);
+            set("Model",        model).
+            set("View",         camera.modelview).
+            set("Projection",   camera.projection);
 
         ((SphereShape*)m_shape.get())->bind();
         ((SphereShape*)m_shape.get())->draw();
@@ -106,11 +112,11 @@ void s_set_shader_common(UShader& shader) {
     shader->
         attachSource(GL_VERTEX_SHADER, ShaderSource{}
             .add_var("in", "vec3", "aPos")
-            .add_var("uniform", "vec3", "offset")
             .add_var("uniform", "mat4", "Projection")
-            .add_var("uniform", "mat4", "Modelview")
+            .add_var("uniform", "mat4", "View")
+            .add_var("uniform", "mat4", "Model")
             .add_func("void", "main", "", R"_main_(
-                gl_Position = Projection * Modelview * vec4(aPos + offset, 1.0);
+                gl_Position = Projection * View * Model * vec4(aPos, 1.0);
             )_main_").str()
         ).
         attachSource(GL_FRAGMENT_SHADER, ShaderSource{}

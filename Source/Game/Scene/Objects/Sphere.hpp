@@ -22,7 +22,7 @@ struct Sphere : public Object {
     virtual ~Sphere() = default;
 
     Sphere* addRecipe(const CookType& type, const glm::vec4& color);
-    void draw(const Camera& camera, const glm::vec3& position = glm::vec3());
+    void draw(const Camera& camera, const glm::vec3& position = glm::vec3(), const glm::vec3& orientation = glm::vec3());
 
 private:
     // Members

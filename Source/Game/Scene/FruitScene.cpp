@@ -13,7 +13,7 @@ FruitScene::FruitScene() :
     _cook_shapes();
 
     // Camera
-    m_camera.position = glm::vec3(0.0f, 3.0f, 0.5f);
+    m_camera.position  = glm::vec3(0.0f, 3.0f, 0.5f);
     m_camera.direction = glm::vec3(0.0f, 0.0f, 0.5f);
     m_camera.fieldOfView = 30.0f;
 }
@@ -39,7 +39,11 @@ void FruitScene::draw() {
     m_shapes["bucketFace"]->as<Facette>()->draw(m_camera);
 
     // Dynamic objects
-    m_shapes["fruitCurrent"]->as<Facette>()->draw(m_camera, glm::vec3(0.0f, 0.0f, 0.7f));
+    static float a = 0.0f;
+    a += 0.01f;
+    m_shapes["fruitCurrent"]->as<Sphere>()->draw(m_camera, glm::vec3(0.0f, 0.0f, 0.5f), glm::vec3(a, 0.0f, 0.0f));
+
+    m_shapes["sceneGround2D"]->as<Facette>()->draw(m_camera);
 
     // Texts
     int score = 0;
@@ -56,13 +60,13 @@ void FruitScene::_create_shapes() {
     const glm::vec3 uHeight(0.f, 0.f, 1.f);
 
     const float cst_plank = 1e-3f;
-    const float infinity = 1e+1f;
+    const float infinity  = 1e+1f;
 
-    const float bucketWidth = 0.50f;
+    const float bucketWidth  = 0.50f;
     const float bucketHeight = 0.50f;
-    const float bucketDepth = 0.10f;
+    const float bucketDepth  = 0.10f;
 
-    const float fruitRadius = 0.05f;
+    const float fruitRadius = 0.50f;
 
     // Create
     m_shapes["sceneGround"] = std::make_shared<Facette>(pOrigin - cst_plank * uHeight, infinity * uDirect, infinity * uNormal);
@@ -74,7 +78,9 @@ void FruitScene::_create_shapes() {
 
     m_shapes["fruitCurrent"] = std::make_shared<Sphere>(pOrigin, fruitRadius);
 
+    m_shapes["sceneGround2D"] = std::make_shared<Facette>(pOrigin - uNormal, infinity*uDirect, infinity*uHeight);
 }
+
 void FruitScene::_cook_shapes() {
     // Data
     const glm::vec4 borderColor(1.0f, 1.0f, 1.0f, 0.2f);
@@ -110,9 +116,14 @@ void FruitScene::_cook_shapes() {
         ;
 
 
-    m_shapes["fruitCurrent"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid, fruitColor)
-        ->addRecipe(Facette::CookType::Border, borderColor)
+    m_shapes["fruitCurrent"]->as<Sphere>()
+        ->addRecipe(Sphere::CookType::Solid, fruitColor)
+        ->addRecipe(Sphere::CookType::Border, borderColor)
+        ;
+
+
+    m_shapes["sceneGround2D"]->as<Facette>()
+        ->addRecipe(Facette::CookType::Solid, groundColor * 0.5f)
         ;
 }
 
@@ -131,7 +142,8 @@ void FruitScene::_camera_update() {
 
         m_camera.modelview = m_camera.lookAt(glm::vec3(0, 0, 1));
         m_camera.projection = camTarget;
-    }
+    }        
+    return;
 
     // Change progressively to identity
     static float speed = 0.001f;
