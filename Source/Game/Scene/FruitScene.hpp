@@ -21,8 +21,8 @@ struct FruitScene : public BaseScene {
     void draw() override;
     void resize(int width, int height) override;
 
-    void addWall(std::shared_ptr<Wall> wall);
-    void addFruit(std::shared_ptr<Fruit> fruit);
+    std::shared_ptr<Wall>  addWall(std::shared_ptr<Wall> wall);
+    std::shared_ptr<Fruit> addFruit(std::shared_ptr<Fruit> fruit);
 
 private:
     void _create_shapes();

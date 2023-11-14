@@ -32,13 +32,10 @@ private:
 
 // Instance
 SphereBody::SphereBody(float radius_, const glm::vec3& position_, const glm::vec4& color_) :
+	BaseBody(position_),
 	radius(radius_), 
-	position(position_),
-	orientation(glm::vec3()),
-
 	_speedPosition(glm::vec3()),
 	_speedOrientation(glm::vec3()),
-
 	_impl(new _SphereBodyImpl(radius_, color_))
 {
 	// ..

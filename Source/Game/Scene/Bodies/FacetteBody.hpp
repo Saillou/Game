@@ -3,9 +3,10 @@
 #include <array>
 #include <glm/glm.hpp>
 #include "../../../Engine/Graphic/Camera.hpp"
+#include "../../../Engine/Physx/BaseBody.hpp"
 
 // Public objects
-struct FacetteBody {
+struct FacetteBody : public BaseBody {
     typedef std::array<glm::vec3, 4> Quad;
 
     // Instance
@@ -17,7 +18,6 @@ struct FacetteBody {
     virtual void draw(const Camera& camera) const;
 
     // External data
-    glm::vec3 position;
     glm::vec3 vec_direction;
     glm::vec3 vec_normal;
 

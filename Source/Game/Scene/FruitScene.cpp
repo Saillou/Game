@@ -39,12 +39,14 @@ void FruitScene::resize(int width, int height) {
     _camera_update();
 }
 
-void FruitScene::addWall(std::shared_ptr<Wall> wall) {
+std::shared_ptr<Wall> FruitScene::addWall(std::shared_ptr<Wall> wall) {
     m_walls.push_back(wall);
+    return wall;
 }
 
-void FruitScene::addFruit(std::shared_ptr<Fruit> fruit) {
+std::shared_ptr<Fruit> FruitScene::addFruit(std::shared_ptr<Fruit> fruit) {
     m_fruits.push_back(fruit);
+    return fruit;
 }
 
 void FruitScene::draw() {

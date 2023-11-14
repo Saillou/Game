@@ -2,9 +2,10 @@
 
 #include <glm/glm.hpp>
 #include "../../../Engine/Graphic/Camera.hpp"
+#include "../../../Engine/Physx/BaseBody.hpp"
 
 // Public objects
-struct SphereBody {
+struct SphereBody : public BaseBody {
     SphereBody(float radius_, const glm::vec3& position_, const glm::vec4& color_);
     virtual ~SphereBody();
 
@@ -14,8 +15,6 @@ struct SphereBody {
 
     // External data
     float radius;
-    glm::vec3 position;
-    glm::vec3 orientation;
 
 protected:
     // Internal params

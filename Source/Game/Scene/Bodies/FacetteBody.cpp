@@ -32,12 +32,10 @@ private:
 
 // Instance
 FacetteBody::FacetteBody(const glm::vec3& position_, const glm::vec3& u, const glm::vec3& n, const glm::vec4& color_) :
-	position(position_),
+	BaseBody(position_),
 	vec_direction(u),
 	vec_normal(n),
-
 	_speedPosition(glm::vec3()),
-
 	_impl(new _FacetteBodyImpl(position_, u, n, color_))
 {
 	// .. 

@@ -1,7 +1,8 @@
-#include <iostream>
 #include <string>
 
 #include "Game/Game.hpp"
+#include "Utils/Timer.hpp"
+#include "Engine/Physx/Physx.hpp"
 #include "Engine/Graphic/Window.hpp"
 
 // -- Entry point --
@@ -12,6 +13,7 @@ int main() {
 
     // Main loop
     gamestate.sceneId = SceneId::FruitScene;
+    Timer::Chronometre chrono;
     do {
         // Read keyboard inputs
         for (auto key : window.keyPressed()) {
@@ -39,6 +41,8 @@ int main() {
         switch (Game::UpdateState(gamestate)) {
             // Let's update
             case Game::ActionCode::Ok:
+                Physx::Compute(chrono.elapsed<Timer::microsecond>()/1000.0f);
+                chrono.tic();
                 break;
 
             // Create (or change) the scene

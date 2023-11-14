@@ -51,7 +51,7 @@ public:
 	private:
 		// Note: 
 		//	these are temporary callbacks used to crush the _message type to _Base (inherited) type,
-		//  the final callback provided by the subscriber is encapsulate the crushy callback.
+		//  the final callback provided by the subscriber is encapsulated in the crushy callback.
 		typedef std::function<void(const Event::_Base*)> _crushyCallback;
 		std::unordered_map<_Type, std::vector<_crushyCallback>> _callbacks;
 	};
