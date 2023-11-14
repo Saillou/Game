@@ -3,19 +3,15 @@
 #include <array>
 #include <glm/glm.hpp>
 
-#include "../../../Utils/Caster.hpp"
-#include "../../../Engine/Graphic/Shaders/Shader.hpp"
 #include "../../../Engine/Graphic/Camera.hpp"
 #include "../../../Engine/Graphic/Base/BaseShape.hpp"
+#include "../../../Engine/Graphic/Base/Cookable.hpp"
 
 // Objects
-struct Facette : public Object {
+struct Facette : public Cookable
+{
     // Enums and type
     typedef std::array<glm::vec3, 4> Quad;
-
-    enum class CookType {
-        Solid, Border, Point
-    };
 
     // Instance
     Facette(const Quad& points);
@@ -23,11 +19,14 @@ struct Facette : public Object {
 
     virtual ~Facette() = default;
 
-    Facette* addRecipe(const CookType& type, const glm::vec4& color);
     void draw(const Camera& camera, const glm::vec3& position = glm::vec3());
 
 private:
+    void _set_shader_common(UShader&);
+    void _set_shader_solid(UShader&)  override;
+    void _set_shader_border(UShader&) override;
+    void _set_shader_point(UShader&)  override;
+
     // Members
     std::shared_ptr<BaseShape> m_shape;
-    std::vector<UShader> m_shaders;
 };

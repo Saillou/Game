@@ -48,6 +48,6 @@ void CrashScene::_cook_shapes() {
     const glm::vec4 groundColor(1.0f, 0.7f, 0.3f, 1.0f);
 
     // Cook
-    m_shapes["sceneGround"]->as<Facette>()->addRecipe(Facette::CookType::Solid, groundColor);
+    m_shapes["sceneGround"]->as<Facette>()->addRecipe(Cookable::CookType::Solid, groundColor);
 
 }

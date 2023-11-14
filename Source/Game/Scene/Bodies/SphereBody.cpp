@@ -13,7 +13,7 @@ struct _SphereBodyImpl {
 		color(color_),
 		m_shape(std::make_shared<Sphere>(glm::vec3(0.f), radius_))
 	{
-		m_shape->addRecipe(Sphere::CookType::Solid, color_);
+		m_shape->addRecipe(Cookable::CookType::Solid, color_);
 	}
 
 	void draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation) {
@@ -32,10 +32,8 @@ private:
 
 // Instance
 SphereBody::SphereBody(float radius_, const glm::vec3& position_, const glm::vec4& color_) :
-	BaseBody(position_),
-	radius(radius_), 
-	_speedPosition(glm::vec3()),
-	_speedOrientation(glm::vec3()),
+	BaseBody(BaseBody::ContactType::Sphere, position_, radius_ * glm::mat3(1.0f)),
+	radius(radius_),
 	_impl(new _SphereBodyImpl(radius_, color_))
 {
 	// ..

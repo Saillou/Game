@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../../Utils/Caster.hpp"
 #include "../TextEngine.hpp"
 #include "../Camera.hpp"
 
+#include "Cookable.hpp"
 #include "BaseShape.hpp"
 
 struct BaseScene {
@@ -21,7 +21,7 @@ protected:
     virtual void _init_gl_config(); // Override this to enable or disable some opengl functionalities. (eg PENCIL_TEST)
 
     // Members
-    Collection m_shapes;
+    CookableCollection m_shapes;
     Camera m_camera = {};
 
     int m_width  = 0;

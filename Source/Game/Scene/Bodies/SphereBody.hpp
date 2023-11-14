@@ -16,15 +16,6 @@ struct SphereBody : public BaseBody {
     // External data
     float radius;
 
-protected:
-    // Internal params
-    const float _bouncyness = 1.0f;
-    const float _friction   = 1.0f;
-
-    // Internal data
-    glm::vec3 _speedPosition;
-    glm::vec3 _speedOrientation;
-
 private:
     // Hidden impl details
     void* _impl;

@@ -6,10 +6,10 @@
 #include "../../../Engine/Physx/BaseBody.hpp"
 
 // Public objects
-struct FacetteBody : public BaseBody {
+struct ParallelipipedBody : public BaseBody {
     // Instance
-    FacetteBody(const glm::vec3& pos, const glm::vec3& u, const glm::vec3& n, const glm::vec4& color_);
-    virtual ~FacetteBody();
+    ParallelipipedBody(const glm::vec3& pos, const glm::vec3& u, const glm::vec3& n, const glm::vec3& w, const glm::vec4& color_);
+    virtual ~ParallelipipedBody();
 
     // Method
     virtual int id() const;
@@ -18,6 +18,7 @@ struct FacetteBody : public BaseBody {
     // External data
     glm::vec3 vec_direction;
     glm::vec3 vec_normal;
+    glm::vec3 vec_height;
 
 private:
     // Hidden impl details

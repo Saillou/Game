@@ -105,47 +105,47 @@ void SlimeScene::_cook_shapes() {
     const glm::vec4 ballColor(1.0f, 0.4f, 0.1f, 1.0f);
 
     // Cook
-    m_shapes["sceneGround"]->as<Facette>()->addRecipe(Facette::CookType::Solid, groundColor);
+    m_shapes["sceneGround"]->as<Facette>()->addRecipe(Cookable::CookType::Solid, groundColor);
 
     // wgoal
     m_shapes["westGoal_l"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Border, borderColor)
-        ->addRecipe(Facette::CookType::Solid, bucketColor);
+        ->addRecipe(Cookable::CookType::Border, borderColor)
+        ->addRecipe(Cookable::CookType::Solid, bucketColor);
 
     m_shapes["westGoal_r"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Border, borderColor)
-        ->addRecipe(Facette::CookType::Solid, bucketColor);
+        ->addRecipe(Cookable::CookType::Border, borderColor)
+        ->addRecipe(Cookable::CookType::Solid, bucketColor);
 
     m_shapes["westGoal_f"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Border, borderColor)
-        ->addRecipe(Facette::CookType::Solid, bucketColor*0.5f);
+        ->addRecipe(Cookable::CookType::Border, borderColor)
+        ->addRecipe(Cookable::CookType::Solid, bucketColor*0.5f);
 
     // egoal
     m_shapes["eastGoal_l"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Border, borderColor)
-        ->addRecipe(Facette::CookType::Solid, bucketColor);
+        ->addRecipe(Cookable::CookType::Border, borderColor)
+        ->addRecipe(Cookable::CookType::Solid, bucketColor);
 
     m_shapes["eastGoal_r"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Border, borderColor)
-        ->addRecipe(Facette::CookType::Solid, bucketColor);
+        ->addRecipe(Cookable::CookType::Border, borderColor)
+        ->addRecipe(Cookable::CookType::Solid, bucketColor);
 
     m_shapes["eastGoal_f"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Border, borderColor)
-        ->addRecipe(Facette::CookType::Solid, bucketColor*0.5f);
+        ->addRecipe(Cookable::CookType::Border, borderColor)
+        ->addRecipe(Cookable::CookType::Solid, bucketColor*0.5f);
 
     // Player
     m_shapes["westPlayer"]->as<Parallelepiped>()
-        ->addRecipe(Parallelepiped::CookType::Border, borderColor)
-        ->addRecipe(Parallelepiped::CookType::Solid, playerColor);
+        ->addRecipe(Cookable::CookType::Border, borderColor)
+        ->addRecipe(Cookable::CookType::Solid, playerColor);
 
     m_shapes["eastPlayer"]->as<Parallelepiped>()
-        ->addRecipe(Parallelepiped::CookType::Border, borderColor)
-        ->addRecipe(Parallelepiped::CookType::Solid, glm::vec4(1.0f, 1.0f, 1.0f, 2*playerColor.a) - playerColor);
+        ->addRecipe(Cookable::CookType::Border, borderColor)
+        ->addRecipe(Cookable::CookType::Solid, glm::vec4(1.0f, 1.0f, 1.0f, 2*playerColor.a) - playerColor);
 
     // ball
     m_shapes["ball"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Border, ballColor*0.7f)
-        ->addRecipe(Facette::CookType::Solid, ballColor);
+        ->addRecipe(Cookable::CookType::Border, ballColor*0.7f)
+        ->addRecipe(Cookable::CookType::Solid, ballColor);
 }
 
 void SlimeScene::_camera_update() {

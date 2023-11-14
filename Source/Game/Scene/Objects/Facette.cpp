@@ -1,11 +1,5 @@
 #include "Facette.hpp"
 
-// - Helpers -
-static void s_set_shader_common(UShader&);
-static void s_set_shader_solid(UShader&);
-static void s_set_shader_border(UShader&);
-static void s_set_shader_point(UShader&);
-
 // - Shape
 struct FacetteShape : public BaseShape {
     FacetteShape(const Facette::Quad& points) {
@@ -60,34 +54,6 @@ Facette::Facette(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n
 {
 }
 
-Facette* Facette::addRecipe(const CookType& type, const glm::vec4& color) {
-    m_shaders.push_back(std::make_unique<Shader>());
-    UShader& recipe = m_shaders.back();
-
-    switch (type) {
-    case CookType::Solid:  
-        s_set_shader_solid(recipe);
-        break;
-
-    case CookType::Border: 
-        s_set_shader_border(recipe);
-        break;
-
-    case CookType::Point:
-        s_set_shader_point(recipe);
-        break;
-
-    default:
-        return this;
-    }
-
-    // Set uniforms
-    recipe->use().set("color", color);
-
-    // Allow chained calls
-    return this;
-}
-
 void Facette::draw(const Camera& camera, const glm::vec3& position) {
     for (auto& recipe: m_shaders) {
         recipe->
@@ -102,7 +68,7 @@ void Facette::draw(const Camera& camera, const glm::vec3& position) {
 }
 
 // - Shader
-void s_set_shader_common(UShader& shader) {
+void Facette::_set_shader_common(UShader& shader) {
     shader->
         attachSource(GL_VERTEX_SHADER, ShaderSource{}
             .add_var("in", "vec3", "aPos")
@@ -122,15 +88,13 @@ void s_set_shader_common(UShader& shader) {
         );
 }
 
-void s_set_shader_solid(UShader& shader) {
-    s_set_shader_common(shader);
-
-    shader->
-        link();
+void Facette::_set_shader_solid(UShader& shader) {
+    Facette::_set_shader_common(shader);
+    shader->link();
 }
 
-void s_set_shader_border(UShader& shader) {
-    s_set_shader_common(shader);
+void Facette::_set_shader_border(UShader& shader) {
+    _set_shader_common(shader);
 
     shader->
         attachSource(GL_GEOMETRY_SHADER, ShaderSource{}
@@ -148,8 +112,8 @@ void s_set_shader_border(UShader& shader) {
         ).link();
 }
 
-void s_set_shader_point(UShader& shader) {
-    s_set_shader_common(shader);
+void Facette::_set_shader_point(UShader& shader) {
+    _set_shader_common(shader);
 
     shader->
         attachSource(GL_GEOMETRY_SHADER, ShaderSource{}

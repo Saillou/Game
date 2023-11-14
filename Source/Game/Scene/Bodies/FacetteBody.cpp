@@ -13,7 +13,7 @@ struct _FacetteBodyImpl {
 		color(color_),
 		m_shape(std::make_shared<Facette>(position, u, n))
 	{
-		m_shape->addRecipe(Facette::CookType::Solid, color_);
+		m_shape->addRecipe(Cookable::CookType::Solid, color_);
 	}
 
 	void draw(const Camera& camera, const glm::vec3& position) {
@@ -32,10 +32,9 @@ private:
 
 // Instance
 FacetteBody::FacetteBody(const glm::vec3& position_, const glm::vec3& u, const glm::vec3& n, const glm::vec4& color_) :
-	BaseBody(position_),
+	BaseBody(BaseBody::ContactType::Parallelepiped, position_, glm::mat3(u, n, glm::vec3(0.0f))),
 	vec_direction(u),
 	vec_normal(n),
-	_speedPosition(glm::vec3()),
 	_impl(new _FacetteBodyImpl(position_, u, n, color_))
 {
 	// .. 

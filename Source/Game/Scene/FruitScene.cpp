@@ -103,14 +103,14 @@ void FruitScene::_cook_shapes() {
 
     // Cook
     m_shapes["sceneGround"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid, groundColor);
+        ->addRecipe(Cookable::CookType::Solid, groundColor);
 
     m_shapes["sceneFrame"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid, groundColor * 0.5f);
+        ->addRecipe(Cookable::CookType::Solid, groundColor * 0.5f);
 
     m_shapes["bucketFace"]->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid, bucketColor * 0.5f)
-        ->addRecipe(Facette::CookType::Border, borderColor);
+        ->addRecipe(Cookable::CookType::Solid, bucketColor * 0.5f)
+        ->addRecipe(Cookable::CookType::Border, borderColor);
 }
 
 void FruitScene::_camera_update() {

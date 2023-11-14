@@ -41,11 +41,11 @@ TestScene::TestScene() :
     // Cook style
     m_shapes["Ground"]
         ->as<Facette>()
-        ->addRecipe(Facette::CookType::Solid, color_solid);
+        ->addRecipe(Cookable::CookType::Solid, color_solid);
 
     m_shapes["Ball"]
         ->as<Sphere>()
-        ->addRecipe(Sphere::CookType::Solid,  color_solid);
+        ->addRecipe(Cookable::CookType::Solid,  color_solid);
 }
 
 void TestScene::resize(int width, int height) {
