@@ -15,6 +15,8 @@ public:
     static void Clear();
     static void Compute(float delta_time_ms);
 
+    static void debug();
+
 private:
     static Physx& _get();
 
