@@ -26,6 +26,8 @@ add_executable(${TARGET_NAME}
 
 # Set solution properties
 set_target_properties(${TARGET_NAME} PROPERTIES 
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
     RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_FOLDER}
     VS_STARTUP_PROJECT ${TARGET_NAME}
 )

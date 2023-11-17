@@ -3,9 +3,12 @@
 #include <glm/glm.hpp>
 
 class BaseBody {
+    friend class Physx;
+
 public:
     enum class ContactType {
         Sphere,
+        Facette,
         Parallelepiped
     };
 

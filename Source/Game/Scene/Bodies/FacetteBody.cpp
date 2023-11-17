@@ -32,7 +32,7 @@ private:
 
 // Instance
 FacetteBody::FacetteBody(const glm::vec3& position_, const glm::vec3& u, const glm::vec3& n, const glm::vec4& color_) :
-	BaseBody(BaseBody::ContactType::Parallelepiped, position_, glm::mat3(u, n, glm::vec3(0.0f))),
+	BaseBody(BaseBody::ContactType::Facette, position_, glm::mat3(u, n, glm::vec3(0.0f))),
 	vec_direction(u),
 	vec_normal(n),
 	_impl(new _FacetteBodyImpl(position_, u, n, color_))

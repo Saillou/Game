@@ -36,8 +36,8 @@ FruitCommander::FruitCommander(std::shared_ptr<BaseScene> scene):
     auto wb = m_scene->addWall(std::make_shared<Wall>(pOrigin, udDirect, udNormal, wallColor)); // Bottom
 
     // Physics
-    Physx::Add(ww, Physx::BodyType::Static);
-    Physx::Add(we, Physx::BodyType::Static);
+    //Physx::Add(ww, Physx::BodyType::Static);
+    //Physx::Add(we, Physx::BodyType::Static);
     Physx::Add(wb, Physx::BodyType::Static);
 }
 
