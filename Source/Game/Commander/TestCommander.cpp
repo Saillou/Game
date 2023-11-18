@@ -9,33 +9,36 @@ using namespace glm;
 // Instance
 TestCommander::TestCommander(std::shared_ptr<BaseScene> scene):
     BaseCommander(scene),
+    m_last_add_ms(Timer::GetCurrentTime<Timer::millisecond>()),
     m_scene(std::dynamic_pointer_cast<TestScene>(scene))
-{    
+{
     // Context 2d
     m_sphere_preview = draw_circle(m_scene, vec2(1.0f, 1.0f), 0.10f,  vec4(0.0f, 0.0f, 1.0f, 1.0f));
     
-    float size = 1.0f;
+    float size = 0.75f;
     const vec2 A(-size, -size);
     const vec2 B(-size, +size);
     const vec2 C(+size, +size);
     const vec2 D(+size, -size);
 
-    draw_line(m_scene, A, B, vec4(1.0f, 1.0f, 0.0f, 1.0f));
-    draw_line(m_scene, B, C, vec4(1.0f, 1.0f, 0.0f, 1.0f));
-    draw_line(m_scene, C, D, vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    draw_circle_dead(m_scene, vec2(0, 0), 0.20f, vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    draw_line_dead(m_scene, A, B, vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    draw_line_dead(m_scene, B, C, vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    draw_line_dead(m_scene, C, D, vec4(1.0f, 1.0f, 0.0f, 1.0f));
     draw_line_dead(m_scene, D, A, vec4(1.0f, 1.0f, 0.0f, 1.0f));
 }
 
 // Events
 void TestCommander::_on_key_pressed(const Event::KeyPressed& evt) {
-    static float theta = 0.0f;
+    const int DELAY_MS_ADD = 300; //ms
 
     // React to the emitted keys 
     if (evt.key == Key::Space) {
-        if (!m_launched) {
-            m_launched = true;
-
-            Physx::Add(m_sphere_preview, Physx::BodyType::Dynamic);
+        int current_time = Timer::GetCurrentTime<Timer::millisecond>();
+        if (current_time - m_last_add_ms > DELAY_MS_ADD)
+        {
+            m_last_add_ms = current_time;
+            draw_circle_alive(m_scene, glm::vec2(-m_sphere_preview->position.x, m_sphere_preview->position.z), 0.10f, vec4(0.0f, 0.0f, 1.0f, 1.0f));
         }
     }
 
@@ -49,9 +52,6 @@ void TestCommander::_on_key_pressed(const Event::KeyPressed& evt) {
 }
 
 void TestCommander::_on_mouse_moved(const Event::MouseMoved& evt) {
-    if (m_launched)
-        return;
-
     float size_square = (float)std::min(m_scene->width(), m_scene->height());
 
     float offset_x = (m_scene->width() - size_square) / size_square;

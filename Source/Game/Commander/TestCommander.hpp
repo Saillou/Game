@@ -26,7 +26,7 @@ private:
     // Members
     std::shared_ptr<TestScene> m_scene;
 
-    bool m_launched = false;
+    int m_last_add_ms;
     std::unordered_map<std::string, std::shared_ptr<Line>> m_lines;
     std::unordered_map<std::string, std::shared_ptr<Circle>> m_circles;
 

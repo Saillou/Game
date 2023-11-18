@@ -5,6 +5,7 @@
 
 #include <glm/gtx/string_cast.hpp>
 
+// Objects
 Circle::Circle(const glm::vec2& pos_, float radius_, const glm::vec4& color_):
     SphereBody(radius_, glm::vec3(-pos_.x, 0.0f, pos_.y), color_)
 {
@@ -27,9 +28,9 @@ TestScene::TestScene() :
     BaseScene()
 {
     // Camera
-    m_camera.position    = glm::vec3(0.0f, 10.0f, 0.0f);
+    m_camera.position    = glm::vec3(0.0f, 3.8f, 0.0f);
     m_camera.direction   = glm::vec3(0.0f, 0.0f, 0.0f);
-    m_camera.fieldOfView = 10.0f;
+    m_camera.fieldOfView = 45.0f;
 }
 
 void TestScene::resize(int width, int height) {
@@ -70,5 +71,13 @@ void TestScene::_camera_update() {
     float aspect = (float)m_width / m_height;
 
     m_camera.modelview = m_camera.lookAt(glm::vec3(0, 0, 1));
+
+    // Example: mouvement 2D
     m_camera.projection = m_camera.ortho(aspect);
+
+    // Example: mouvement 3D
+    //static float theta = 0.0f;
+    //theta += 0.05f;
+    //m_camera.position = glm::vec3(3.8f*sin(theta), 3.8f*cos(theta), 0.0f);
+    //m_camera.projection = m_camera.perspective(aspect);
 }

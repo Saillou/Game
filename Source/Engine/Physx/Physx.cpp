@@ -1,56 +1,9 @@
 #include "Physx.hpp"
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/norm.hpp>
 
 #include <optional>
 #include <iostream>
-
-
-// ----- D e b u g -----
-void Physx::debug() {
-	Physx& engine = _get();
-
-	std::cout << "m_dynamic_elements: " << engine.m_dynamic_elements.size() << std::endl;
-	for (auto& body : engine.m_dynamic_elements) {
-		std::cout << " - Type: " << (int)body->type << std::endl;
-		std::cout << " - Position: " << glm::to_string(body->position) << std::endl;
-		std::cout << " - Dimensions: " << glm::to_string(body->dimensions) << std::endl;
-		std::cout << " - Orientation: " << glm::to_string(body->orientation) << std::endl;
-		std::cout << std::endl;
-	}
-
-	std::cout << "m_static_elements: " << engine.m_static_elements.size() << std::endl;
-	for (auto& body : engine.m_static_elements) {
-		std::cout << " - Type: " << (int)body->type << std::endl;
-		std::cout << " - Position: " << glm::to_string(body->position) << std::endl;
-		std::cout << " - Dimensions: " << glm::to_string(body->dimensions) << std::endl;
-		std::cout << " - Orientation: " << glm::to_string(body->orientation) << std::endl;
-		std::cout << std::endl;
-	}
-}
-
-void Physx::debug2d() {
-	Physx& engine = _get();
-
-	std::cout << "m_dynamic_elements: " << engine.m_dynamic_elements.size() << std::endl;
-	for (auto& body : engine.m_dynamic_elements) {
-		std::cout << " - Type: " << (int)body->type << std::endl;
-		std::cout << " - Position: " << glm::to_string(body->position) << std::endl;
-		std::cout << " - Dimensions: " << glm::to_string(body->dimensions) << std::endl;
-		std::cout << " - Orientation: " << glm::to_string(body->orientation) << std::endl;
-		std::cout << std::endl;
-	}
-
-	std::cout << "m_static_elements: " << engine.m_static_elements.size() << std::endl;
-	for (auto& body : engine.m_static_elements) {
-		std::cout << " - Type: " << (int)body->type << std::endl;
-		std::cout << " - Position: " << glm::to_string(body->position) << std::endl;
-		std::cout << " - Dimensions: " << glm::to_string(body->dimensions) << std::endl;
-		std::cout << " - Orientation: " << glm::to_string(body->orientation) << std::endl;
-		std::cout << std::endl;
-	}
-}
-
-// ------------------------
 
 // Private
 Physx& Physx::_get() {
@@ -87,10 +40,10 @@ void Physx::Compute(float delta_time_ms) {
 	const float dt_sec = delta_time_ms / 1000.0f;
 	const glm::vec3 GRAVITY(0.0f, 0.0f, -9.81f);
 
-	//  Dynamic object
+	//  Dynamic objects
 	for (auto& body : engine.m_dynamic_elements)
 	{
-		// Properties
+		// Properties - Dynamic
 		glm::vec2 body_pos   = to2d(body->position);
 		glm::vec2 body_speed = to2d(body->_speedPosition);
 
@@ -99,18 +52,75 @@ void Physx::Compute(float delta_time_ms) {
 		glm::vec2 speed    = accel * dt_sec + body_speed;
 		glm::vec2 position = accel * (dt_sec * dt_sec) / 2.0f + body_speed * dt_sec + body_pos;
 
-		// Static object
+		// Static objects
 		for (const auto& hindrance : engine.m_static_elements)
 		{
-			if (hindrance->type == BaseBody::ContactType::Parallelepiped) {
-				const glm::vec2 line_center = to2d(hindrance->position);
-				const glm::vec2 line_dir    = to2d(hindrance->dimensions[0]);
-				const glm::vec2 pt_a = line_center - line_dir;
-				const glm::vec2 pt_b = line_center + line_dir;
+			// Properties - Static
+			const glm::vec2 hind_center				   = to2d(hindrance->position);
+			std::optional<glm::vec2> collide_direction = {};
 
-				
+			switch (body->type)
+			{
+			case BaseBody::ContactType::Sphere:
+			{
+				// Collide
+				float body_radius = body->dimensions[0][0];
+
+				switch (hindrance->type)
+				{
+					// ---- Contact Sphere / Parallelepiped ----
+				case BaseBody::ContactType::Parallelepiped:
+				{
+					const glm::vec2 line_dir = to2d(hindrance->dimensions[0]);
+					const glm::vec2 pt_a = hind_center - line_dir;
+					const glm::vec2 pt_b = hind_center + line_dir;
+
+					if (glm::dot(position - pt_a, line_dir) * glm::dot(position - pt_b, line_dir) < 0) {
+						float dist_line =
+							std::abs((pt_b.x - pt_a.x) * (pt_a.y - position.y) - (pt_a.x - position.x) * (pt_b.y - pt_a.y)) /
+							glm::distance(pt_a, pt_b);
+
+						if (dist_line < body_radius) {
+							collide_direction = glm::normalize(glm::vec2(-line_dir.y, line_dir.x));
+						}
+					}
+
+					else if (glm::distance(pt_a, position) < body_radius) {
+						collide_direction = glm::normalize(pt_a - position);
+					}
+
+					else if (glm::distance(pt_b, position) < body_radius) {
+						collide_direction = glm::normalize(pt_b - position);
+					}
+				} break;
+
+				// -- Contact Sphere / Sphere
+				case BaseBody::ContactType::Sphere:
+				{
+					float hind_radius = hindrance->dimensions[0][0];
+
+					// Collide
+					float d = glm::distance(position, hind_center);
+					if (d > hind_radius + body_radius)
+						continue; // No boum
+
+					// Collide point
+					collide_direction = glm::normalize(hind_center - position);
+				} break;
+				}
+
+				// no boum
+				if (!collide_direction.has_value())
+					continue;
+
+				glm::vec2 collide_point = position + body_radius * collide_direction.value();
+				std::cout << glm::to_string(position) << " " << glm::to_string(collide_point) << std::endl;
+
+			} break; // End contact sphere
 			}
+
 		}
+
 
 		// Update
 		body_pos = position;
