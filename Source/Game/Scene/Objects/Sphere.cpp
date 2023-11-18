@@ -2,10 +2,10 @@
 
 // - Shape
 struct SphereShape : public BaseShape {
-    SphereShape(const glm::vec3& center, float radius) 
+    SphereShape(float radius) 
     {
-        const unsigned int X_SEGMENTS = 16;
-        const unsigned int Y_SEGMENTS = 16;
+        const unsigned int X_SEGMENTS = 32;
+        const unsigned int Y_SEGMENTS = 32;
 
         for (unsigned int x = 0; x <= X_SEGMENTS; ++x) {
             for (unsigned int y = 0; y <= Y_SEGMENTS; ++y) {
@@ -13,9 +13,9 @@ struct SphereShape : public BaseShape {
                 float ySegment = (float)y / (float)Y_SEGMENTS;
                 
                 _addPoint(
-                    center.x + radius * std::cos(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
-                    center.y + radius * std::cos(ySegment * 1.0f * glm::pi<float>()),
-                    center.z + radius * std::sin(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>())
+                    radius * std::cos(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
+                    radius * std::cos(ySegment * 1.0f * glm::pi<float>()),
+                    radius * std::sin(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>())
                 );
             }
         }
@@ -50,7 +50,7 @@ struct SphereShape : public BaseShape {
 
 // - Constructor
 Sphere::Sphere(const glm::vec3& center, float radius) :
-    m_shape(std::make_shared<SphereShape>(center, radius))
+    m_shape(std::make_shared<SphereShape>(radius))
 {
     // ..
 }

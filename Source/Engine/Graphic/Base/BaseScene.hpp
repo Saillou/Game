@@ -17,6 +17,9 @@ struct BaseScene {
     virtual void moveCameraDirection(float dx, float dy, float dz);
     virtual void changeCameraPerspective(float dfov);
 
+    int width() const;
+    int height() const;
+
 protected:
     virtual void _init_gl_config(); // Override this to enable or disable some opengl functionalities. (eg PENCIL_TEST)
 

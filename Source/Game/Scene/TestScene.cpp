@@ -13,12 +13,12 @@ Circle::Circle(const glm::vec2& pos_, float radius_, const glm::vec4& color_):
 Line::Line(const glm::vec2& pt_a, const glm::vec2& pt_b, const glm::vec4& color_):
     ParallelipipedBody(
         0.5f * glm::vec3(-pt_a.x - pt_b.x, 0.0f, pt_a.y + pt_b.y),
-        1.0f * glm::vec3(-pt_b.x + pt_a.x, 0.0f, pt_b.y - pt_a.y),
+        0.5f * glm::vec3(-pt_b.x + pt_a.x, 0.0f, pt_b.y - pt_a.y),
         0.005f * glm::normalize(glm::vec3(-pt_b.y + pt_a.y, 0.0f, -pt_b.x + pt_a.x)),
         0.005f * glm::normalize(glm::cross(glm::vec3(-pt_b.x + pt_a.x, 0.0f, pt_b.y - pt_a.y), glm::vec3(-pt_b.y + pt_a.y, 0.0f, -pt_b.x + pt_a.x))),
-        color_)
+        color_
+    )
 {
-
 }
 
 
@@ -27,8 +27,8 @@ TestScene::TestScene() :
     BaseScene()
 {
     // Camera
-    m_camera.position    = glm::vec3(0.0f, 10.0f, 0.5f);
-    m_camera.direction   = glm::vec3(0.0f, 0.0f, 0.5f);
+    m_camera.position    = glm::vec3(0.0f, 10.0f, 0.0f);
+    m_camera.direction   = glm::vec3(0.0f, 0.0f, 0.0f);
     m_camera.fieldOfView = 10.0f;
 }
 

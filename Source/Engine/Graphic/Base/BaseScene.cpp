@@ -34,3 +34,10 @@ void BaseScene::_init_gl_config() {
     glEnable(GL_PROGRAM_POINT_SIZE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
+
+int BaseScene::width() const {
+    return m_width;
+}
+int BaseScene::height() const {
+    return m_height;
+}

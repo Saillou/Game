@@ -2,16 +2,16 @@
 
 // - Shape
 struct ParallelepipedShape : public BaseShape {
-    ParallelepipedShape(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n, const glm::vec3& w) {
-        _addPoint(center + (-u + n) - w);
-        _addPoint(center + (+u + n) - w);
-        _addPoint(center + (+u - n) - w);
-        _addPoint(center + (-u - n) - w);
+    ParallelepipedShape(const glm::vec3& u, const glm::vec3& n, const glm::vec3& w) {
+        _addPoint((-u + n) - w);
+        _addPoint((+u + n) - w);
+        _addPoint((+u - n) - w);
+        _addPoint((-u - n) - w);
 
-        _addPoint(center + (-u + n) + w);
-        _addPoint(center + (+u + n) + w);
-        _addPoint(center + (+u - n) + w);
-        _addPoint(center + (-u - n) + w);
+        _addPoint((-u + n) + w);
+        _addPoint((+u + n) + w);
+        _addPoint((+u - n) + w);
+        _addPoint((-u - n) + w);
 
         auto __face = [=](int a, int b, int c, int d) {
             _addAsTriangle(a, b, c);
@@ -42,7 +42,7 @@ private:
 
 // - Constructor
 Parallelepiped::Parallelepiped(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n, const glm::vec3& w) :
-    m_shape(std::make_shared<ParallelepipedShape>(center, u, n, w))
+    m_shape(std::make_shared<ParallelepipedShape>(u, n, w))
 {
 }
 

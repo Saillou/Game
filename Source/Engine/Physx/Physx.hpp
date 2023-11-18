@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <vector>
+#include <unordered_set>
 
 #include "BaseBody.hpp"
 
@@ -22,8 +22,8 @@ private:
     static Physx& _get();
 
     // Instance members
-    std::vector<std::shared_ptr<BaseBody>> m_static_elements;
-    std::vector<std::shared_ptr<BaseBody>> m_dynamic_elements;
+    std::unordered_set<std::shared_ptr<BaseBody>> m_static_elements;
+    std::unordered_set<std::shared_ptr<BaseBody>> m_dynamic_elements;
 
     // -- No copy --
     Physx() = default;

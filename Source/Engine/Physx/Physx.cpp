@@ -63,7 +63,7 @@ void Physx::Add(std::shared_ptr<BaseBody> body, BodyType type) {
 	(type == BodyType::Static ?
 		_get().m_static_elements: 
 		_get().m_dynamic_elements
-	).push_back(body);
+	).insert(body);
 }
 
 void Physx::Clear() {
@@ -104,9 +104,11 @@ void Physx::Compute(float delta_time_ms) {
 		{
 			if (hindrance->type == BaseBody::ContactType::Parallelepiped) {
 				const glm::vec2 line_center = to2d(hindrance->position);
-				const glm::vec2 line_dir    = 0.5f*to2d(hindrance->dimensions[0]);
+				const glm::vec2 line_dir    = to2d(hindrance->dimensions[0]);
 				const glm::vec2 pt_a = line_center - line_dir;
 				const glm::vec2 pt_b = line_center + line_dir;
+
+				
 			}
 		}
 

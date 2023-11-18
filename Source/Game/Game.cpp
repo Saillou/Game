@@ -45,7 +45,7 @@ Game::ActionCode Game::UpdateState(Game::State& state) {
 	}
 
 	if (game._curr_state.mousePos != state.mousePos) {
-		Event::Emit(Event::MouseMoved(state.mousePos.x, state.mousePos.y));
+		Event::Emit(Event::MouseMoved((int)state.mousePos.x, (int)state.mousePos.y));
 	}
 
 Result:
