@@ -6,6 +6,7 @@
 BaseCommander::BaseCommander(std::shared_ptr<BaseScene> scene) : m_scene(scene) {
     // Root events
     _subscribe(&BaseCommander::_on_key_pressed);
+    _subscribe(&BaseCommander::_on_mouse_moved);
 
     // Clean physx
     Physx::Clear();
@@ -79,4 +80,8 @@ void BaseCommander::_on_key_pressed(const Event::KeyPressed& evt) {
             m_scene->changeCameraPerspective(-speed*10);
             break;
     }
+}
+
+void BaseCommander::_on_mouse_moved(const Event::MouseMoved& evt) {
+    // Do something ..
 }

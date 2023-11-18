@@ -5,6 +5,7 @@
 // Command
 #include "Commander/FruitCommander.hpp"
 #include "Commander/SlimeCommander.hpp"
+#include "Commander/TestCommander.hpp"
 
 // Scene
 #include "Scene/FruitScene.hpp"
@@ -35,12 +36,16 @@ Game::ActionCode Game::UpdateState(Game::State& state) {
 	if (action == ActionCode::Refresh)
 		goto Result;
 
-	// Do actions ..
+	// Emit events
 	while (!state.keyPressed.empty()) {
 		int key = state.keyPressed.front();
 		state.keyPressed.pop();
 
 		Event::Emit(Event::KeyPressed(key));
+	}
+
+	if (game._curr_state.mousePos != state.mousePos) {
+		Event::Emit(Event::MouseMoved(state.mousePos.x, state.mousePos.y));
 	}
 
 Result:
@@ -70,6 +75,7 @@ void Game::Refresh(Window& window) {
 		{
 			case SceneId::FruitScene: return std::make_unique<FruitCommander>(window.scene());
 			case SceneId::SlimeScene: return std::make_unique<SlimeCommander>(window.scene());
+			case SceneId::Other: return std::make_unique<TestCommander>(window.scene());
 			default:
 				return std::make_unique<BaseCommander>(window.scene());
 		}

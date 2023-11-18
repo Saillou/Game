@@ -21,6 +21,7 @@ public:
 
     struct State {
         SceneId sceneId = SceneId::None;
+        glm::vec2 mousePos = {};
         std::queue<int> keyPressed = {};
     };
 

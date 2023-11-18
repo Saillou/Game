@@ -12,6 +12,7 @@ struct BaseCommander : public Event::Subscriber {
 
 protected:
     virtual void _on_key_pressed(const Event::KeyPressed& evt);
+    virtual void _on_mouse_moved(const Event::MouseMoved& evt);
 
     std::shared_ptr<BaseScene> m_scene;
 };

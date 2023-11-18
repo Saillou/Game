@@ -14,6 +14,14 @@ Event::KeyPressed::KeyPressed(int key) :
 	// ..
 }
 
+// -- Mouse events --
+Event::MouseMoved::MouseMoved(int x, int y) :
+	_Base(_Type::MouseMoved),
+	x(x), y(y)
+{
+	// ..
+}
+
 // Private
 Event::Subscriber::Subscriber() {
 	_allSubscribers.insert(this);

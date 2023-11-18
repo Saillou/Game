@@ -76,18 +76,18 @@ void FruitScene::draw() {
 
 void FruitScene::_create_shapes() {
     // Data
-    const glm::vec3 pOrigin(0.f, 0.f, 0.f);
+    constexpr glm::vec3 pOrigin(0.f, 0.f, 0.f);
 
-    const glm::vec3 uDirect(1.f, 0.f, 0.f);
-    const glm::vec3 uNormal(0.f, 1.f, 0.f);
-    const glm::vec3 uHeight(0.f, 0.f, 1.f);
+    constexpr glm::vec3 uDirect(1.f, 0.f, 0.f);
+    constexpr glm::vec3 uNormal(0.f, 1.f, 0.f);
+    constexpr glm::vec3 uHeight(0.f, 0.f, 1.f);
 
-    const float cst_plank = 1e-3f;
-    const float infinity  = 1e+1f;
+    constexpr float cst_plank = 1e-3f;
+    constexpr float infinity  = 1e+1f;
 
-    const float bucketWidth  = 0.50f;
-    const float bucketHeight = 0.50f;
-    const float bucketDepth  = 0.10f;
+    constexpr float bucketWidth  = 0.50f;
+    constexpr float bucketHeight = 0.50f;
+    constexpr float bucketDepth  = 0.10f;
 
     // Create
     m_shapes["sceneGround"] = std::make_shared<Facette>(pOrigin - cst_plank * uHeight, infinity * uDirect, infinity * uNormal);

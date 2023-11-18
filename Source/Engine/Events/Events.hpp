@@ -14,6 +14,7 @@ protected:
 	enum class _Type : int {
 		Undefined = 0,
 		KeyPressed,
+		MouseMoved
 	};
 
 	// Abstract base event
@@ -61,6 +62,12 @@ public:
 	struct KeyPressed : public _Base {
 		explicit KeyPressed(int key = -1);
 		int key;
+	};
+
+	struct MouseMoved : public _Base {
+		explicit MouseMoved(int x = 0, int y = 0);
+		int x;
+		int y;
 	};
 
 private:

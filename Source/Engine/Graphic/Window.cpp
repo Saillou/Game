@@ -93,6 +93,12 @@ std::vector<unsigned int> Window::keyPressed() {
     return keys;
 }
 
+glm::vec2 Window::mousePos() {
+    double x, y;
+    glfwGetCursorPos(m_window, &x, &y);
+    return glm::vec2(x, y);
+}
+
 std::shared_ptr<BaseScene> Window::scene() const {
     return m_scene;
 }

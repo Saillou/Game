@@ -12,7 +12,7 @@ int main() {
     Window window(1600, 900, "The Game");
 
     // Main loop
-    gamestate.sceneId = SceneId::FruitScene;
+    gamestate.sceneId = SceneId::Other;
     Timer::Chronometre chrono;
     do {
         // Read keyboard inputs
@@ -36,6 +36,9 @@ int main() {
                     break;
             }
         }
+
+        // Read mouse
+        gamestate.mousePos = window.mousePos();
 
         // Compute world
         switch (Game::UpdateState(gamestate)) {

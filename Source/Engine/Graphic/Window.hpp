@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include "Base/BaseScene.hpp"
 
@@ -19,6 +20,7 @@ struct Window {
     int width() const;
     int height() const;
     std::vector<unsigned int> keyPressed();
+    glm::vec2 mousePos();
     std::shared_ptr<BaseScene> scene() const;
 
     // Setters
