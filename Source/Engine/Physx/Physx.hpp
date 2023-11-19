@@ -18,12 +18,13 @@ public:
 private:
     static Physx& _get();
 
-    // Instance members
-    std::unordered_set<std::shared_ptr<BaseBody>> m_static_elements;
-    std::unordered_set<std::shared_ptr<BaseBody>> m_dynamic_elements;
+    // Hide physics details
+    struct _impl;
+    std::unique_ptr<_impl> p_impl;
 
     // -- No copy --
-    Physx() = default;
+    Physx();
+    ~Physx();
 
     Physx& operator=(const Physx&) = delete;
     Physx(const Physx&) = delete;

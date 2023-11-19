@@ -46,9 +46,9 @@ target_include_directories(${TARGET_NAME} PRIVATE
 target_link_libraries(${TARGET_NAME} 
     debug "${EXTERNAL_FOLDER}/glfw/bin/Debug/glfw3.lib"
     debug "${EXTERNAL_FOLDER}/freetype/bin/Debug/freetype.lib"
-    debug "${EXTERNAL_FOLDER}/reactphysics3d/Debug/reactphysics3d.lib"
+    debug "${EXTERNAL_FOLDER}/reactphysics3d/bin/Debug/reactphysics3d.lib"
 
     optimized "${EXTERNAL_FOLDER}/glfw/bin/Release/glfw3.lib"
     optimized "${EXTERNAL_FOLDER}/freetype/bin/Release/freetype.lib"
-    optimized "${EXTERNAL_FOLDER}/reactphysics3d/Release/reactphysics3d.lib"
+    optimized "${EXTERNAL_FOLDER}/reactphysics3d/bin/Release/reactphysics3d.lib"
 )
