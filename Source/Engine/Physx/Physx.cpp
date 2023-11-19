@@ -5,6 +5,8 @@
 #include <optional>
 #include <iostream>
 
+using namespace glm;
+
 // Private
 Physx& Physx::_get() {
 	static Physx physx;
@@ -26,11 +28,11 @@ void Physx::Clear() {
 
 #define WORLD_2D
 #ifdef WORLD_2D
-static glm::vec3 to3d(const glm::vec2& v) {
-	return glm::vec3(-v.x, 0.0f, v.y);
+static vec3 to3d(const vec2& v) {
+	return vec3(-v.x, 0.0f, v.y);
 }
-static glm::vec2 to2d(const glm::vec3& v) {
-	return glm::vec2(-v.x, v.z);
+static vec2 to2d(const vec3& v) {
+	return vec2(-v.x, v.z);
 }
 
 void Physx::Compute(float delta_time_ms) {
@@ -38,26 +40,27 @@ void Physx::Compute(float delta_time_ms) {
 
 	// World constantes
 	const float dt_sec = delta_time_ms / 1000.0f;
-	const glm::vec3 GRAVITY(0.0f, 0.0f, -9.81f);
+	const vec3 GRAVITY(0.0f, 0.0f, -1.0f);
 
 	//  Dynamic objects
 	for (auto& body : engine.m_dynamic_elements)
 	{
 		// Properties - Dynamic
-		glm::vec2 body_pos   = to2d(body->position);
-		glm::vec2 body_speed = to2d(body->_speedPosition);
+		vec2 body_pos   = to2d(body->position);
+		vec2 body_speed = to2d(body->_speedPosition);
 
 		// Bdf
-		glm::vec2 accel    = to2d(GRAVITY);
-		glm::vec2 speed    = accel * dt_sec + body_speed;
-		glm::vec2 position = accel * (dt_sec * dt_sec) / 2.0f + body_speed * dt_sec + body_pos;
+		vec2 accel    = to2d(GRAVITY);
+		vec2 speed    = accel * dt_sec + body_speed;
+		vec2 position = accel * (dt_sec * dt_sec) / 2.0f + body_speed * dt_sec + body_pos;
 
 		// Static objects
 		for (const auto& hindrance : engine.m_static_elements)
 		{
 			// Properties - Static
-			const glm::vec2 hind_center				   = to2d(hindrance->position);
-			std::optional<glm::vec2> collide_direction = {};
+			const vec2 hind_center		      = to2d(hindrance->position);
+			std::optional<vec2> collide_point = {};
+			std::optional<vec2> collide_direction = {};
 
 			switch (body->type)
 			{
@@ -71,27 +74,35 @@ void Physx::Compute(float delta_time_ms) {
 					// ---- Contact Sphere / Parallelepiped ----
 				case BaseBody::ContactType::Parallelepiped:
 				{
-					const glm::vec2 line_dir = to2d(hindrance->dimensions[0]);
-					const glm::vec2 pt_a = hind_center - line_dir;
-					const glm::vec2 pt_b = hind_center + line_dir;
+					const vec2 line_dir = to2d(hindrance->dimensions[0]);
+					const vec2 pt_a = hind_center - line_dir;
+					const vec2 pt_b = hind_center + line_dir;
 
-					if (glm::dot(position - pt_a, line_dir) * glm::dot(position - pt_b, line_dir) < 0) {
+					if (dot(position - pt_a, line_dir) * dot(position - pt_b, line_dir) < 0) {
 						float dist_line =
 							std::abs((pt_b.x - pt_a.x) * (pt_a.y - position.y) - (pt_a.x - position.x) * (pt_b.y - pt_a.y)) /
-							glm::distance(pt_a, pt_b);
+							distance(pt_a, pt_b);
 
 						if (dist_line < body_radius) {
-							collide_direction = glm::normalize(glm::vec2(-line_dir.y, line_dir.x));
+							collide_direction = normalize(vec2(line_dir.y, -line_dir.x));
+							goto compute_collide_point;
 						}
 					}
 
-					else if (glm::distance(pt_a, position) < body_radius) {
-						collide_direction = glm::normalize(pt_a - position);
+					if (distance(pt_a, position) < body_radius) {
+						collide_direction = normalize(position - pt_a);
+						goto compute_collide_point;
 					}
 
-					else if (glm::distance(pt_b, position) < body_radius) {
-						collide_direction = glm::normalize(pt_b - position);
+					if (distance(pt_b, position) < body_radius) {
+						collide_direction = normalize(position - pt_b);
+						goto compute_collide_point;
 					}
+
+				compute_collide_point:
+					if(collide_direction.has_value())
+						collide_point = position + body_radius * collide_direction.value();
+
 				} break;
 
 				// -- Contact Sphere / Sphere
@@ -100,27 +111,25 @@ void Physx::Compute(float delta_time_ms) {
 					float hind_radius = hindrance->dimensions[0][0];
 
 					// Collide
-					float d = glm::distance(position, hind_center);
+					float d = distance(position, hind_center);
 					if (d > hind_radius + body_radius)
-						continue; // No boum
+						break; // No boum
 
-					// Collide point
-					collide_direction = glm::normalize(hind_center - position);
+					collide_direction = normalize(position - hind_center);
+					collide_point = position + body_radius * collide_direction.value();
 				} break;
 				}
 
 				// no boum
-				if (!collide_direction.has_value())
+				if (!collide_point.has_value())
 					continue;
 
-				glm::vec2 collide_point = position + body_radius * collide_direction.value();
-				std::cout << glm::to_string(position) << " " << glm::to_string(collide_point) << std::endl;
-
+				// boum
+				speed	 = body->_bouncyness * length(speed) * collide_direction.value();
+				position = collide_point.value() - body_radius * collide_direction.value();
 			} break; // End contact sphere
 			}
-
 		}
-
 
 		// Update
 		body_pos = position;
@@ -142,15 +151,15 @@ void Physx::Compute(float delta_time_ms) {
 
 	// World constantes
 	const float dt_sec = delta_time_ms / 1000.0f;
-	const glm::vec3 GRAVITY(0.0f, 0.0f, -9.81f);
+	const vec3 GRAVITY(0.0f, 0.0f, -9.81f);
 	
 	// Update positions/velocity
 	for (auto& body : engine.m_dynamic_elements) 
 	{
 		// Bdf
-		glm::vec3 accel = GRAVITY;			    
-		glm::vec3 speed = accel*dt_sec + body->_speedPosition;
-		glm::vec3 position = accel*(dt_sec*dt_sec)/2.0f + body->_speedPosition*dt_sec + body->position;
+		vec3 accel = GRAVITY;			    
+		vec3 speed = accel*dt_sec + body->_speedPosition;
+		vec3 position = accel*(dt_sec*dt_sec)/2.0f + body->_speedPosition*dt_sec + body->position;
 
 
 		// Collisions
@@ -168,9 +177,9 @@ void Physx::Compute(float delta_time_ms) {
 				continue;
 			}
 
-			const glm::vec3 Pr = hindrance->position;
-			const glm::vec3 Vn = glm::normalize(
-				hindrance->dimensions[2] == glm::vec3(0) ? glm::cross(hindrance->dimensions[1], hindrance->dimensions[0]) : hindrance->dimensions[2]
+			const vec3 Pr = hindrance->position;
+			const vec3 Vn = normalize(
+				hindrance->dimensions[2] == vec3(0) ? cross(hindrance->dimensions[1], hindrance->dimensions[0]) : hindrance->dimensions[2]
 			);
 
 			if (body->type != BaseBody::ContactType::Sphere) {
@@ -180,10 +189,10 @@ void Physx::Compute(float delta_time_ms) {
 
 			// Boum
 			float tc = 0.0f;
-			const auto collide_point = ([=](float& r_time_collide) -> std::optional<glm::vec3>
+			const auto collide_point = ([=](float& r_time_collide) -> std::optional<vec3>
 				{
-					const float Dp0 = glm::dot(Pp0, Vn);
-					const float Dp1 = glm::dot(Pp1, Vn);
+					const float Dp0 = dot(Pp0, Vn);
+					const float Dp1 = dot(Pp1, Vn);
 					if (Dp0 * Dp1 > 0) // no collision
 						return {};
 

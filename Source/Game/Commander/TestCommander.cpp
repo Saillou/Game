@@ -6,6 +6,7 @@
 
 using namespace glm;
 
+
 // Instance
 TestCommander::TestCommander(std::shared_ptr<BaseScene> scene):
     BaseCommander(scene),
@@ -20,12 +21,15 @@ TestCommander::TestCommander(std::shared_ptr<BaseScene> scene):
     const vec2 B(-size, +size);
     const vec2 C(+size, +size);
     const vec2 D(+size, -size);
+    const vec4 yellow(1.0f, 1.0f, 0.0f, 1.0f);
 
-    draw_circle_dead(m_scene, vec2(0, 0), 0.20f, vec4(1.0f, 1.0f, 0.0f, 1.0f));
-    draw_line_dead(m_scene, A, B, vec4(1.0f, 1.0f, 0.0f, 1.0f));
-    draw_line_dead(m_scene, B, C, vec4(1.0f, 1.0f, 0.0f, 1.0f));
-    draw_line_dead(m_scene, C, D, vec4(1.0f, 1.0f, 0.0f, 1.0f));
-    draw_line_dead(m_scene, D, A, vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    draw_circle_dead(m_scene, vec2(0, 0), 0.20f, yellow);
+    draw_line_dead(m_scene, A, B, yellow);
+    draw_line_dead(m_scene, B, C, yellow);
+    draw_line_dead(m_scene, C, D, yellow);
+    draw_line_dead(m_scene, D, A, yellow);
+    //draw_line_dead(m_scene, D, B, yellow);
+    //draw_line_dead(m_scene, C, A, yellow);
 }
 
 // Events
@@ -38,7 +42,7 @@ void TestCommander::_on_key_pressed(const Event::KeyPressed& evt) {
         if (current_time - m_last_add_ms > DELAY_MS_ADD)
         {
             m_last_add_ms = current_time;
-            draw_circle_alive(m_scene, glm::vec2(-m_sphere_preview->position.x, m_sphere_preview->position.z), 0.10f, vec4(0.0f, 0.0f, 1.0f, 1.0f));
+            draw_circle_alive(m_scene, vec2(-m_sphere_preview->position.x, m_sphere_preview->position.z), 0.10f, vec4(0.0f, 0.0f, 1.0f, 1.0f));
         }
     }
 
@@ -60,36 +64,36 @@ void TestCommander::_on_mouse_moved(const Event::MouseMoved& evt) {
     float rel_mx = 1.0f - 2.0f * evt.x / size_square;
     float rel_my = 1.0f - 2.0f * evt.y / size_square;
 
-    m_sphere_preview->position = glm::vec3(rel_mx+offset_x, 0.0f, rel_my+offset_y);
+    m_sphere_preview->position = vec3(rel_mx+offset_x, 0.0f, rel_my+offset_y);
 }
 
 
 // -- Drawing helper --
 // circles
-std::shared_ptr<Circle> TestCommander::draw_circle(std::shared_ptr<TestScene> scene, const vec2& pos, const float radius, vec4& color) {
+std::shared_ptr<Circle> TestCommander::draw_circle(std::shared_ptr<TestScene> scene, const vec2& pos, const float radius, const vec4& color) {
     return scene->addCircle(std::make_shared<Circle>(pos, radius, color));
 }
-std::shared_ptr<Circle> TestCommander::draw_circle_dead(std::shared_ptr<TestScene> scene, const vec2& pos, const float radius, vec4& color) {
+std::shared_ptr<Circle> TestCommander::draw_circle_dead(std::shared_ptr<TestScene> scene, const vec2& pos, const float radius, const vec4& color) {
     auto circle = draw_circle(scene, pos, radius, color);
     Physx::Add(circle, Physx::BodyType::Static);
     return circle;
 }
-std::shared_ptr<Circle> TestCommander::draw_circle_alive(std::shared_ptr<TestScene> scene, const vec2& pos, const float radius, vec4& color) {
+std::shared_ptr<Circle> TestCommander::draw_circle_alive(std::shared_ptr<TestScene> scene, const vec2& pos, const float radius, const vec4& color) {
     auto circle = draw_circle(scene, pos, radius, color);
     Physx::Add(circle, Physx::BodyType::Dynamic);
     return circle;
 }
 
 // lines
-std::shared_ptr<Line> TestCommander::draw_line(std::shared_ptr<TestScene> scene, const vec2& pos_start, const vec2& pos_end, vec4& color) {
+std::shared_ptr<Line> TestCommander::draw_line(std::shared_ptr<TestScene> scene, const vec2& pos_start, const vec2& pos_end, const vec4& color) {
     return scene->addLine(std::make_shared<Line>(pos_start, pos_end, color));
 }
-std::shared_ptr<Line> TestCommander::draw_line_dead(std::shared_ptr<TestScene> scene, const vec2& pos_start, const vec2& pos_end, vec4& color) {
+std::shared_ptr<Line> TestCommander::draw_line_dead(std::shared_ptr<TestScene> scene, const vec2& pos_start, const vec2& pos_end, const vec4& color) {
     auto line = draw_line(scene, pos_start, pos_end, color);
     Physx::Add(line, Physx::BodyType::Static);
     return line;
 }
-std::shared_ptr<Line> TestCommander::draw_line_alive(std::shared_ptr<TestScene> scene, const vec2& pos_start, const vec2& pos_end, vec4& color) {
+std::shared_ptr<Line> TestCommander::draw_line_alive(std::shared_ptr<TestScene> scene, const vec2& pos_start, const vec2& pos_end, const vec4& color) {
     auto line = draw_line(scene, pos_start, pos_end, color);
     Physx::Add(line, Physx::BodyType::Dynamic);
     return line;
