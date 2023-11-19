@@ -10,26 +10,17 @@
 
 class Event {
 protected:
-	// List possibilities
-	enum class _Type : int {
-		Undefined = 0,
-		KeyPressed,
-		MouseMoved
-	};
+	typedef int _Type;
 
 	// Abstract base event
 	struct _Base {
-		_Base(_Type id = _Type::Undefined) : _id(id) {
-			// ..
-		}
+		_Base(_Type type);
 		virtual ~_Base() = default;
 
-		const _Type id() const { 
-			return _id;
-		};
+		virtual const _Type type() const;
 
 	private:
-		_Type _id;
+		_Type m_type;
 	};
 
 public:
@@ -57,19 +48,6 @@ public:
 		std::unordered_map<_Type, std::vector<_crushyCallback>> _callbacks;
 	};
 
-	// Define events available
-	// -- Keyboard --
-	struct KeyPressed : public _Base {
-		explicit KeyPressed(int key = -1);
-		int key;
-	};
-
-	struct MouseMoved : public _Base {
-		explicit MouseMoved(int x = 0, int y = 0);
-		int x;
-		int y;
-	};
-
 private:
 	static std::unordered_set<Subscriber*> _allSubscribers;
 };
@@ -81,7 +59,7 @@ inline void Event::Emit(const T& event)
 	static_assert(std::is_base_of<Event::_Base, T>(), "Can't emit non inherited BaseEvent.");
 
 	for (Subscriber* subscriber : _allSubscribers) {
-		for (const Subscriber::_crushyCallback& callback : subscriber->_callbacks[event.id()]) {
+		for (const Subscriber::_crushyCallback& callback : subscriber->_callbacks[event.type()]) {
 			callback(static_cast<const Event::_Base*>(&event));
 		}
 	}
@@ -90,10 +68,10 @@ inline void Event::Emit(const T& event)
 template<class _subscriber, typename _message>
 inline void Event::Subscriber::_subscribe(void(_subscriber::*finalCallback)(const _message&))
 {
-	static_assert(std::is_base_of<Event::_Base, Event::KeyPressed>(), "Can't subscribe to non inherited BaseEvent.");
+	static_assert(std::is_base_of<Event::_Base, _message>(), "Can't subscribe to non inherited BaseEvent.");
 
-	// Memorize id from type
-	static const _Type type = _message{}.id();
+	// Memorize type
+	static const _Type type = _message{}.type();
 
 	// Encapsulate the final callback
 	const _crushyCallback crushy = [=](const Event::_Base* msg) -> void 

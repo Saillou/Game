@@ -10,8 +10,8 @@ struct TestCommander : public BaseCommander {
 
 protected:
     // Events
-    void _on_key_pressed(const Event::KeyPressed& evt) override;
-    void _on_mouse_moved(const Event::MouseMoved& evt) override;
+    void _on_key_pressed(const CustomEvents::KeyPressed& evt) override;
+    void _on_mouse_moved(const CustomEvents::MouseMoved& evt) override;
 
 private:
     // Drawing helpers

@@ -8,7 +8,7 @@ struct FruitCommander : public BaseCommander {
     FruitCommander(std::shared_ptr<BaseScene> scene);
 
 protected:
-    void _on_key_pressed(const Event::KeyPressed& evt) override;
+    void _on_key_pressed(const CustomEvents::KeyPressed& evt) override;
 
 private:
     std::shared_ptr<FruitScene> m_scene;

@@ -42,7 +42,7 @@ FruitCommander::FruitCommander(std::shared_ptr<BaseScene> scene):
 }
 
 // Events
-void FruitCommander::_on_key_pressed(const Event::KeyPressed& evt) {
+void FruitCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
     // Constantes for events
     const int DELAY_MS_ADD = 300; //ms
     const float SPEED_FRUIT = 0.02f;

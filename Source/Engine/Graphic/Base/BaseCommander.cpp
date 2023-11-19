@@ -12,7 +12,7 @@ BaseCommander::BaseCommander(std::shared_ptr<BaseScene> scene) : m_scene(scene) 
     Physx::Clear();
 }
 
-void BaseCommander::_on_key_pressed(const Event::KeyPressed& evt) {
+void BaseCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
     std::cout << "BaseCommander::OnKeyPressed: " << evt.key << std::endl;
 
     // Test camera position/direction
@@ -82,6 +82,6 @@ void BaseCommander::_on_key_pressed(const Event::KeyPressed& evt) {
     }
 }
 
-void BaseCommander::_on_mouse_moved(const Event::MouseMoved& evt) {
+void BaseCommander::_on_mouse_moved(const CustomEvents::MouseMoved& evt) {
     // Do something ..
 }

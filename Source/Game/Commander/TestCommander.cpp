@@ -33,7 +33,7 @@ TestCommander::TestCommander(std::shared_ptr<BaseScene> scene):
 }
 
 // Events
-void TestCommander::_on_key_pressed(const Event::KeyPressed& evt) {
+void TestCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
     const int DELAY_MS_ADD = 300; //ms
 
     // React to the emitted keys 
@@ -55,7 +55,7 @@ void TestCommander::_on_key_pressed(const Event::KeyPressed& evt) {
     }
 }
 
-void TestCommander::_on_mouse_moved(const Event::MouseMoved& evt) {
+void TestCommander::_on_mouse_moved(const CustomEvents::MouseMoved& evt) {
     float size_square = (float)std::min(m_scene->width(), m_scene->height());
 
     float offset_x = (m_scene->width() - size_square) / size_square;

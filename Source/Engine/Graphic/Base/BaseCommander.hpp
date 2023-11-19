@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "BaseScene.hpp"
-#include "../../Events/Events.hpp"
+#include "../../Events/CustomEvents.hpp"
 
 // -- Scene --
 struct BaseCommander : public Event::Subscriber {
@@ -11,8 +11,8 @@ struct BaseCommander : public Event::Subscriber {
     virtual ~BaseCommander() = default;
 
 protected:
-    virtual void _on_key_pressed(const Event::KeyPressed& evt);
-    virtual void _on_mouse_moved(const Event::MouseMoved& evt);
+    virtual void _on_key_pressed(const CustomEvents::KeyPressed& evt);
+    virtual void _on_mouse_moved(const CustomEvents::MouseMoved& evt);
 
     std::shared_ptr<BaseScene> m_scene;
 };

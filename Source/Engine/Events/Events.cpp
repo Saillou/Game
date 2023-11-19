@@ -1,26 +1,8 @@
 #include "Events.hpp"
 
-#include <iostream>
-
-// Static
+// Static init
 std::unordered_set<Event::Subscriber*> Event::_allSubscribers;
 
-// Public
-// -- Keyboard events --
-Event::KeyPressed::KeyPressed(int key) :
-	_Base(_Type::KeyPressed),
-	key(key) 
-{
-	// ..
-}
-
-// -- Mouse events --
-Event::MouseMoved::MouseMoved(int x, int y) :
-	_Base(_Type::MouseMoved),
-	x(x), y(y)
-{
-	// ..
-}
 
 // Private
 Event::Subscriber::Subscriber() {
@@ -29,4 +11,14 @@ Event::Subscriber::Subscriber() {
 
 Event::Subscriber::~Subscriber() {
 	_allSubscribers.erase(this);
+}
+
+Event::_Base::_Base(_Type type) : m_type(type)
+{
+	// ..
+}
+
+// Identifier
+const Event::_Type Event::_Base::type() const {
+	return m_type;
 }

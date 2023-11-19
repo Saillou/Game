@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-#include "../Engine/Events/Events.hpp"
+#include "../Engine/Events/CustomEvents.hpp"
 
 // Command
 #include "Commander/FruitCommander.hpp"
@@ -41,11 +41,11 @@ Game::ActionCode Game::UpdateState(Game::State& state) {
 		int key = state.keyPressed.front();
 		state.keyPressed.pop();
 
-		Event::Emit(Event::KeyPressed(key));
+		Event::Emit(CustomEvents::KeyPressed(key));
 	}
 
 	if (game._curr_state.mousePos != state.mousePos) {
-		Event::Emit(Event::MouseMoved((int)state.mousePos.x, (int)state.mousePos.y));
+		Event::Emit(CustomEvents::MouseMoved((int)state.mousePos.x, (int)state.mousePos.y));
 	}
 
 Result:
