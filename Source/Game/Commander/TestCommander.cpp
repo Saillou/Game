@@ -28,17 +28,41 @@ TestCommander::TestCommander(std::shared_ptr<BaseScene> scene):
     draw_line_dead(m_scene, B, C, yellow);
     draw_line_dead(m_scene, C, D, yellow);
     draw_line_dead(m_scene, D, A, yellow);
-    //draw_line_dead(m_scene, D, B, yellow);
-    //draw_line_dead(m_scene, C, A, yellow);
+    draw_line_dead(m_scene, D*0.25f, B*0.5f, yellow);
+
+    _subscribe(&TestCommander::_on_debug_point);
+    _subscribe(&TestCommander::_on_debug_line);
 }
 
 // Events
+void TestCommander::_on_debug_point(const CustomEvents::DebugDrawPoint& evt) {
+    static int64_t last_time = 0;
+    int64_t current_time = Timer::GetCurrentTime<Timer::millisecond>();
+    std::cout << Timer::GetCurrentTime<Timer::millisecond>() << std::endl;
+    if (current_time - last_time > 150)
+    {
+        last_time = current_time;
+        draw_circle(m_scene, vec2(evt.x, evt.y), 0.01f, vec4(1.0f, 0.0f, 1.0f, 1.0f));
+    }
+}
+void TestCommander::_on_debug_line(const CustomEvents::DebugDrawLine& evt) {
+    static int64_t last_time = 0;
+    int64_t current_time = Timer::GetCurrentTime<Timer::millisecond>();
+    if (current_time - last_time > 150)
+    {
+        last_time = current_time;
+        draw_circle(m_scene, vec2(evt.x0, evt.y0), 0.01f, vec4(0.0f, 1.0f, 1.0f, 1.0f));
+        draw_circle(m_scene, vec2(evt.x1, evt.y1), 0.01f, vec4(0.0f, 1.0f, 1.0f, 1.0f));
+        draw_line(m_scene, vec2(evt.x0, evt.y0), vec2(evt.x1, evt.y1), vec4(0.0f, 1.0f, 1.0f, 1.0f));
+    }
+}
+
 void TestCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
     const int DELAY_MS_ADD = 300; //ms
 
     // React to the emitted keys 
     if (evt.key == Key::Space) {
-        int current_time = Timer::GetCurrentTime<Timer::millisecond>();
+        int64_t current_time = Timer::GetCurrentTime<Timer::millisecond>();
         if (current_time - m_last_add_ms > DELAY_MS_ADD)
         {
             m_last_add_ms = current_time;

@@ -24,7 +24,7 @@ public:
 protected:
     // Internal params
     const float _mass       = 1.0f;
-    const float _bouncyness = 0.5f;
+    const float _bouncyness = 0.7f;
 
     // Internal data
     glm::vec3 _speedPosition    { glm::vec3(0.f) };

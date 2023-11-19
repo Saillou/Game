@@ -60,11 +60,11 @@ public:
 
 	// Get timestamp
 	template <typename TimePolicy> inline
-		static int GetCurrentTime() 
+		static int64_t GetCurrentTime()
 	{
 		static_assert(std::is_base_of<_time_policy, TimePolicy>(), "Bad time policy");
 
-		return TimePolicy::Get<int>(Timer::Now());
+		return TimePolicy::Get<int64_t>(Timer::Now());
 	}
 
 	// Instance
@@ -79,10 +79,10 @@ public:
 
 		// Get elapsed time since last tic
 		template <typename TimePolicy> inline
-		int elapsed() {
+			int64_t elapsed() {
 			static_assert(std::is_base_of<_time_policy, TimePolicy>(), "Bad time policy");
 
-			return TimePolicy::GetDiff<int>(Timer::Now(), m_last_tic);
+			return TimePolicy::GetDiff<int64_t>(Timer::Now(), m_last_tic);
 		}
 
 	private:

@@ -1,4 +1,6 @@
 #include "Physx.hpp"
+#include "../Events/CustomEvents.hpp"
+
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/norm.hpp>
 
@@ -101,7 +103,7 @@ void Physx::Compute(float delta_time_ms) {
 
 				compute_collide_point:
 					if(collide_direction.has_value())
-						collide_point = position + body_radius * collide_direction.value();
+						collide_point = position - body_radius * collide_direction.value();
 
 				} break;
 
@@ -116,7 +118,7 @@ void Physx::Compute(float delta_time_ms) {
 						break; // No boum
 
 					collide_direction = normalize(position - hind_center);
-					collide_point = position + body_radius * collide_direction.value();
+					collide_point = position - body_radius * collide_direction.value();
 				} break;
 				}
 
@@ -125,8 +127,23 @@ void Physx::Compute(float delta_time_ms) {
 					continue;
 
 				// boum
-				speed	 = body->_bouncyness * length(speed) * collide_direction.value();
-				position = collide_point.value() - body_radius * collide_direction.value();
+				vec2 u0 = collide_direction.value();
+				vec2 z0 = normalize(speed);
+
+				const float cos_a = dot(u0, z0);
+				const float sin_a = sin(acos(cos_a));
+				mat2 m01 = {
+					+cos_a, -sin_a,
+					+sin_a, +cos_a
+				};
+				mat2 m10 = glm::inverse(m01);
+
+				vec2 z1 = m01 * z0;
+				vec2 s1 = vec2(z1.x, -z1.y);
+				vec2 s0 = m10 * s1;
+
+				speed = body->_bouncyness * length(speed) * s0;
+				position = body_pos;
 			} break; // End contact sphere
 			}
 		}

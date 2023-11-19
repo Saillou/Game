@@ -10,6 +10,9 @@ struct TestCommander : public BaseCommander {
 
 protected:
     // Events
+    void _on_debug_line(const CustomEvents::DebugDrawLine& evt);
+    void _on_debug_point(const CustomEvents::DebugDrawPoint& evt);
+
     void _on_key_pressed(const CustomEvents::KeyPressed& evt) override;
     void _on_mouse_moved(const CustomEvents::MouseMoved& evt) override;
 
@@ -26,7 +29,7 @@ private:
     // Members
     std::shared_ptr<TestScene> m_scene;
 
-    int m_last_add_ms;
+    int64_t m_last_add_ms;
     std::unordered_map<std::string, std::shared_ptr<Line>> m_lines;
     std::unordered_map<std::string, std::shared_ptr<Circle>> m_circles;
 

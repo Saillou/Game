@@ -49,7 +49,7 @@ void FruitCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
 
     // React to the emitted keys 
     if (evt.key == Key::Space) {
-        int current_time = Timer::GetCurrentTime<Timer::millisecond>();
+        int64_t current_time = Timer::GetCurrentTime<Timer::millisecond>();
         if (current_time - m_last_add_ms > DELAY_MS_ADD) 
         {
             m_last_add_ms = current_time;

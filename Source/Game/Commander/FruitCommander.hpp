@@ -14,5 +14,5 @@ private:
     std::shared_ptr<FruitScene> m_scene;
     std::shared_ptr<Fruit> m_currentFruit;
 
-    int m_last_add_ms = 0;
+    int64_t m_last_add_ms = 0;
 };

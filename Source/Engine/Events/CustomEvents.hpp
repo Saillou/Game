@@ -19,13 +19,13 @@ struct CustomEvents : public Event {
 
 	// -- Debug --
 	struct DebugDrawPoint : public _Base {
-		explicit DebugDrawPoint(float x, float y);
+		explicit DebugDrawPoint(float x = 0, float y = 0);
 
 		float x;
 		float y;
 	};
 	struct DebugDrawLine : public _Base {
-		explicit DebugDrawLine(float x0, float y0, float x1, float y1);
+		explicit DebugDrawLine(float x0 = 0, float y0 = 0, float x1 = 0, float y1 = 0);
 
 		float x0;
 		float y0;
