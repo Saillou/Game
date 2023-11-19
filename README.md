@@ -19,3 +19,4 @@ Use the command `./generate.ps1` and hope for the best.
 - `Glad` (Get entry points for `opengl32.dll`'s methods) | Generated at: https://glad.dav1d.de
 - `Glfw` (Windows and inputs helper)                              | Official website: https://www.glfw.org
 - `FreeType` (Font renderer)                                             | Clone: https://gitlab.freedesktop.org/freetype
+- `ReactPhysics3D` (Physic Engine)                                     | Clone: https://github.com/DanielChappuis/reactphysics3d
