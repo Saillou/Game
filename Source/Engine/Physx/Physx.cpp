@@ -89,14 +89,14 @@ void Physx::Add(std::shared_ptr<BaseBody> body, BodyType type) {
 		switch (body->type) {
 		case BaseBody::ContactType::Sphere: 
 			return px->factory.createSphereShape(
-				body->dimensions[0][0]
+				0.10f
 			);
 
 		case BaseBody::ContactType::Parallelepiped:
 			return px->factory.createBoxShape(Vector3(
-				length(body->dimensions[0]), 
-				length(body->dimensions[1]), 
-				length(body->dimensions[2])
+				1.0f,
+				1.0f,
+				0.005f
 			));
 		}
 		return nullptr;
