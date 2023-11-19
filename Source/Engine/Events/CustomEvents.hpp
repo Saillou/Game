@@ -17,9 +17,28 @@ struct CustomEvents : public Event {
 		int y;
 	};
 
+	// -- Debug --
+	struct DebugDrawPoint : public _Base {
+		explicit DebugDrawPoint(float x, float y);
+
+		float x;
+		float y;
+	};
+	struct DebugDrawLine : public _Base {
+		explicit DebugDrawLine(float x0, float y0, float x1, float y1);
+
+		float x0;
+		float y0;
+		float x1;
+		float y1;
+	};
+
 private:
 	enum _Type : int {
 		EventKeyPressed,
-		EventMouseMoved
+		EventMouseMoved,
+
+		Debug_Draw_Point,
+		Debug_Draw_Line,
 	};
 };
