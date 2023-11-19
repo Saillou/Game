@@ -10,7 +10,7 @@ struct BaseScene {
     BaseScene();
     virtual ~BaseScene();
 
-    virtual void draw() = 0;                        // called by an instance of a `Window::update()`
+    virtual void draw();                            // called by an instance of a `Window::update()`
     virtual void resize(int width, int height);     // called by an event `Window::resize()`
 
     virtual void moveCameraPosition(float dx, float dy, float dz);

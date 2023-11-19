@@ -1,6 +1,6 @@
 #include "TestScene.hpp"
 
-#include "Objects/Parallelepiped.hpp"
+#include "Objects/Box.hpp"
 #include "Objects/Sphere.hpp"
 
 #include <glm/gtx/string_cast.hpp>
@@ -12,13 +12,14 @@ Circle::Circle(const glm::vec2& pos_, float radius_, const glm::vec4& color_):
 }
 
 Line::Line(const glm::vec2& pt_a, const glm::vec2& pt_b, const glm::vec4& color_):
-    ParallelipipedBody(
-        0.5f * glm::vec3(-pt_a.x - pt_b.x, 0.0f, pt_a.y + pt_b.y),
-        0.5f * glm::vec3(-pt_b.x + pt_a.x, 0.0f, pt_b.y - pt_a.y),
-        0.005f * glm::normalize(glm::vec3(-pt_b.y + pt_a.y, 0.0f, -pt_b.x + pt_a.x)),
-        0.005f * glm::normalize(glm::cross(glm::vec3(-pt_b.x + pt_a.x, 0.0f, pt_b.y - pt_a.y), glm::vec3(-pt_b.y + pt_a.y, 0.0f, -pt_b.x + pt_a.x))),
-        color_
-    )
+    //BoxBody(
+    //    0.5f * glm::vec3(-pt_a.x - pt_b.x, 0.0f, pt_a.y + pt_b.y),
+    //    0.5f * glm::vec3(-pt_b.x + pt_a.x, 0.0f, pt_b.y - pt_a.y),
+    //    0.005f * glm::normalize(glm::vec3(-pt_b.y + pt_a.y, 0.0f, -pt_b.x + pt_a.x)),
+    //    0.005f * glm::normalize(glm::cross(glm::vec3(-pt_b.x + pt_a.x, 0.0f, pt_b.y - pt_a.y), glm::vec3(-pt_b.y + pt_a.y, 0.0f, -pt_b.x + pt_a.x))),
+    //    color_
+    //)
+    BoxBody(glm::vec3(0.0f), glm::vec3(0.5f, 0.5f, 0.5f), color_)
 {
 }
 
@@ -42,7 +43,7 @@ void TestScene::resize(int width, int height) {
 }
 
 std::shared_ptr<Line>  TestScene::addLine(std::shared_ptr<Line> line) {
-    m_facettes.push_back(line);
+    m_boxes.push_back(line);
     return line;
 }
 
@@ -55,7 +56,7 @@ void TestScene::draw() {
     // Get camera
     _camera_update();
 
-    for (auto& shape : m_facettes) {
+    for (auto& shape : m_boxes) {
         shape->draw(m_camera);
     }
 

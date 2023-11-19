@@ -23,6 +23,10 @@ void BaseScene::changeCameraPerspective(float dfov) {
     m_camera.fieldOfView += dfov;
 }
 
+void BaseScene::draw() {
+    // to be overrided
+}
+
 void BaseScene::resize(int width, int height) {
     m_width = width;
     m_height = height;

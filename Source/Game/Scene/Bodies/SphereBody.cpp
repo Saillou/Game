@@ -32,7 +32,7 @@ private:
 
 // Instance
 SphereBody::SphereBody(float radius_, const glm::vec3& position_, const glm::vec4& color_) :
-	BaseBody(BaseBody::ContactType::Sphere, position_, radius_ * glm::mat3(1.0f)),
+	BaseBody(BaseBody::ContactType::Sphere, position_, glm::vec3(radius_, radius_, radius_)),
 	radius(radius_),
 	_impl(new _SphereBodyImpl(radius_, color_))
 {

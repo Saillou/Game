@@ -8,18 +8,13 @@
 #include "../../../Engine/Graphic/Base/Cookable.hpp"
 
 // Objects
-struct Facette : public Cookable
+struct Box : public Cookable
 {
-    // Enums and type
-    typedef std::array<glm::vec3, 4> Quad;
-
     // Instance
-    Facette(const Quad& points);
-    Facette(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n);
+    Box(const glm::vec3& dims);
+    virtual ~Box() = default;
 
-    virtual ~Facette() = default;
-
-    void draw(const Camera& camera, const glm::vec3& position = glm::vec3());
+    void draw(const Camera& camera, const glm::vec3& position = glm::vec3(), const glm::vec3& orientation = glm::vec3());
 
 private:
     void _set_shader_common(UShader&);

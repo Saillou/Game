@@ -58,7 +58,7 @@ Physx::Physx() : p_impl(std::make_unique<_impl>())
 }
 Physx::~Physx() 
 {
-	// Need a body
+	// Need a body due to unique_ptr pimpl
 }
 
 // Public
@@ -92,7 +92,7 @@ void Physx::Add(std::shared_ptr<BaseBody> body, BodyType type) {
 				0.10f
 			);
 
-		case BaseBody::ContactType::Parallelepiped:
+		case BaseBody::ContactType::Box:
 			return px->factory.createBoxShape(Vector3(
 				1.0f,
 				1.0f,

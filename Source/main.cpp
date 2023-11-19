@@ -12,7 +12,8 @@ int main() {
     Window window(1600, 900, "The Game");
 
     // Main loop
-    gamestate.sceneId = SceneId::Other;
+    gamestate.sceneId = SceneId::TestScene;
+
     Timer::Chronometre chrono;
     do {
         // Read keyboard inputs
@@ -23,12 +24,10 @@ int main() {
                     window.close(); 
                     break;
 
-                // All scenes
-                case GLFW_KEY_1: gamestate.sceneId = SceneId::FruitScene; break;
-                case GLFW_KEY_2: gamestate.sceneId = SceneId::SlimeScene; break;
-                case GLFW_KEY_3: gamestate.sceneId = SceneId::CrashScene; break;
-                case GLFW_KEY_4: gamestate.sceneId = SceneId::FlapiScene; break;
-                case GLFW_KEY_5: gamestate.sceneId = SceneId::Other;      break;
+                // Change scene
+                case GLFW_KEY_1: 
+                    gamestate.sceneId = SceneId::TestScene;  
+                    break;
 
                 // Game inputs
                 default:

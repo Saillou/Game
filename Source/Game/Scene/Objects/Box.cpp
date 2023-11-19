@@ -1,17 +1,22 @@
-#include "Parallelepiped.hpp"
+#include "Box.hpp"
 
 // - Shape
-struct ParallelepipedShape : public BaseShape {
-    ParallelepipedShape(const glm::vec3& u, const glm::vec3& n, const glm::vec3& w) {
-        _addPoint((-u + n) - w);
-        _addPoint((+u + n) - w);
-        _addPoint((+u - n) - w);
-        _addPoint((-u - n) - w);
+struct BoxShape : public BaseShape {
+    BoxShape(const glm::vec3& dims) {
+        const glm::mat3 world(1.0f);
+        const glm::vec3 u = dims[0] * world[0];
+        const glm::vec3 v = dims[1] * world[1];
+        const glm::vec3 w = dims[2] * world[2];
 
-        _addPoint((-u + n) + w);
-        _addPoint((+u + n) + w);
-        _addPoint((+u - n) + w);
-        _addPoint((-u - n) + w);
+        _addPoint((-u + v) - w);
+        _addPoint((+u + v) - w);
+        _addPoint((+u - v) - w);
+        _addPoint((-u - v) - w);
+
+        _addPoint((-u + v) + w);
+        _addPoint((+u + v) + w);
+        _addPoint((+u - v) + w);
+        _addPoint((-u - v) + w);
 
         auto __face = [=](int a, int b, int c, int d) {
             _addAsTriangle(a, b, c);
@@ -41,34 +46,40 @@ private:
 };
 
 // - Constructor
-Parallelepiped::Parallelepiped(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n, const glm::vec3& w) :
-    m_shape(std::make_shared<ParallelepipedShape>(u, n, w))
+Box::Box(const glm::vec3& dims) :
+    m_shape(std::make_shared<BoxShape>(dims))
 {
 }
 
-void Parallelepiped::draw(const Camera& camera, const glm::vec3& position) {
+void Box::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation) {
+    glm::mat4 model(1.0f);
+    model = glm::translate(model, position);
+    model = glm::rotate(model, orientation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, orientation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, orientation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
     for (auto& recipe: m_shaders) {
         recipe->
             use().
-            set("offset",       position).
-            set("Projection",   camera.projection).
-            set("Modelview",    camera.modelview);
+            set("Model",        model).
+            set("View",         camera.modelview).
+            set("Projection",   camera.projection);
 
-        ((ParallelepipedShape*)m_shape.get())->bind();
-        ((ParallelepipedShape*)m_shape.get())->draw();
+        ((BoxShape*)m_shape.get())->bind();
+        ((BoxShape*)m_shape.get())->draw();
     }
 }
 
 // - Shader
-void Parallelepiped::_set_shader_common(UShader& shader) {
+void Box::_set_shader_common(UShader& shader) {
     shader->
         attachSource(GL_VERTEX_SHADER, ShaderSource{}
             .add_var("in", "vec3", "aPos")
-            .add_var("uniform", "vec3", "offset")
             .add_var("uniform", "mat4", "Projection")
-            .add_var("uniform", "mat4", "Modelview")
+            .add_var("uniform", "mat4", "View")
+            .add_var("uniform", "mat4", "Model")
             .add_func("void", "main", "", R"_main_(
-                gl_Position = Projection * Modelview * vec4(aPos + offset, 1.0);
+                gl_Position = Projection * View * Model * vec4(aPos, 1.0);
             )_main_").str()
         ).
         attachSource(GL_FRAGMENT_SHADER, ShaderSource{}
@@ -80,12 +91,12 @@ void Parallelepiped::_set_shader_common(UShader& shader) {
         );
 }
 
-void Parallelepiped::_set_shader_solid(UShader& shader) {
+void Box::_set_shader_solid(UShader& shader) {
     _set_shader_common(shader);
     shader->link();
 }
 
-void Parallelepiped::_set_shader_border(UShader& shader) {
+void Box::_set_shader_border(UShader& shader) {
     _set_shader_common(shader);
 
     shader->
@@ -104,7 +115,7 @@ void Parallelepiped::_set_shader_border(UShader& shader) {
         ).link();
 }
 
-void Parallelepiped::_set_shader_point(UShader& shader) {
+void Box::_set_shader_point(UShader& shader) {
     _set_shader_common(shader);
 
     shader->

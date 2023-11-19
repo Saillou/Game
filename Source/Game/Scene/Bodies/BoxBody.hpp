@@ -6,19 +6,17 @@
 #include "../../../Engine/Physx/BaseBody.hpp"
 
 // Public objects
-struct ParallelipipedBody : public BaseBody {
+struct BoxBody : public BaseBody {
     // Instance
-    ParallelipipedBody(const glm::vec3& pos, const glm::vec3& u, const glm::vec3& n, const glm::vec3& w, const glm::vec4& color_);
-    virtual ~ParallelipipedBody();
+    BoxBody(const glm::vec3& position, const glm::vec3& dimensions, const glm::vec4& color_);
+    virtual ~BoxBody();
 
     // Method
     virtual int id() const;
     virtual void draw(const Camera& camera) const;
 
     // External data
-    glm::vec3 vec_direction;
-    glm::vec3 vec_normal;
-    glm::vec3 vec_height;
+    glm::vec3 dimensions;
 
 private:
     // Hidden impl details
