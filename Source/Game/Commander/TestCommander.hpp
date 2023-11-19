@@ -10,9 +10,6 @@ struct TestCommander : public BaseCommander {
 
 protected:
     // Events
-    void _on_debug_line(const CustomEvents::DebugDrawLine& evt);
-    void _on_debug_point(const CustomEvents::DebugDrawPoint& evt);
-
     void _on_key_pressed(const CustomEvents::KeyPressed& evt) override;
     void _on_mouse_moved(const CustomEvents::MouseMoved& evt) override;
 

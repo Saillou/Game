@@ -16,8 +16,17 @@ using namespace reactphysics3d;
 struct Physx::_impl
 {
 	struct BodyElement {
-		std::shared_ptr<BaseBody> body;
+		BodyElement(std::shared_ptr<BaseBody> shape, RigidBody* rigid, Collider* collider):
+			shape(shape),
+			rigid(rigid),
+			collider(collider)
+		{
+			// ..
+		}
+
+		std::shared_ptr<BaseBody> shape;
 		RigidBody* rigid;
+		Collider* collider = nullptr;
 	};
 
 	Physx::_impl() :
@@ -58,21 +67,44 @@ void Physx::Add(std::shared_ptr<BaseBody> body, BodyType type) {
 	auto& world = px->world;
 
 	// Convert pose(position, orientation) to world referential
-	Transform pose(Vector3(body->position.x, body->position.y, body->position.z), Quaternion::identity());
+	Transform pose(Vector3(
+		body->position.x, 
+		body->position.y, 
+		body->position.z
+	), Quaternion::identity());
 
 	// Create physical object
 	RigidBody* phxBody = world->createRigidBody(pose);
 	phxBody->setType(([=]() -> ::BodyType {
 		switch (type) {
-		case BodyType::Dynamic: return ::BodyType::DYNAMIC;
-		case BodyType::Static:  return ::BodyType::STATIC;
+			case BodyType::Dynamic:   return ::BodyType::DYNAMIC;
+			case BodyType::Static:    return ::BodyType::STATIC;
+			case BodyType::Kinematic: return ::BodyType::KINEMATIC;
 		}
-		return ::BodyType::KINEMATIC; // whatever that means
+		return ::BodyType::STATIC;
 	})());
+
+	// Manage collision
+	Collider* collider = phxBody->addCollider(([&]() -> CollisionShape* {
+		switch (body->type) {
+		case BaseBody::ContactType::Sphere: 
+			return px->factory.createSphereShape(
+				body->dimensions[0][0]
+			);
+
+		case BaseBody::ContactType::Parallelepiped:
+			return px->factory.createBoxShape(Vector3(
+				length(body->dimensions[0]), 
+				length(body->dimensions[1]), 
+				length(body->dimensions[2])
+			));
+		}
+		return nullptr;
+	})(), pose);
 
 	// Add to world and memory
 	px->bodies.insert(
-		std::make_shared<_impl::BodyElement>(_impl::BodyElement { body, phxBody })
+		std::make_shared<_impl::BodyElement>(body, phxBody, collider)
 	);
 }
 
@@ -81,7 +113,7 @@ void Physx::Clear() {
 	auto& world = px->world;
 
 	// Remove from world
-	for (auto elt : px->bodies) {
+	for (auto& elt : px->bodies) {
 		world->destroyRigidBody(elt->rigid);
 	}
 
@@ -91,7 +123,7 @@ void Physx::Clear() {
 
 void Physx::Compute(float delta_time_ms) {
 	Physx& engine(_get());
-	_impl& engine_impl = *engine.p_impl;
+	_impl& engine_impl(*engine.p_impl);
 
 	// Magie here
 	engine_impl.world->update(delta_time_ms / 1000.0f);
@@ -101,7 +133,7 @@ void Physx::Compute(float delta_time_ms) {
 		const Transform& transform = element->rigid->getTransform();
 		const Vector3& position = transform.getPosition();
 		
-		element->body->position = vec3(position.x, position.y, position.z);
+		element->shape->position = vec3(position.x, position.y, position.z);
 
 		// to do, add orientations..
 	}

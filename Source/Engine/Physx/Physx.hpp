@@ -9,7 +9,7 @@
 class Physx {
 public:
     enum class BodyType {
-        Static, Dynamic
+        Static, Dynamic, Kinematic
     };
     static void Add(std::shared_ptr<BaseBody> body, BodyType type = BodyType::Static);
     static void Clear();
