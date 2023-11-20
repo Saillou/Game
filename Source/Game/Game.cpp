@@ -2,8 +2,8 @@
 
 #include "../Engine/Events/CustomEvents.hpp"
 
-#include "Commander/TestCommander.hpp"
-#include "Scene/TestScene.hpp"
+#include "Commanders/TestCommander.hpp"
+#include "Scenes/TestScene.hpp"
 
 // Private
 Game::ActionCode Game::_validateState(const Game::State& state) {
