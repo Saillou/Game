@@ -19,7 +19,7 @@ Line::Line(const glm::vec2& pt_a, const glm::vec2& pt_b, const glm::vec4& color_
     //    0.005f * glm::normalize(glm::cross(glm::vec3(-pt_b.x + pt_a.x, 0.0f, pt_b.y - pt_a.y), glm::vec3(-pt_b.y + pt_a.y, 0.0f, -pt_b.x + pt_a.x))),
     //    color_
     //)
-    BoxBody(glm::vec3(0.0f), glm::vec3(0.5f, 0.5f, 0.5f), color_)
+    BoxBody(glm::vec3(pt_a.x, 0.0f, pt_a.y), glm::vec3(0.5f, 0.5f, 0.005f), color_)
 {
 }
 
@@ -78,7 +78,7 @@ void TestScene::_camera_update() {
 
     // Example: mouvement 3D
     //static float theta = 0.0f;
-    //theta += 0.05f;
+    //theta += 0.02f;
     //m_camera.position = glm::vec3(3.8f*sin(theta), 3.8f*cos(theta), 0.0f);
     //m_camera.projection = m_camera.perspective(aspect);
 }

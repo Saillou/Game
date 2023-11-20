@@ -89,18 +89,18 @@ void Physx::Add(std::shared_ptr<BaseBody> body, BodyType type) {
 		switch (body->type) {
 		case BaseBody::ContactType::Sphere: 
 			return px->factory.createSphereShape(
-				0.10f
+				body->dimensions.r
 			);
 
 		case BaseBody::ContactType::Box:
 			return px->factory.createBoxShape(Vector3(
-				1.0f,
-				1.0f,
-				0.005f
+				body->dimensions.x,
+				body->dimensions.y,
+				body->dimensions.z
 			));
 		}
 		return nullptr;
-	})(), pose);
+	})(), Transform::identity());
 
 	// Add to world and memory
 	px->bodies.insert(

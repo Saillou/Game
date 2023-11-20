@@ -1,5 +1,8 @@
 #include "Box.hpp"
 
+#include <iostream>
+#include <glm/gtx/string_cast.hpp>
+
 // - Shape
 struct BoxShape : public BaseShape {
     BoxShape(const glm::vec3& dims) {
