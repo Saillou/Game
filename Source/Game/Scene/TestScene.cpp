@@ -7,22 +7,18 @@
 
 // Objects
 Circle::Circle(const glm::vec2& pos_, float radius_, const glm::vec4& color_):
-    SphereBody(radius_, glm::vec3(-pos_.x, 0.0f, pos_.y), color_)
+    SphereBody(radius_, color_)
 {
+    position    = glm::vec3(-pos_.x, 0.0f, pos_.y);
+    orientation = glm::vec3(0.0f);
 }
 
 Line::Line(const glm::vec2& pt_a, const glm::vec2& pt_b, const glm::vec4& color_):
-    //BoxBody(
-    //    0.5f * glm::vec3(-pt_a.x - pt_b.x, 0.0f, pt_a.y + pt_b.y),
-    //    0.5f * glm::vec3(-pt_b.x + pt_a.x, 0.0f, pt_b.y - pt_a.y),
-    //    0.005f * glm::normalize(glm::vec3(-pt_b.y + pt_a.y, 0.0f, -pt_b.x + pt_a.x)),
-    //    0.005f * glm::normalize(glm::cross(glm::vec3(-pt_b.x + pt_a.x, 0.0f, pt_b.y - pt_a.y), glm::vec3(-pt_b.y + pt_a.y, 0.0f, -pt_b.x + pt_a.x))),
-    //    color_
-    //)
-    BoxBody(glm::vec3(pt_a.x, 0.0f, pt_a.y), glm::vec3(0.5f, 0.5f, 0.005f), color_)
+    BoxBody(glm::vec3(glm::distance(pt_a, pt_b)*0.5f, 0.005f, 0.005f), color_)
 {
+    position = glm::vec3(-(pt_a.x+pt_b.x)*0.5f, 0.0f, (pt_a.y+pt_b.x)*0.5f);
+    orientation.y = glm::acos(glm::clamp(glm::dot(glm::normalize(pt_b - pt_a), glm::normalize(glm::vec2(-1.0f, 0.0f))), -1.0f, +1.0f));
 }
-
 
 // Scene instance
 TestScene::TestScene() :

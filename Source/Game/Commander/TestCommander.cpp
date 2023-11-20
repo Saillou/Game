@@ -23,13 +23,12 @@ TestCommander::TestCommander(std::shared_ptr<BaseScene> scene):
     const vec2 D(+size, -size);
     const vec4 yellow(1.0f, 1.0f, 0.0f, 1.0f);
 
-    //draw_circle_dead(m_scene, vec2(0, 0), 0.20f, yellow);
+    draw_circle_dead(m_scene, vec2(0, 0), 0.20f, yellow);
     //draw_line_dead(m_scene, A, B, yellow);
-    //draw_line_alive(m_scene, B, C, yellow);
+    //draw_line_dead(m_scene, B, C, yellow);
     //draw_line_dead(m_scene, C, D, yellow);
-    //draw_line_dead(m_scene, D*0.25f, B*0.5f, yellow);
-
-    draw_line_dead(m_scene,  vec2(0.0f, 0.0f), vec2(0.0f, 0.0f), yellow);
+    //draw_line_dead(m_scene, D, A, yellow);
+    draw_line_dead(m_scene, A, C, yellow);
 }
 
 // Events

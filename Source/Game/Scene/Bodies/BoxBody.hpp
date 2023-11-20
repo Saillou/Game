@@ -8,7 +8,7 @@
 // Public objects
 struct BoxBody : public BaseBody {
     // Instance
-    BoxBody(const glm::vec3& position, const glm::vec3& dimensions, const glm::vec4& color_);
+    BoxBody(const glm::vec3& dimensions, const glm::vec4& color_);
     virtual ~BoxBody();
 
     // Method

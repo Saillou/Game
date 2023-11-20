@@ -6,7 +6,7 @@
 
 // Public objects
 struct SphereBody : public BaseBody {
-    SphereBody(float radius_, const glm::vec3& position_, const glm::vec4& color_);
+    SphereBody(float radius_, const glm::vec4& color_);
     virtual ~SphereBody();
 
     // Method

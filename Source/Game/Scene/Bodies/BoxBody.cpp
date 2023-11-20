@@ -31,8 +31,9 @@ private:
 };
 
 // Instance
-BoxBody::BoxBody(const glm::vec3& pos, const glm::vec3& dimensions, const glm::vec4& color_) :
-	BaseBody(BaseBody::ContactType::Box, pos, dimensions),
+BoxBody::BoxBody(const glm::vec3& dimensions, const glm::vec4& color_) :
+	BaseBody(BaseBody::ContactType::Box, glm::vec3(0.0f), dimensions),
+	dimensions(dimensions),
 	_impl(new _BoxBodyImpl(dimensions, color_))
 {
 	// .. 

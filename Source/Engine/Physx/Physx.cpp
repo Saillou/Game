@@ -26,7 +26,7 @@ struct Physx::_impl
 
 		std::shared_ptr<BaseBody> shape;
 		RigidBody* rigid;
-		Collider* collider = nullptr;
+		Collider* collider;
 	};
 
 	Physx::_impl() :
@@ -67,11 +67,18 @@ void Physx::Add(std::shared_ptr<BaseBody> body, BodyType type) {
 	auto& world = px->world;
 
 	// Convert pose(position, orientation) to world referential
-	Transform pose(Vector3(
-		body->position.x, 
-		body->position.y, 
-		body->position.z
-	), Quaternion::identity());
+	Transform pose(
+		Vector3(
+			body->position.x, 
+			body->position.y, 
+			body->position.z
+		), 
+		Quaternion::fromEulerAngles(Vector3(
+			body->orientation.x,
+			body->orientation.y,
+			body->orientation.z
+		))
+	);
 
 	// Create physical object
 	RigidBody* phxBody = world->createRigidBody(pose);
@@ -130,11 +137,11 @@ void Physx::Compute(float delta_time_ms) {
 
 	// Update drawn bodies
 	for (auto& element : engine_impl.bodies) {
-		const Transform& transform = element->rigid->getTransform();
-		const Vector3& position = transform.getPosition();
+		const Transform& transform	  = element->rigid->getTransform();
+		const Vector3& position		  = transform.getPosition();
+		const Quaternion& orientation = transform.getOrientation();
 		
-		element->shape->position = vec3(position.x, position.y, position.z);
-
-		// to do, add orientations..
+		element->shape->position	= vec3(position.x, position.y, position.z);
+		element->shape->orientation = -eulerAngles(glm::quat(orientation.x, orientation.y, orientation.z, orientation.w));
 	}
 }
