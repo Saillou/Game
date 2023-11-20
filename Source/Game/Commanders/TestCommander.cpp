@@ -34,7 +34,7 @@ TestCommander::TestCommander(std::shared_ptr<BaseScene> scene):
 void TestCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
     const int DELAY_MS_ADD = 300; //ms
 
-    // React to the emitted keys 
+    // Gameplay movements
     if (evt.key == Key::Space) {
         int64_t current_time = Timer::GetCurrentTime<Timer::millisecond>();
         if (current_time - m_last_add_ms > DELAY_MS_ADD)
@@ -47,14 +47,85 @@ void TestCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
             );
             draw_circle(m_scene, last_pos, 0.10f, vec4(0.0f, 0.0f, 1.0f, 1.0f), Physx::BodyType::Dynamic);
         }
+        return;
     }
 
-    if (evt.key == Key::ArrowLeft) {
+    // -- Camera movements -- 
+    static const auto reset_cam = [&]() {
+        m_scene->camera().position = glm::vec3(0.0f, 3.8f, 0.0f);
+        m_scene->camera().direction = glm::vec3(0.0f, 0.0f, 0.0f);
+        m_scene->camera().fieldOfView = 45.0f;
+        m_scene->camera().lookAt(glm::vec3(0, 0, 1));
 
+        if(m_scene->enable_2d_camera)
+            m_scene->camera().useOrtho(m_scene->width() / (float)m_scene->height());
+        else
+            m_scene->camera().usePerspective(m_scene->width() / (float)m_scene->height());
+    };
+
+    static const auto get_cam_angles = [&]() {
+        float theta_x = asin(m_scene->camera().position.x / 3.8f);
+        float theta_z = asin(m_scene->camera().position.z / 3.8f);
+        float theta_y = theta_x + theta_z;
+
+        return glm::vec3(theta_x, theta_y, theta_z);
+    };
+
+
+    // -- 
+    constexpr float speed_cam   = 0.04f;
+    const glm::vec3 angles      = get_cam_angles();
+
+    if (evt.key == Key::ArrowLeft) {
+        if (m_scene->enable_2d_camera) {
+            m_scene->camera().position += glm::vec3(speed_cam, 0.0f, 0.0f);
+            m_scene->camera().direction += glm::vec3(speed_cam, 0.0f, 0.0f);
+        }
+        else {
+            m_scene->camera().position = glm::vec3(3.8f*sin(angles.x-speed_cam), 3.8f*cos(angles.y-speed_cam), 3.8f * sin(angles.z));
+        }
     }
 
     if (evt.key == Key::ArrowRight) {
+        if (m_scene->enable_2d_camera) {
+            m_scene->camera().position -= glm::vec3(speed_cam, 0.0f, 0.0f);
+            m_scene->camera().direction -= glm::vec3(speed_cam, 0.0f, 0.0f);
+        }
+        else {
+            m_scene->camera().position = glm::vec3(3.8f * sin(angles.x + speed_cam), 3.8f * cos(angles.y + speed_cam), 3.8f * sin(angles.z));
+        }
+    }
 
+    if (evt.key == Key::ArrowUp) {
+        if (m_scene->enable_2d_camera) {
+            m_scene->camera().position += glm::vec3(0.0f, 0.0f, speed_cam);
+            m_scene->camera().direction += glm::vec3(0.0f, 0.0f, speed_cam);
+        }
+        else {
+            m_scene->camera().position = glm::vec3(3.8f*sin(angles.x), 3.8f*cos(angles.y-speed_cam), 3.8f * sin(angles.z-speed_cam));
+        }
+    }
+
+    if (evt.key == Key::ArrowDown) {
+        if (m_scene->enable_2d_camera) {
+            m_scene->camera().position -= glm::vec3(0.0f, 0.0f, speed_cam);
+            m_scene->camera().direction -= glm::vec3(0.0f, 0.0f, speed_cam);
+        }
+        else {
+            m_scene->camera().position = glm::vec3(3.8f*sin(angles.x), 3.8f*cos(angles.y+speed_cam), 3.8f * sin(angles.z+speed_cam));
+        }
+    }
+
+    // 2D world
+    if (evt.key == 'C') {
+        m_scene->enable_2d_camera = true;
+        reset_cam();
+    }
+
+    // 3D world
+    if (evt.key == 'V') {
+        m_scene->enable_2d_camera = false;
+        reset_cam();
     }
 }
 

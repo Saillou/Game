@@ -17,7 +17,7 @@ Line::Line(const glm::vec2& pt_a, const glm::vec2& pt_b, const glm::vec4& color_
     BoxBody(glm::vec3(glm::distance(pt_a, pt_b)*0.5f, 0.005f, 0.005f), color_)
 {
     position = glm::vec3(-(pt_a.x+pt_b.x)*0.5f, 0.0f, (pt_a.y+pt_b.y)*0.5f);
-    orientation.y = glm::acos(glm::clamp(glm::dot(glm::normalize(pt_b - pt_a), glm::normalize(glm::vec2(-1.0f, 0.0f))), -1.0f, +1.0f));
+    orientation.y = glm::acos(glm::clamp(glm::dot(glm::normalize(pt_b - pt_a), glm::vec2(-1.0f, 0.0f)), -1.0f, +1.0f));
 }
 
 // Scene instance
@@ -28,6 +28,12 @@ TestScene::TestScene() :
     m_camera.position    = glm::vec3(0.0f, 3.8f, 0.0f);
     m_camera.direction   = glm::vec3(0.0f, 0.0f, 0.0f);
     m_camera.fieldOfView = 45.0f;
+
+    // Lighting
+    m_lights.push_back(std::make_unique<Light>(
+        glm::vec3(0.0f, 0.0f, 3.0f),
+        glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
+    ));
 }
 
 void TestScene::resize(int width, int height) {
@@ -67,14 +73,6 @@ void TestScene::draw() {
 void TestScene::_camera_update() {
     float aspect = (float)m_width / m_height;
 
-    m_camera.modelview = m_camera.lookAt(glm::vec3(0, 0, 1));
-
-    // Example: mouvement 2D
-    m_camera.projection = m_camera.ortho(aspect);
-
-    // Example: mouvement 3D
-    //static float theta = 0.0f;
-    //theta += 0.02f;
-    //m_camera.position = glm::vec3(3.8f*sin(theta), 3.8f*cos(theta), 0.0f);
-    //m_camera.projection = m_camera.perspective(aspect);
+    m_camera.lookAt(glm::vec3(0, 0, 1));
+    enable_2d_camera ? m_camera.useOrtho(aspect) : m_camera.usePerspective(aspect);
 }

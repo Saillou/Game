@@ -18,7 +18,9 @@ struct Cookable : public Object {
     virtual Cookable* addRecipe(const CookType& type, const glm::vec4& color);
 
 protected:
-    virtual void _set_shader_solid(UShader&)  = 0;
+    void _set_shader_common(UShader& shader);
+
+    virtual void _set_shader_solid(UShader&);
     virtual void _set_shader_border(UShader&) = 0;
     virtual void _set_shader_point(UShader&)  = 0;
 

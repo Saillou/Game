@@ -17,8 +17,6 @@ struct Box : public Cookable
     void draw(const Camera& camera, const glm::vec3& position = glm::vec3(), const glm::vec3& orientation = glm::vec3());
 
 private:
-    void _set_shader_common(UShader&);
-    void _set_shader_solid(UShader&)  override;
     void _set_shader_border(UShader&) override;
     void _set_shader_point(UShader&)  override;
 

@@ -23,6 +23,8 @@ struct TestScene : public BaseScene {
     void draw() override;
     void resize(int width, int height) override;
 
+    bool enable_2d_camera = true;
+
 private:
     void _camera_update();
 
