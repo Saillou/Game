@@ -55,7 +55,7 @@ Sphere::Sphere(const glm::vec3& center, float radius) :
     // ..
 }
 
-void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation) {
+void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation, const std::vector<std::unique_ptr<Light>>& lights) {
     glm::mat4 model(1.0f);
     model = glm::translate(model, position);
     model = glm::rotate(model, orientation.x, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -67,7 +67,14 @@ void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::ve
             use().
             set("Model",        model).
             set("View",         camera.modelview).
-            set("Projection",   camera.projection);
+            set("Projection",   camera.projection).
+            set("CameraPos",    camera.position);
+
+        for (const auto& light : lights) {
+            recipe->
+                set("LightPos",   light->position).
+                set("LightColor", light->color);
+        }
 
         ((SphereShape*)m_shape.get())->bind();
         ((SphereShape*)m_shape.get())->draw();

@@ -78,6 +78,17 @@ Shader& Shader::set(const std::string& name, float v) {
     return *this;
 }
 
+Shader& Shader::set(const std::string& name, int v) {
+    use();
+
+    int varLoc = glGetUniformLocation(m_id, name.c_str());
+    if (varLoc == -1)
+        std::cerr << "[warning] Uniform location not found for `" << name << "`" << std::endl;
+    glUniform1i(varLoc, v);
+
+    return *this;
+}
+
 Shader& Shader::set(const std::string& name, const glm::vec3& vec) {
     use();
 

@@ -16,8 +16,8 @@ struct _BoxBodyImpl {
 		m_shape->addRecipe(Cookable::CookType::Solid, color_);
 	}
 
-	void draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation) {
-		m_shape->draw(camera, position, orientation);
+	void draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation, const std::vector<std::unique_ptr<Light>>& lights) {
+		m_shape->draw(camera, position, orientation, lights);
 	}
 
 	int id() const {
@@ -48,6 +48,6 @@ int BoxBody::id() const {
 	return ((_BoxBodyImpl*)_impl)->id();
 }
 
-void BoxBody::draw(const Camera& camera) const {
-	((_BoxBodyImpl*)_impl)->draw(camera, position, orientation);
+void BoxBody::draw(const Camera& camera, const std::vector<std::unique_ptr<Light>>& lights) const {
+	((_BoxBodyImpl*)_impl)->draw(camera, position, orientation, lights);
 }

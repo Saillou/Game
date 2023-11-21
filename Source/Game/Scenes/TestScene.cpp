@@ -59,11 +59,11 @@ void TestScene::draw() {
     _camera_update();
 
     for (auto& shape : m_boxes) {
-        shape->draw(m_camera);
+        shape->draw(m_camera, m_lights);
     }
 
     for (auto& shape : m_spheres) {
-        shape->draw(m_camera);
+        shape->draw(m_camera, m_lights);
     }
 
     // Draw texts
