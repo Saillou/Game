@@ -31,7 +31,7 @@ TestScene::TestScene() :
 
     // Lighting
     m_lights.push_back(std::make_unique<Light>(
-        glm::vec3(0.0f, 0.0f, 3.0f),
+        glm::vec3(0.0f, 0.0f, 1.5f),
         glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
     ));
 }

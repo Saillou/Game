@@ -67,7 +67,7 @@ void Cookable::_set_shader_common(UShader& shader) {
 
             .add_func("void", "main", "", R"_main_(
                 // ambient
-                float ambientStrength = 0.1;
+                float ambientStrength = 0.8;
                 vec3 ambient = ambientStrength * vec3(LightColor.rgb);
   	
                 // diffuse 
