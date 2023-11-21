@@ -8,19 +8,15 @@
 #include "../../../Engine/Graphic/Base/Cookable.hpp"
 
 // Objects
-struct Parallelepiped : public Cookable
+struct Sphere : public Cookable
 {
-    typedef std::array<glm::vec3, 4> Quad;
-
     // Instance
-    Parallelepiped(const glm::vec3& center, const glm::vec3& u, const glm::vec3& n, const glm::vec3& w);
-    virtual ~Parallelepiped() = default;
+    Sphere(const glm::vec3& center, float radius);
+    virtual ~Sphere() = default;
 
-    void draw(const Camera& camera, const glm::vec3& position = glm::vec3());
+    void draw(const Camera& camera, const glm::vec3& position = glm::vec3(), const glm::vec3& orientation = glm::vec3());
 
 private:
-    void _set_shader_common(UShader&);
-    void _set_shader_solid(UShader&)  override;
     void _set_shader_border(UShader&) override;
     void _set_shader_point(UShader&)  override;
 

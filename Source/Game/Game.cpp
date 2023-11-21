@@ -2,17 +2,8 @@
 
 #include "../Engine/Events/CustomEvents.hpp"
 
-// Command
-#include "Commander/FruitCommander.hpp"
-#include "Commander/SlimeCommander.hpp"
-#include "Commander/TestCommander.hpp"
-
-// Scene
-#include "Scene/FruitScene.hpp"
-#include "Scene/SlimeScene.hpp"
-#include "Scene/CrashScene.hpp"
-#include "Scene/FlapiScene.hpp"
-#include "Scene/TestScene.hpp"
+#include "Commanders/TestCommander.hpp"
+#include "Scenes/TestScene.hpp"
 
 // Private
 Game::ActionCode Game::_validateState(const Game::State& state) {
@@ -60,12 +51,11 @@ void Game::Refresh(Window& window) {
 	window.scene(([&]() -> std::shared_ptr<BaseScene> {
 		switch (game._curr_state.sceneId) 
 		{
-			case SceneId::FruitScene: return std::make_shared<FruitScene>();
-			case SceneId::SlimeScene: return std::make_shared<SlimeScene>();
-			case SceneId::CrashScene: return std::make_shared<CrashScene>();
-			case SceneId::FlapiScene: return std::make_shared<FlapiScene>();
-			default: 
+			case SceneId::TestScene: 
 				return std::make_shared<TestScene>();
+
+			default: 
+				return std::make_shared<BaseScene>();
 		}})()
 	);
 
@@ -73,9 +63,9 @@ void Game::Refresh(Window& window) {
 	game._commander = ([&]() -> std::unique_ptr<BaseCommander> {
 		switch (game._curr_state.sceneId) 
 		{
-			case SceneId::FruitScene: return std::make_unique<FruitCommander>(window.scene());
-			case SceneId::SlimeScene: return std::make_unique<SlimeCommander>(window.scene());
-			case SceneId::Other: return std::make_unique<TestCommander>(window.scene());
+			case SceneId::TestScene: 
+				return std::make_unique<TestCommander>(window.scene());
+
 			default:
 				return std::make_unique<BaseCommander>(window.scene());
 		}

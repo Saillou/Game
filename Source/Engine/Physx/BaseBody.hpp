@@ -8,17 +8,16 @@ class BaseBody {
 public:
     enum class ContactType {
         Sphere,
-        Facette,
-        Parallelepiped
+        Box
     };
 
-    BaseBody(ContactType type, glm::vec3 position = glm::vec3(0.f), glm::mat3 dimensions = glm::mat3(0.f), glm::vec3 orientation = glm::vec3(0.f));
+    BaseBody(ContactType type, glm::vec3 position = glm::vec3(0.f), glm::vec3 dimensions = glm::vec3(0.f), glm::vec3 orientation = glm::vec3(0.f));
     virtual ~BaseBody();
 
     // To do: protect these members (a bit)
     ContactType type;
     glm::vec3 position;
-    glm::mat3 dimensions;
+    glm::vec3 dimensions;
     glm::vec3 orientation;
 
 protected:

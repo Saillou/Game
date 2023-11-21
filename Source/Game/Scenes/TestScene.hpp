@@ -1,14 +1,15 @@
 #pragma once
 
 #include "../../Engine/Graphic/Base/BaseScene.hpp"
+
 #include "Bodies/SphereBody.hpp"
-#include "Bodies/ParallelipipedBody.hpp"
+#include "Bodies/BoxBody.hpp"
 
 struct Circle : public SphereBody {
     Circle(const glm::vec2& pos_, float radius_, const glm::vec4& color_);
 };
 
-struct Line : public ParallelipipedBody {
+struct Line : public BoxBody {
     Line(const glm::vec2& pt_a, const glm::vec2& pt_b, const glm::vec4& color_);
 };
 
@@ -22,9 +23,11 @@ struct TestScene : public BaseScene {
     void draw() override;
     void resize(int width, int height) override;
 
+    bool enable_2d_camera = true;
+
 private:
     void _camera_update();
 
     std::vector<std::shared_ptr<SphereBody>> m_spheres;
-    std::vector<std::shared_ptr<ParallelipipedBody>> m_facettes;
+    std::vector<std::shared_ptr<BoxBody>> m_boxes;
 };

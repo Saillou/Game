@@ -8,17 +8,15 @@
 #include "../../../Engine/Graphic/Base/Cookable.hpp"
 
 // Objects
-struct Sphere : public Cookable
+struct Box : public Cookable
 {
     // Instance
-    Sphere(const glm::vec3& center, float radius);
-    virtual ~Sphere() = default;
+    Box(const glm::vec3& dims);
+    virtual ~Box() = default;
 
     void draw(const Camera& camera, const glm::vec3& position = glm::vec3(), const glm::vec3& orientation = glm::vec3());
 
 private:
-    void _set_shader_common(UShader&);
-    void _set_shader_solid(UShader&)  override;
     void _set_shader_border(UShader&) override;
     void _set_shader_point(UShader&)  override;
 
