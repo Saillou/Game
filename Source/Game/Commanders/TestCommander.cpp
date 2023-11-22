@@ -14,8 +14,6 @@ TestCommander::TestCommander(std::shared_ptr<BaseScene> scene):
     m_scene(std::dynamic_pointer_cast<TestScene>(scene))
 {
     // Context 2d
-    m_sphere_preview = draw_circle(m_scene, vec2(1.0f, 1.0f), 0.10f,  vec4(0.0f, 0.0f, 1.0f, 1.0f));
-    
     float size = 0.75f;
     const vec2 A(-size, -size);
     const vec2 B(-size, +size);
@@ -23,11 +21,14 @@ TestCommander::TestCommander(std::shared_ptr<BaseScene> scene):
     const vec2 D(+size, -size);
     const vec4 yellow(1.0f, 1.0f, 0.0f, 1.0f);
 
-    draw_circle(m_scene, vec2(0, 0), 0.20f, yellow, Physx::BodyType::Static);
     draw_line(m_scene, A, B, yellow, Physx::BodyType::Static);
     draw_line(m_scene, B, C, yellow, Physx::BodyType::Static);
     draw_line(m_scene, C, D, yellow, Physx::BodyType::Static);
     draw_line(m_scene, D, A, yellow, Physx::BodyType::Static);
+    draw_circle(m_scene, vec2(0, 0), 0.20f, yellow, Physx::BodyType::Static);
+
+    // start
+    m_sphere_preview = draw_circle(m_scene, vec2(1.0f, 1.0f), 0.10f,  vec4(0.0f, 0.0f, 1.0f, 1.0f));
 }
 
 // Events

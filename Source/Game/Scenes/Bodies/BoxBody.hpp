@@ -1,7 +1,9 @@
 #pragma once
 
-#include <array>
+#include <memory>
+#include <vector>
 #include <glm/glm.hpp>
+#include "../../../Engine/Graphic/Base/Light.hpp"
 #include "../../../Engine/Graphic/Camera.hpp"
 #include "../../../Engine/Physx/BaseBody.hpp"
 
@@ -13,7 +15,7 @@ struct BoxBody : public BaseBody {
 
     // Method
     virtual int id() const;
-    virtual void draw(const Camera& camera) const;
+    virtual void draw(const Camera& camera, const std::vector<std::unique_ptr<Light>>& lights) const;
 
     // External data
     glm::vec3 dimensions;

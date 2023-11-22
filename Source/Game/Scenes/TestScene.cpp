@@ -14,7 +14,7 @@ Circle::Circle(const glm::vec2& pos_, float radius_, const glm::vec4& color_):
 }
 
 Line::Line(const glm::vec2& pt_a, const glm::vec2& pt_b, const glm::vec4& color_):
-    BoxBody(glm::vec3(glm::distance(pt_a, pt_b)*0.5f, 0.005f, 0.005f), color_)
+    BoxBody(glm::vec3(glm::distance(pt_a, pt_b)*0.5f, 0.02f, 0.02f), color_)
 {
     position = glm::vec3(-(pt_a.x+pt_b.x)*0.5f, 0.0f, (pt_a.y+pt_b.y)*0.5f);
     orientation.y = glm::acos(glm::clamp(glm::dot(glm::normalize(pt_b - pt_a), glm::vec2(-1.0f, 0.0f)), -1.0f, +1.0f));
@@ -31,7 +31,7 @@ TestScene::TestScene() :
 
     // Lighting
     m_lights.push_back(std::make_unique<Light>(
-        glm::vec3(0.0f, 0.0f, 3.0f),
+        glm::vec3(0.0f, 0.0f, 1.5f),
         glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
     ));
 }
@@ -59,15 +59,15 @@ void TestScene::draw() {
     _camera_update();
 
     for (auto& shape : m_boxes) {
-        shape->draw(m_camera);
+        shape->draw(m_camera, m_lights);
     }
 
     for (auto& shape : m_spheres) {
-        shape->draw(m_camera);
+        shape->draw(m_camera, m_lights);
     }
 
     // Draw texts
-    TextEngine::Write("Test Scene", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+    TextEngine::Write("Test Scene: Key C (ortho) | Key V (perspective) | Arrow Keys (move) | Space (fall)", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void TestScene::_camera_update() {

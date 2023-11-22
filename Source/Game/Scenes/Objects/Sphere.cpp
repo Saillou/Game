@@ -15,6 +15,10 @@ struct SphereShape : public BaseShape {
                 _addPoint(
                     radius * std::cos(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
                     radius * std::cos(ySegment * 1.0f * glm::pi<float>()),
+                    radius * std::sin(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
+
+                    radius * std::cos(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
+                    radius * std::cos(ySegment * 1.0f * glm::pi<float>()),
                     radius * std::sin(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>())
                 );
             }
@@ -42,10 +46,6 @@ struct SphereShape : public BaseShape {
     void draw() override {
         glDrawElements(GL_TRIANGLE_STRIP, (int)m_indices.size(), GL_UNSIGNED_INT, 0);
     }
-    void _setAttributes() override {
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-        glEnableVertexAttribArray(0);
-    }
 };
 
 // - Constructor
@@ -55,7 +55,7 @@ Sphere::Sphere(const glm::vec3& center, float radius) :
     // ..
 }
 
-void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation) {
+void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation, const std::vector<std::unique_ptr<Light>>& lights) {
     glm::mat4 model(1.0f);
     model = glm::translate(model, position);
     model = glm::rotate(model, orientation.x, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -67,7 +67,14 @@ void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::ve
             use().
             set("Model",        model).
             set("View",         camera.modelview).
-            set("Projection",   camera.projection);
+            set("Projection",   camera.projection).
+            set("CameraPos",    camera.position);
+
+        for (const auto& light : lights) {
+            recipe->
+                set("LightPos",   light->position).
+                set("LightColor", light->color);
+        }
 
         ((SphereShape*)m_shape.get())->bind();
         ((SphereShape*)m_shape.get())->draw();

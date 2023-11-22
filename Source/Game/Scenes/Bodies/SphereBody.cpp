@@ -16,8 +16,8 @@ struct _SphereBodyImpl {
 		m_shape->addRecipe(Cookable::CookType::Solid, color_);
 	}
 
-	void draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation) {
-		m_shape->draw(camera, position, orientation);
+	void draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation, const std::vector<std::unique_ptr<Light>>& lights) {
+		m_shape->draw(camera, position, orientation, lights);
 	}
 
 	int id() const {
@@ -48,6 +48,6 @@ int SphereBody::id() const {
 	return ((_SphereBodyImpl*)_impl)->id();
 }
 
-void SphereBody::draw(const Camera& camera) const {
-	((_SphereBodyImpl*)_impl)->draw(camera, position, orientation);
+void SphereBody::draw(const Camera& camera, const std::vector<std::unique_ptr<Light>>& lights) const {
+	((_SphereBodyImpl*)_impl)->draw(camera, position, orientation, lights);
 }
