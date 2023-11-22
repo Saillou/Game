@@ -66,6 +66,12 @@ void Cookable::_set_shader_common(UShader& shader) {
             .add_var("out", "vec4", "FragColor")
 
             .add_func("void", "main", "", R"_main_(
+                // Shall use light ?
+                if(LightColor == vec4(0, 0, 0, 0)) {
+                    FragColor = color;
+                    return;
+                }
+
                 // ambient
                 float ambientStrength = 0.1;
                 vec3 ambient = ambientStrength * vec3(LightColor.rgb);
@@ -85,7 +91,6 @@ void Cookable::_set_shader_common(UShader& shader) {
 
                 vec3 result = (ambient + diffuse + specular) * color.rgb;
                 FragColor = vec4(result, color.a);
-                //FragColor = vec4(color);
             )_main_").str()
         );
 }
