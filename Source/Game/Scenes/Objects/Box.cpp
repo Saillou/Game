@@ -1,37 +1,41 @@
 #include "Box.hpp"
 
 #include <iostream>
+#include <sstream>
 #include <glm/gtx/string_cast.hpp>
 
+using v3 = glm::vec3;
+
 // - Shape
-struct BoxShape : public BaseShape {
-    BoxShape(const glm::vec3& dims) {
-        const glm::mat3 world(1.0f);
-        const glm::vec3 u = dims[0] * world[0];
-        const glm::vec3 v = dims[1] * world[1];
-        const glm::vec3 w = dims[2] * world[2];
+struct BoxShape : public BaseShape 
+{
+    BoxShape(const glm::vec3& dims) 
+    {
+        const glm::mat3 world(1.0f); // identity
 
-        _addPoint((-u + v) - w);
-        _addPoint((+u + v) - w);
-        _addPoint((+u - v) - w);
-        _addPoint((-u - v) - w);
+        const v3 u = dims[0] * world[0];
+        const v3 v = dims[1] * world[1];
+        const v3 w = dims[2] * world[2];
 
-        _addPoint((-u + v) + w);
-        _addPoint((+u + v) + w);
-        _addPoint((+u - v) + w);
-        _addPoint((-u - v) + w);
+        // Vertices positions
+        const v3 A = -u +v -w;
+        const v3 B = +u +v -w;
+        const v3 C = +u -v -w;
+        const v3 D = -u -v -w;
 
-        auto __face = [=](int a, int b, int c, int d) {
-            _addAsTriangle(a, b, c);
-            _addAsTriangle(c, d, a);
-        };
+        const v3 E = -u +v +w;
+        const v3 F = +u +v +w;
+        const v3 G = +u -v +w;
+        const v3 H = -u -v +w;
 
-        __face(0, 1, 2, 3);
-        __face(0, 1, 5, 4);
-        __face(1, 2, 6, 5);
-        __face(2, 3, 7, 6);
-        __face(3, 0, 4, 7);
-        __face(4, 5, 6, 7);
+        _create_quad(D, C, B, A, -w);
+        _create_quad(H, G, F, E, +w);
+
+        _create_quad(E, A, D, H, -u);
+        _create_quad(F, B, C, G, +u);
+
+        _create_quad(D, C, G, H, -v);
+        _create_quad(A, B, F, E, +v);
 
         // Bind
         _bindArray();
@@ -42,16 +46,24 @@ struct BoxShape : public BaseShape {
     }
 
 private:
-    void _setAttributes() override {
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-        glEnableVertexAttribArray(0);
-    }
+    // - Drawing
+    void BoxShape::_create_quad(const v3& P0, const v3& P1, const v3& P2, const v3& P3, const v3& n) {
+        int i0 = _addPoint(P0, n);
+        int i1 = _addPoint(P1, n);
+        int i2 = _addPoint(P2, n);
+        int i3 = _addPoint(P3, n);
+
+        _addAsTriangle(i0, i1, i2);
+        _addAsTriangle(i2, i3, i0);
+    };
+
 };
 
 // - Constructor
 Box::Box(const glm::vec3& dims) :
     m_shape(std::make_shared<BoxShape>(dims))
 {
+    // ...
 }
 
 void Box::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation, const std::vector<std::unique_ptr<Light>>& lights) {

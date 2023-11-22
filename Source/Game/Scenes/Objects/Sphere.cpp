@@ -15,6 +15,10 @@ struct SphereShape : public BaseShape {
                 _addPoint(
                     radius * std::cos(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
                     radius * std::cos(ySegment * 1.0f * glm::pi<float>()),
+                    radius * std::sin(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
+
+                    radius * std::cos(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>()),
+                    radius * std::cos(ySegment * 1.0f * glm::pi<float>()),
                     radius * std::sin(xSegment * 2.0f * glm::pi<float>()) * std::sin(ySegment * glm::pi<float>())
                 );
             }
@@ -41,10 +45,6 @@ struct SphereShape : public BaseShape {
 
     void draw() override {
         glDrawElements(GL_TRIANGLE_STRIP, (int)m_indices.size(), GL_UNSIGNED_INT, 0);
-    }
-    void _setAttributes() override {
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-        glEnableVertexAttribArray(0);
     }
 };
 

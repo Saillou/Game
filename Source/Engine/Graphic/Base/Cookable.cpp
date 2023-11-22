@@ -67,24 +67,25 @@ void Cookable::_set_shader_common(UShader& shader) {
 
             .add_func("void", "main", "", R"_main_(
                 // ambient
-                float ambientStrength = 0.8;
+                float ambientStrength = 0.1;
                 vec3 ambient = ambientStrength * vec3(LightColor.rgb);
-  	
+
                 // diffuse 
-                vec3 norm = normalize(Normal);
+                vec3 normDir = normalize(Normal);
                 vec3 lightDir = normalize(LightPos - FragPos);
-                float diff = max(dot(norm, lightDir), 0.0);
+                float diff = max(dot(normDir, lightDir), 0.0);
                 vec3 diffuse = diff * vec3(LightColor.rgb);
-    
+
                 // specular
                 float specularStrength = 0.5;
                 vec3 cameraDir = normalize(CameraPos - FragPos);
-                vec3 reflectDir = reflect(-lightDir, norm);  
+                vec3 reflectDir = reflect(-lightDir, normDir);  
                 float spec = pow(max(dot(cameraDir, reflectDir), 0.0), 32);
                 vec3 specular = specularStrength * spec * vec3(LightColor.rgb);
-        
+
                 vec3 result = (ambient + diffuse + specular) * color.rgb;
                 FragColor = vec4(result, color.a);
+                //FragColor = vec4(color);
             )_main_").str()
         );
 }
