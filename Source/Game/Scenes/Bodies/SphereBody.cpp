@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include "SphereBody.hpp"
 #include "../Objects/Sphere.hpp"
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include "BoxBody.hpp"
 #include "../Objects/Box.hpp"
 
