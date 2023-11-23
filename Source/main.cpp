@@ -12,7 +12,7 @@ int main() {
     Window window(1600, 900, "The Game");
 
     // Main loop
-    gamestate.sceneId = SceneId::Intro;
+    gamestate.sceneId = SceneId::Slime;
 
     Timer::Chronometre chrono;
     do {
@@ -22,6 +22,10 @@ int main() {
                 // Window control
                 case GLFW_KEY_ESCAPE: 
                     window.close(); 
+                    break;
+
+                case GLFW_KEY_F11:
+                    window.toggleFullScreen();
                     break;
 
                 // Change scene
