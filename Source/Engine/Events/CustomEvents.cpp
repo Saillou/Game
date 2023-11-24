@@ -16,3 +16,10 @@ CustomEvents::MouseMoved::MouseMoved(int x, int y) :
 {
 	// ..
 }
+
+// -- Game events --
+CustomEvents::UpdateGameState::UpdateGameState() :
+	_Base(_Type::EventUpdateGameState)
+{
+	// ..
+}

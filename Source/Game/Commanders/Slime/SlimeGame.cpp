@@ -2,6 +2,7 @@
 
 using namespace reactphysics3d;
 
+
 // ------------------------ Base ------------------------
 BaseItem::BaseItem():
     _body(nullptr),
@@ -17,8 +18,12 @@ BaseItem::sBody BaseItem::body() const {
 void BaseItem::addTo(std::shared_ptr<SlimeScene> scene, Physx::BodyType type) {
     scene->add(_body ? _body : createBody());
     _pbody = Physx::Add(_body, type);
+    _onAdd();
 }
 
+void BaseItem::_onAdd() {
+    // to be overrided
+}
 
 // ------------------------ Slime ------------------------
 Slime::Slime()
@@ -26,26 +31,51 @@ Slime::Slime()
     createBody();
 }
 
-void Slime::move(glm::vec3& direction) {
-    if (!_movePossible)
-        return;
+void Slime::update() {
+    // Simulate gravity
+    constexpr float epsilon = 1e-2f;
 
-    glm::vec3 total = _maxSpeed * direction;
-    _pbody->setLinearVelocity(Vector3(total.x, total.y, total.z));
+    const auto& curr_transform = _pbody->getTransform();
+    const auto& curr_position = curr_transform.getPosition();
+    const auto& curr_velocity = _pbody->getLinearVelocity();
+
+    if (curr_position.z > epsilon) {
+        _pbody->setLinearVelocity(curr_velocity - _jump * Vector3(0, 0, 1e-1f));
+    }
+    else {
+        _pbody->setTransform(Transform(Vector3(curr_position.x, curr_position.y, 0.0f), curr_transform.getOrientation()));
+    }
+}
+
+void Slime::move(glm::vec3& direction) {
+    glm::vec3 total = _accel * direction;
+    auto new_speed = _pbody->getLinearVelocity() + Vector3(total.x, total.y, total.z);
+
+    new_speed.x = glm::clamp(new_speed.x, -_maxSpeed, _maxSpeed);
+    new_speed.y = glm::clamp(new_speed.y, -_maxSpeed, _maxSpeed);
+    new_speed.z = glm::clamp(new_speed.z, -_maxSpeed, _maxSpeed);
+
+    _pbody->setLinearVelocity(new_speed);
 }
 
 void Slime::jump() {
-    if (!_jumpPossible)
+    constexpr float epsilon = 1e-2f;
+
+    if (_pbody->getTransform().getPosition().z > epsilon)
         return;
 
-    _jumpPossible = false;
-    auto time_elapsed = _time.elapsed<Timer::millisecond>();
+    auto curr_velocity = _pbody->getLinearVelocity();
+    _pbody->setLinearVelocity(curr_velocity + _jump * Vector3(0, 0, 1.0f));
 }
 
 const BaseItem::sBody& Slime::createBody() {
     _body = std::make_shared<SphereBody>(0.10f);
     return _body;
     
+}
+
+void Slime::_onAdd() {
+    _pbody->setLinearDamping(10.0f);
 }
 
 // ------------------------ Ground ------------------------
@@ -83,7 +113,7 @@ SlimeGame::SlimeGame() {
 
 void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene) {
     ground.addTo(scene, Physx::BodyType::Static);
-    player.addTo(scene, Physx::BodyType::Kinematic);
     ennemy.addTo(scene, Physx::BodyType::Static);
+    player.addTo(scene, Physx::BodyType::Kinematic);
     target.addTo(scene, Physx::BodyType::Dynamic);
 }

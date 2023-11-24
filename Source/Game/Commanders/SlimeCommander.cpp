@@ -14,17 +14,21 @@ SlimeCommander::SlimeCommander(std::shared_ptr<BaseScene> scene):
 }
 
 // Events
+void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& evt) {
+    m_game->player.update();
+}
+
 void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
     switch (evt.key) {
         case Key::ArrowRight:
-            m_game->player.move(vec3(-0.02f, 0, 0));
+            m_game->player.move(vec3(-1.0f, 0, 0));
             break;
 
         case Key::ArrowLeft:
-            m_game->player.move(vec3(+0.02f, 0, 0));
+            m_game->player.move(vec3(+1.0f, 0, 0));
             break;
 
-        case Key::Space:
+        case Key::ArrowUp:
             m_game->player.jump();
             break;
     }

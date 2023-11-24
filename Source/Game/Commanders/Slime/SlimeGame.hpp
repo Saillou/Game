@@ -16,6 +16,8 @@ protected:
     sBody               _body;
     Physx::PBody        _pbody;
 
+    virtual void _onAdd();
+
 public:
     explicit BaseItem();
     virtual ~BaseItem() = default;
@@ -32,15 +34,19 @@ private:
 
 // ------------ Slime ------------
 class Slime : public BaseItem {
-    bool _jumpPossible = true;
-    bool _movePossible = true;
-    float _maxSpeed = 10.0f; // unit/s
+    float _maxSpeed = 2.0f; // unit/s
+    float _accel    = 0.5f; // unit/s^2
+    float _jump     = 5.0f; // idk
+
+protected:
+    void _onAdd() override;
 
 public:
     Slime();
 
     void move(glm::vec3& direction);
     void jump();
+    void update();
 
     const sBody& createBody() override;
 };

@@ -17,9 +17,15 @@ struct CustomEvents : public Event {
 		int y;
 	};
 
+	// -- State --
+	struct UpdateGameState : public _Base {
+		explicit UpdateGameState();
+	};
+
 private:
 	enum _Type : int {
 		EventKeyPressed,
 		EventMouseMoved,
+		EventUpdateGameState
 	};
 };
