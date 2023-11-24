@@ -9,7 +9,8 @@
 // Data
 enum class SceneId {
     None = -1, 
-    TestScene = 0
+    TestScene = 0,
+    Intro, Slime, Crash, Ending
 };
 
 // Singleton

@@ -3,7 +3,10 @@
 #include "../Engine/Events/CustomEvents.hpp"
 
 #include "Commanders/TestCommander.hpp"
-#include "Scenes/TestScene.hpp"
+#include "Commanders/IntroCommander.hpp"
+#include "Commanders/SlimeCommander.hpp"
+#include "Commanders/CrashCommander.hpp"
+#include "Commanders/EndingCommander.hpp"
 
 // Private
 Game::ActionCode Game::_validateState(const Game::State& state) {
@@ -41,6 +44,7 @@ Game::ActionCode Game::UpdateState(Game::State& state) {
 
 Result:
 	game._curr_state = state;
+	Event::Emit(CustomEvents::UpdateGameState());
 	return action;
 }
 
@@ -51,8 +55,11 @@ void Game::Refresh(Window& window) {
 	window.scene(([&]() -> std::shared_ptr<BaseScene> {
 		switch (game._curr_state.sceneId) 
 		{
-			case SceneId::TestScene: 
-				return std::make_shared<TestScene>();
+			case SceneId::TestScene:	return std::make_shared<TestScene>();
+			case SceneId::Intro:		return std::make_shared<IntroScene>();
+			case SceneId::Slime:		return std::make_shared<SlimeScene>();
+			case SceneId::Crash:		return std::make_shared<CrashScene>();
+			case SceneId::Ending:		return std::make_shared<EndingScene>();
 
 			default: 
 				return std::make_shared<BaseScene>();
@@ -63,8 +70,11 @@ void Game::Refresh(Window& window) {
 	game._commander = ([&]() -> std::unique_ptr<BaseCommander> {
 		switch (game._curr_state.sceneId) 
 		{
-			case SceneId::TestScene: 
-				return std::make_unique<TestCommander>(window.scene());
+			case SceneId::TestScene:	return std::make_unique<TestCommander>(window.scene());
+			case SceneId::Intro:		return std::make_unique<IntroCommander>(window.scene());
+			case SceneId::Slime:		return std::make_unique<SlimeCommander>(window.scene());
+			case SceneId::Crash:		return std::make_unique<CrashCommander>(window.scene());
+			case SceneId::Ending:		return std::make_unique<EndingCommander>(window.scene());
 
 			default:
 				return std::make_unique<BaseCommander>(window.scene());

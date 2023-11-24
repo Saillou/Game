@@ -11,6 +11,7 @@ struct BaseCommander : public Event::Subscriber {
     virtual ~BaseCommander() = default;
 
 protected:
+    virtual void _on_game_state_update(const CustomEvents::UpdateGameState& evt);
     virtual void _on_key_pressed(const CustomEvents::KeyPressed& evt);
     virtual void _on_mouse_moved(const CustomEvents::MouseMoved& evt);
 

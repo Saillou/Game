@@ -1,7 +1,6 @@
 #include "Physx.hpp"
 #include "../Events/CustomEvents.hpp"
 
-#include <reactphysics3d/reactphysics3d.h>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/norm.hpp>
 
@@ -62,7 +61,7 @@ Physx::~Physx()
 }
 
 // Public
-void Physx::Add(std::shared_ptr<BaseBody> body, BodyType type) {
+RigidBody* Physx::Add(std::shared_ptr<BaseBody> body, BodyType type) {
 	auto& px = _get().p_impl;
 	auto& world = px->world;
 
@@ -113,6 +112,8 @@ void Physx::Add(std::shared_ptr<BaseBody> body, BodyType type) {
 	px->bodies.insert(
 		std::make_shared<_impl::BodyElement>(body, phxBody, collider)
 	);
+
+	return phxBody;
 }
 
 void Physx::Clear() {
