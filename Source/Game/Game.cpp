@@ -44,6 +44,7 @@ Game::ActionCode Game::UpdateState(Game::State& state) {
 
 Result:
 	game._curr_state = state;
+	Event::Emit(CustomEvents::UpdateGameState());
 	return action;
 }
 

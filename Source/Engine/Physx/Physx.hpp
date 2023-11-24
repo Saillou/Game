@@ -2,16 +2,20 @@
 
 #include <memory>
 #include <unordered_set>
+#include <reactphysics3d/reactphysics3d.h>
 
 #include "BaseBody.hpp"
 
 // Singleton
 class Physx {
 public:
+    typedef reactphysics3d::RigidBody* PBody;
+
     enum class BodyType {
         Static, Dynamic, Kinematic
     };
-    static void Add(std::shared_ptr<BaseBody> body, BodyType type = BodyType::Static);
+
+    static PBody Add(std::shared_ptr<BaseBody> body, BodyType type = BodyType::Static);
     static void Clear();
     static void Compute(float delta_time_ms);
 
