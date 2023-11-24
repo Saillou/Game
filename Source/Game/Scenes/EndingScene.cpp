@@ -20,7 +20,10 @@ void EndingScene::resize(int width, int height) {
 }
 
 void EndingScene::draw() {
-
     // Draw texts
-    TextEngine::Write("EndingScene", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+    TextEngine::Write("To my wife,", 10.0f, m_height - 20.0f, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
+    TextEngine::Write("without whom this game would have been completed 2 weeks ago.", 50.0f, m_height - 40.0f, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
+
+    TextEngine::Write("Perspective", m_width * 0.45f, m_height * 0.8f, 0.8f, glm::vec3(1.0f, 1.0f, 1.0f));
+    TextEngine::Write("What are the other things hidden from the view?", m_width * 0.375f, m_height * 0.8f - 40.0f, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
 }

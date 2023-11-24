@@ -20,7 +20,6 @@ void CrashScene::resize(int width, int height) {
 }
 
 void CrashScene::draw() {
-
     // Draw texts
     TextEngine::Write("CrashScene", 10.0f, 10.0f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 }

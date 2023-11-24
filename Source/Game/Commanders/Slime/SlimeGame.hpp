@@ -78,4 +78,5 @@ struct SlimeGame
     SlimeGame();
 
     void useScene(std::shared_ptr<SlimeScene> scene);
+    void update();
 };
