@@ -62,6 +62,8 @@ struct Ground : public BaseItem {
 struct Target : public BaseItem {
     Target();
 
+    void update();
+
     const sBody& createBody() override;
 };
 

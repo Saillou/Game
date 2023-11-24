@@ -42,7 +42,7 @@ void Slime::update() {
     if (curr_position.z > epsilon) {
         _pbody->setLinearVelocity(curr_velocity - _jump * Vector3(0, 0, 1e-1f));
     }
-    else {
+    else if (curr_position.z != 0.0f) {
         _pbody->setTransform(Transform(Vector3(curr_position.x, curr_position.y, 0.0f), curr_transform.getOrientation()));
     }
 }
@@ -53,7 +53,6 @@ void Slime::move(glm::vec3& direction) {
 
     new_speed.x = glm::clamp(new_speed.x, -_maxSpeed, _maxSpeed);
     new_speed.y = glm::clamp(new_speed.y, -_maxSpeed, _maxSpeed);
-    new_speed.z = glm::clamp(new_speed.z, -_maxSpeed, _maxSpeed);
 
     _pbody->setLinearVelocity(new_speed);
 }
@@ -65,7 +64,7 @@ void Slime::jump() {
         return;
 
     auto curr_velocity = _pbody->getLinearVelocity();
-    _pbody->setLinearVelocity(curr_velocity + _jump * Vector3(0, 0, 1.0f));
+    _pbody->setLinearVelocity(curr_velocity + _jump * Vector3(0, 0, 2.0f));
 }
 
 const BaseItem::sBody& Slime::createBody() {
@@ -95,6 +94,17 @@ const BaseItem::sBody& Ground::createBody() {
 Target::Target()
 {
     createBody();
+}
+
+void Target::update() {
+    const auto& curr_transform = _pbody->getTransform();
+    const auto& curr_position = curr_transform.getPosition();
+    const auto& curr_velocity = _pbody->getLinearVelocity();
+
+    // Force y-coordinate to 0
+    if (curr_position.y != 0.0f) {
+        _pbody->setTransform(Transform(Vector3(curr_position.x, 0.0f, curr_position.z), curr_transform.getOrientation()));
+    }
 }
 
 const BaseItem::sBody& Target::createBody() {

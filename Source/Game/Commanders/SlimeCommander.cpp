@@ -16,6 +16,7 @@ SlimeCommander::SlimeCommander(std::shared_ptr<BaseScene> scene):
 // Events
 void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& evt) {
     m_game->player.update();
+    m_game->target.update();
 }
 
 void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
