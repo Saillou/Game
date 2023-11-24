@@ -13,7 +13,7 @@
 struct Sphere : public Cookable
 {
     // Instance
-    Sphere(const glm::vec3& center, float radius);
+    Sphere(float radius);
     virtual ~Sphere() = default;
 
     void draw(const Camera& camera, const glm::vec3& position = {}, const glm::vec3& orientation = {}, const std::vector<std::unique_ptr<Light>>& lights = {});

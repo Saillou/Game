@@ -9,6 +9,7 @@ struct IntroCommander : public BaseCommander {
 
 protected:
     // Events
+    void _on_game_state_update(const CustomEvents::UpdateGameState& evt) override;
     void _on_key_pressed(const CustomEvents::KeyPressed& evt) override;
     void _on_mouse_moved(const CustomEvents::MouseMoved& evt) override;
 

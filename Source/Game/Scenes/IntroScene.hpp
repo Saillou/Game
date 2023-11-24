@@ -2,6 +2,10 @@
 
 #include "../../Engine/Graphic/Base/BaseScene.hpp"
 
+#include <vector>
+#include <memory>
+#include "Objects/Sphere.hpp"
+
 // -- Scene --
 struct IntroScene : public BaseScene {
     IntroScene();
@@ -11,4 +15,7 @@ struct IntroScene : public BaseScene {
 
 private:
     void _update_camera();
+
+    std::unique_ptr<Sphere> m_planet;
+    std::vector<glm::vec3> m_universe;
 };

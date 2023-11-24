@@ -49,7 +49,7 @@ struct SphereShape : public BaseShape {
 };
 
 // - Constructor
-Sphere::Sphere(const glm::vec3& center, float radius) :
+Sphere::Sphere(float radius) :
     m_shape(std::make_shared<SphereShape>(radius))
 {
     // ..

@@ -55,7 +55,6 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
         return glm::vec3(theta_x, theta_y, theta_z);
     };
 
-
     // -- 
     constexpr float speed_cam = 0.04f;
     const glm::vec3 angles = get_cam_angles();
