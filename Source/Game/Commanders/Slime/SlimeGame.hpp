@@ -13,19 +13,18 @@ protected:
     using sBody = std::shared_ptr<BaseBody>;
 
     Timer::Chronometre  _time;
-    glm::vec3           _position;
     sBody               _body;
+    Physx::PBody        _pbody;
 
 public:
-    explicit BaseItem(const glm::vec3& initial_position = glm::vec3(0, 0, 0));
+    explicit BaseItem();
     virtual ~BaseItem() = default;
 
     // Getters
-    const glm::vec3& position() const;
-    const sBody& body() const;
+    sBody body() const;
 
     // Methods
-    void addTo(std::shared_ptr<SlimeScene> scene);
+    void addTo(std::shared_ptr<SlimeScene> scene, Physx::BodyType type);
 
 private:
     virtual const sBody& createBody() = 0;
@@ -35,11 +34,12 @@ private:
 class Slime : public BaseItem {
     bool _jumpPossible = true;
     bool _movePossible = true;
+    float _maxSpeed = 10.0f; // unit/s
 
 public:
     Slime();
 
-    void move(glm::vec3& direction, float distance = 1.0f);
+    void move(glm::vec3& direction);
     void jump();
 
     const sBody& createBody() override;
@@ -49,10 +49,7 @@ public:
 struct Ground : public BaseItem {
     Ground();
 
-    const glm::vec3 normal = glm::vec3(0, 0, 1);
-
     const sBody& createBody() override;
-
 };
 
 // ------------ Target ------------
@@ -60,19 +57,17 @@ struct Target : public BaseItem {
     Target();
 
     const sBody& createBody() override;
-
 };
 
 // ------------ Implementation ------------
 struct SlimeGame
 {
     Slime  player;
-    Slime  opponent;
+    Slime  ennemy;
     Ground ground;
     Target target;
 
-    SlimeGame() = default;
-    ~SlimeGame() = default;
+    SlimeGame();
 
     void useScene(std::shared_ptr<SlimeScene> scene);
 };

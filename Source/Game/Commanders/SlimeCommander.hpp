@@ -6,7 +6,6 @@
 
 struct SlimeCommander : public BaseCommander {
     SlimeCommander(std::shared_ptr<BaseScene> scene);
-    ~SlimeCommander();
 
 protected:
     // Events
