@@ -29,12 +29,11 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
             m_game->player.move(vec3(+1.0f, 0, 0));
             break;
 
-        case Key::ArrowUp:
+        case Key::Space:
             m_game->player.jump();
             break;
     }
 
-    /*
     // -- Camera movements -- 
     static const auto reset_cam = [&]() {
         m_scene->camera().position = glm::vec3(0.0f, 3.8f, 0.0f);
@@ -101,18 +100,20 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
         }
     }
 
+
     // 2D world
     if (evt.key == 'C') {
         m_scene->enable_2d_camera = true;
+        m_scene->lightning(false);
         reset_cam();
     }
 
     // 3D world
     if (evt.key == 'V') {
         m_scene->enable_2d_camera = false;
+        m_scene->lightning(true);
         reset_cam();
     }
-    */
 }
 
 void SlimeCommander::_on_mouse_moved(const CustomEvents::MouseMoved& evt) {

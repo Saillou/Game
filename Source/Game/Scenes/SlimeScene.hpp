@@ -16,6 +16,7 @@ struct SlimeScene : public BaseScene {
     void resize(int width, int height) override;
 
     void add(const std::shared_ptr<BaseBody>& body);
+    void lightning(bool enable);
 
     bool enable_2d_camera = true;
 private:
