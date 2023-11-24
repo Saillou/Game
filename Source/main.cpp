@@ -12,7 +12,7 @@ int main() {
     Window window(1600, 900, "The Game");
 
     // Main loop
-    gamestate.sceneId = SceneId::Slime;
+    gamestate.sceneId = SceneId::Intro;
 
     Timer::Chronometre chrono;
     do {

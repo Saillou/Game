@@ -10,5 +10,5 @@ struct IntroScene : public BaseScene {
     void resize(int width, int height) override;
 
 private:
-
+    void _update_camera();
 };
