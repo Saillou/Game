@@ -7,8 +7,8 @@ SlimeScene::SlimeScene() :
     BaseScene()
 {
     // Camera
-    m_camera.position    = glm::vec3(0.0f, 3.8f, 0.0f);
-    m_camera.direction   = glm::vec3(0.0f, 0.0f, 0.0f);
+    m_camera.position    = glm::vec3(0.0f, 3.8f, +0.5f);
+    m_camera.direction   = glm::vec3(0.0f, 0.0f, +0.5f);
     m_camera.fieldOfView = 45.0f;
 }
 

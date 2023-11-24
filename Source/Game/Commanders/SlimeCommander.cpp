@@ -36,8 +36,8 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
 
     // -- Camera movements -- 
     static const auto reset_cam = [&]() {
-        m_scene->camera().position = glm::vec3(0.0f, 3.8f, 0.0f);
-        m_scene->camera().direction = glm::vec3(0.0f, 0.0f, 0.0f);
+        m_scene->camera().position  = glm::vec3(0.0f, 3.8f, +0.5f);
+        m_scene->camera().direction = glm::vec3(0.0f, 0.0f, +0.5f);
         m_scene->camera().fieldOfView = 45.0f;
         m_scene->camera().lookAt(glm::vec3(0, 0, 1));
 
@@ -66,7 +66,11 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
             m_scene->camera().direction += glm::vec3(speed_cam, 0.0f, 0.0f);
         }
         else {
-            m_scene->camera().position = glm::vec3(3.8f * sin(angles.x - speed_cam), 3.8f * cos(angles.y - speed_cam), 3.8f * sin(angles.z));
+            m_scene->camera().position = 3.8f * glm::vec3(
+                sin(glm::clamp(angles.x - speed_cam, -1.0f, +1.0f)),
+                cos(glm::clamp(angles.y - speed_cam, -1.0f, +1.0f)),
+                sin(angles.z)
+            );
         }
     }
 
@@ -76,30 +80,13 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
             m_scene->camera().direction -= glm::vec3(speed_cam, 0.0f, 0.0f);
         }
         else {
-            m_scene->camera().position = glm::vec3(3.8f * sin(angles.x + speed_cam), 3.8f * cos(angles.y + speed_cam), 3.8f * sin(angles.z));
+            m_scene->camera().position = 3.8f * glm::vec3(
+                sin(glm::clamp(angles.x + speed_cam, -1.0f, +1.0f)),
+                cos(glm::clamp(angles.y + speed_cam, -1.0f, +1.0f)),
+                sin(angles.z)
+            );
         }
     }
-
-    if (evt.key == Key::ArrowUp) {
-        if (m_scene->enable_2d_camera) {
-            m_scene->camera().position += glm::vec3(0.0f, 0.0f, speed_cam);
-            m_scene->camera().direction += glm::vec3(0.0f, 0.0f, speed_cam);
-        }
-        else {
-            m_scene->camera().position = glm::vec3(3.8f * sin(angles.x), 3.8f * cos(angles.y - speed_cam), 3.8f * sin(angles.z - speed_cam));
-        }
-    }
-
-    if (evt.key == Key::ArrowDown) {
-        if (m_scene->enable_2d_camera) {
-            m_scene->camera().position -= glm::vec3(0.0f, 0.0f, speed_cam);
-            m_scene->camera().direction -= glm::vec3(0.0f, 0.0f, speed_cam);
-        }
-        else {
-            m_scene->camera().position = glm::vec3(3.8f * sin(angles.x), 3.8f * cos(angles.y + speed_cam), 3.8f * sin(angles.z + speed_cam));
-        }
-    }
-
 
     // 2D world
     if (evt.key == 'C') {

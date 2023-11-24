@@ -79,12 +79,14 @@ void Box::draw(const Camera& camera, const glm::vec3& position, const glm::vec3&
             set("Model",        model).
             set("View",         camera.modelview).
             set("Projection",   camera.projection).            
-            set("CameraPos",    camera.position);
+            set("CameraPos",    camera.position).
+            set("LightPos",     glm::vec3(0, 0, 0)).
+            set("LightColor",   glm::vec4(0, 0, 0, 0));
 
-        for (const auto& light : lights) {
+        if(!lights.empty()) {
             recipe->
-                set("LightPos",   light->position).
-                set("LightColor", light->color);
+                set("LightPos",   lights[0]->position).
+                set("LightColor", lights[0]->color);
         }
 
         ((BoxShape*)m_shape.get())->bind();
