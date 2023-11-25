@@ -44,7 +44,15 @@ struct SphereShape : public BaseShape {
     }
 
     void draw() override {
+        bind();
         glDrawElements(GL_TRIANGLE_STRIP, (int)m_indices.size(), GL_UNSIGNED_INT, 0);
+        unbind();
+    }
+
+    void draw(int amount) {
+        bind();
+        glDrawElementsInstanced(GL_TRIANGLE_STRIP, (int)m_indices.size(), GL_UNSIGNED_INT, 0, amount);
+        unbind();
     }
 };
 
@@ -53,6 +61,14 @@ Sphere::Sphere(float radius) :
     m_shape(std::make_shared<SphereShape>(radius))
 {
     // ..
+}
+
+void Sphere::bind() {
+    m_shape->bind();
+}
+
+void Sphere::unbind() {
+    m_shape->unbind();
 }
 
 void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation, const std::vector<std::unique_ptr<Light>>& lights) {
@@ -78,44 +94,26 @@ void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::ve
                 set("LightColor", lights[0]->color);
         }
 
-        ((SphereShape*)m_shape.get())->bind();
         ((SphereShape*)m_shape.get())->draw();
     }
 }
 
-// - Shaders
-void Sphere::_set_shader_border(UShader& shader) {
-    _set_shader_common(shader);
+void Sphere::drawBatch(int amount, const Camera& camera, const std::vector<std::unique_ptr<Light>>& lights) {
+    for (auto& recipe : m_shaders) {
+        recipe->
+            use().
+            set("View",         camera.modelview).
+            set("Projection",   camera.projection).
+            set("CameraPos",    camera.position).
+            set("LightPos",     glm::vec3(0, 0, 0)).
+            set("LightColor",   glm::vec4(0, 0, 0, 0));
 
-    shader->
-        attachSource(GL_GEOMETRY_SHADER, ShaderSource{}
-            .add_var("in", "layout", "(triangles)")
-            .add_var("out", "layout", "(line_strip, max_vertices = 4)")
-            .add_func("void", "main", "", R"_main_(
-                    gl_Position     = gl_in[1].gl_Position; EmitVertex();
-                    gl_Position     = gl_in[2].gl_Position; EmitVertex(); 
-                    EndPrimitive();
+        if (!lights.empty()) {
+            recipe->
+                set("LightPos", lights[0]->position).
+                set("LightColor", lights[0]->color);
+        }
 
-                    gl_Position     = gl_in[0].gl_Position; EmitVertex();
-                    gl_Position     = gl_in[1].gl_Position; EmitVertex(); 
-                    EndPrimitive();
-                )_main_").str()
-        ).link();
-}
-
-void Sphere::_set_shader_point(UShader& shader) {
-    _set_shader_common(shader);
-
-    shader->
-        attachSource(GL_GEOMETRY_SHADER, ShaderSource{}
-            .add_var("in", "layout", "(triangles)")
-            .add_var("out", "layout", "(points, max_vertices = 2)")
-            .add_func("void", "main", "", R"_main_(
-                    gl_Position     = gl_in[0].gl_Position; EmitVertex();
-                    EndPrimitive();
-
-                    gl_Position     = gl_in[1].gl_Position; EmitVertex(); 
-                    EndPrimitive();
-                )_main_").str()
-        ).link();
+        ((SphereShape*)m_shape.get())->draw(amount);
+    }
 }

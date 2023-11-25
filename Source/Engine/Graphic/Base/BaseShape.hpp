@@ -15,6 +15,7 @@ public:
 	virtual ~BaseShape() = default;
 
 	virtual void bind();
+	virtual void unbind();
 	virtual void draw() = 0;
 
 	int indicesLength() const;

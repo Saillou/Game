@@ -13,6 +13,10 @@ void BaseShape::bind() {
     m_vao.bind();
 }
 
+void BaseShape::unbind() {
+    m_vao.unbind();
+}
+
 int BaseShape::indicesLength() const {
     return (int)m_indices.size();
 }
@@ -38,8 +42,9 @@ void BaseShape::_bindArray() {
 
     m_ebo.bindData(m_indices);
 
-    // unbind all
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // unbind arrays
+    m_vbo_vertices.unbind();
+    m_vbo_normals.unbind();
 }
 
 // Helpers

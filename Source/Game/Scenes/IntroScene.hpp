@@ -17,5 +17,5 @@ private:
     void _update_camera();
 
     std::unique_ptr<Sphere> m_planet;
-    std::vector<glm::vec3> m_universe;
+    std::vector<glm::mat4> m_planets_pose;
 };
