@@ -71,6 +71,10 @@ void Sphere::unbind() {
     m_shape->unbind();
 }
 
+std::shared_ptr<BaseShape> Sphere::shape() {
+    return m_shape;
+}
+
 void Sphere::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation, const std::vector<std::unique_ptr<Light>>& lights) {
     glm::mat4 model(1.0f);
     model = glm::translate(model, position);

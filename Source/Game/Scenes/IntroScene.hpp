@@ -6,6 +6,17 @@
 #include <memory>
 #include "Objects/Sphere.hpp"
 
+// -- Objects --
+struct SphereBatch {
+    SphereBatch(float radius);
+
+    void create();
+    void draw(const Camera& camera, const std::vector<std::unique_ptr<Light>>& lights);
+
+    std::unique_ptr<Sphere> object;
+    std::vector<glm::mat4>  models;
+};
+
 // -- Scene --
 struct IntroScene : public BaseScene {
     IntroScene();
@@ -15,7 +26,8 @@ struct IntroScene : public BaseScene {
 
 private:
     void _update_camera();
+    const std::vector<glm::vec2> _get_title_pos() const;
 
-    std::unique_ptr<Sphere> m_planet;
-    std::vector<glm::mat4> m_planets_pose;
+    SphereBatch m_decors;
+    SphereBatch m_title;
 };

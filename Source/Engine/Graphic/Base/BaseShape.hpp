@@ -14,6 +14,8 @@ public:
 	BaseShape();
 	virtual ~BaseShape() = default;
 
+	void createBatch(const std::vector<glm::mat4>& models);
+
 	virtual void bind();
 	virtual void unbind();
 	virtual void draw() = 0;
@@ -21,6 +23,7 @@ public:
 	int indicesLength() const;
 	int verticesLength() const;
 	int normalsLength() const;
+
 
 protected:
 	virtual void _bindArray();

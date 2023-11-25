@@ -22,6 +22,8 @@ struct Sphere : public Cookable
     void draw(const Camera& camera, const glm::vec3& position = {}, const glm::vec3& orientation = {}, const std::vector<std::unique_ptr<Light>>& lights = {});
     void drawBatch(int amount, const Camera& camera, const std::vector<std::unique_ptr<Light>>& lights = {});
 
+    std::shared_ptr<BaseShape> shape();
+
 private:
     // Members
     std::shared_ptr<BaseShape> m_shape;
