@@ -87,7 +87,7 @@ void IntroScene::draw() {
     _update_camera();
 
     // Update text
-    //if (m_anime_text) {
+    if (m_anime_text) {
         for (size_t i = 0; i < m_title.models.size(); i++)
         {
             const auto _get_pos = _get_title_pos(i);
@@ -95,11 +95,13 @@ void IntroScene::draw() {
             const glm::vec2& pos = _get_pos[0];
             glm::vec4& model_pos = m_title.models[i][3];
 
-            model_pos[0] = model_pos[0] * 0.95f + (0.5f - pos.x) * 0.05f;
-            model_pos[1] = model_pos[1] * 0.95f;
-            model_pos[2] = model_pos[2] * 0.95f + (0.5f - pos.y) * 0.05f;
+            const float sp = 0.03f;
+
+            model_pos[0] = model_pos[0] * (1.0f-sp) + (0.5f - pos.x) * sp;
+            model_pos[1] = model_pos[1] * (1.0f-sp);
+            model_pos[2] = model_pos[2] * (1.0f-sp) + (0.5f - pos.y) * sp;
         }
-    //}
+    }
     m_title.update();
 
     // Update particles

@@ -28,10 +28,10 @@ int main() {
                     window.toggleFullScreen();
                     break;
 
-                // Change scene
-                case GLFW_KEY_1: gamestate.sceneId = SceneId::Intro;     break;
-                case GLFW_KEY_2: gamestate.sceneId = SceneId::Slime;     break;
-                case GLFW_KEY_3: gamestate.sceneId = SceneId::Ending;    break;
+                //// Change scene
+                //case GLFW_KEY_1: gamestate.sceneId = SceneId::Intro;     break;
+                //case GLFW_KEY_2: gamestate.sceneId = SceneId::Slime;     break;
+                //case GLFW_KEY_3: gamestate.sceneId = SceneId::Ending;    break;
 
                 // Game inputs
                 default:
