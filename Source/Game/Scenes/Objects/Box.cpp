@@ -66,6 +66,10 @@ Box::Box(const glm::vec3& dims) :
     // ...
 }
 
+void Box::bind() {
+    ((BoxShape*)m_shape.get())->bind();
+}
+
 void Box::draw(const Camera& camera, const glm::vec3& position, const glm::vec3& orientation, const std::vector<std::unique_ptr<Light>>& lights) {
     glm::mat4 model(1.0f);
     model = glm::translate(model, position);
@@ -89,44 +93,7 @@ void Box::draw(const Camera& camera, const glm::vec3& position, const glm::vec3&
                 set("LightColor", lights[0]->color);
         }
 
-        ((BoxShape*)m_shape.get())->bind();
+        bind();
         ((BoxShape*)m_shape.get())->draw();
     }
-}
-
-// - Shaders
-void Box::_set_shader_border(UShader& shader) {
-    _set_shader_common(shader);
-
-    shader->
-        attachSource(GL_GEOMETRY_SHADER, ShaderSource{}
-            .add_var("in", "layout", "(triangles)")
-            .add_var("out", "layout", "(line_strip, max_vertices = 4)")
-            .add_func("void", "main", "", R"_main_(
-                    gl_Position     = gl_in[1].gl_Position; EmitVertex();
-                    gl_Position     = gl_in[2].gl_Position; EmitVertex(); 
-                    EndPrimitive();
-
-                    gl_Position     = gl_in[0].gl_Position; EmitVertex();
-                    gl_Position     = gl_in[1].gl_Position; EmitVertex(); 
-                    EndPrimitive();
-                )_main_").str()
-        ).link();
-}
-
-void Box::_set_shader_point(UShader& shader) {
-    _set_shader_common(shader);
-
-    shader->
-        attachSource(GL_GEOMETRY_SHADER, ShaderSource{}
-            .add_var("in", "layout", "(triangles)")
-            .add_var("out", "layout", "(points, max_vertices = 2)")
-            .add_func("void", "main", "", R"_main_(
-                    gl_Position     = gl_in[0].gl_Position; EmitVertex();
-                    EndPrimitive();
-
-                    gl_Position     = gl_in[1].gl_Position; EmitVertex(); 
-                    EndPrimitive();
-                )_main_").str()
-        ).link();
 }

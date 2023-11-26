@@ -16,6 +16,10 @@ void Buffer::bindData(const size_t size) {
 	glBufferData(m_bufferType, size, nullptr, m_memoryType);
 }
 
+void Buffer::unbind() {
+	glBindBuffer(m_bufferType, 0);
+}
+
 unsigned int Buffer::getId() const {
 	return m_bufferId;
 }

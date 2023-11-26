@@ -4,13 +4,47 @@
 BaseShape::BaseShape() : 
     m_vbo_vertices(GL_ARRAY_BUFFER), 
     m_vbo_normals(GL_ARRAY_BUFFER), 
-    m_ebo(GL_ELEMENT_ARRAY_BUFFER) 
+    m_ebo(GL_ELEMENT_ARRAY_BUFFER),
+    m_instances(GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW)
 {
     // ..
 }
 
+void BaseShape::createBatch(const std::vector<glm::mat4>& models) {
+    m_instances.bindData(models);
+
+    bind();
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+
+    glVertexAttribDivisor(2, 1);
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+
+    unbind();
+}
+
+void BaseShape::updateBatch(const std::vector<glm::mat4>& models) {
+    m_instances.bindData(models);
+}
+
 void BaseShape::bind() {
     m_vao.bind();
+}
+
+void BaseShape::unbind() {
+    m_vao.unbind();
 }
 
 int BaseShape::indicesLength() const {
@@ -38,8 +72,9 @@ void BaseShape::_bindArray() {
 
     m_ebo.bindData(m_indices);
 
-    // unbind all
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // unbind arrays
+    m_vbo_vertices.unbind();
+    m_vbo_normals.unbind();
 }
 
 // Helpers

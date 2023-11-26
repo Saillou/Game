@@ -15,8 +15,7 @@ SlimeCommander::SlimeCommander(std::shared_ptr<BaseScene> scene):
 
 // Events
 void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& evt) {
-    m_game->player.update();
-    m_game->target.update();
+    m_game->update();
 }
 
 void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
@@ -55,7 +54,6 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
         return glm::vec3(theta_x, theta_y, theta_z);
     };
 
-
     // -- 
     constexpr float speed_cam = 0.04f;
     const glm::vec3 angles = get_cam_angles();
@@ -66,6 +64,7 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
             m_scene->camera().direction += glm::vec3(speed_cam, 0.0f, 0.0f);
         }
         else {
+            m_scene->camera().direction = m_game->player.body()->position;
             m_scene->camera().position = 3.8f * glm::vec3(
                 sin(glm::clamp(angles.x - speed_cam, -1.0f, +1.0f)),
                 cos(glm::clamp(angles.y - speed_cam, -1.0f, +1.0f)),
@@ -80,6 +79,7 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
             m_scene->camera().direction -= glm::vec3(speed_cam, 0.0f, 0.0f);
         }
         else {
+            m_scene->camera().direction = m_game->player.body()->position;
             m_scene->camera().position = 3.8f * glm::vec3(
                 sin(glm::clamp(angles.x + speed_cam, -1.0f, +1.0f)),
                 cos(glm::clamp(angles.y + speed_cam, -1.0f, +1.0f)),

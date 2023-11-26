@@ -127,3 +127,8 @@ void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene) {
     player.addTo(scene, Physx::BodyType::Kinematic);
     target.addTo(scene, Physx::BodyType::Dynamic);
 }
+
+void SlimeGame::update() {
+    player.update();
+    target.update();
+}

@@ -13,6 +13,10 @@ void Array::bind() {
 	glBindVertexArray(m_array_id);
 }
 
+void Array::unbind() {
+	glBindVertexArray(0);
+}
+
 unsigned int Array::getId() const {
 	return m_array_id;
 }

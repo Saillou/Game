@@ -25,6 +25,11 @@ Game& Game::_get() {
 Game::ActionCode Game::UpdateState(Game::State& state) {
 	Game& game = _get();
 
+	// Next scene
+	if (game._commander && game._commander->ended()) {
+		state.sceneId = SceneId((int)game._curr_state.sceneId + 1);
+	}
+
 	// Stop/Refresh here, invalid state detected
 	ActionCode action = game._validateState(state);
 	if (action == ActionCode::Refresh)

@@ -10,7 +10,7 @@ struct _SphereBodyImpl {
 	_SphereBodyImpl(float radius_, const glm::vec4& color_) :
 		_id(++sphere_id),
 		color(color_),
-		m_shape(std::make_shared<Sphere>(glm::vec3(0.f), radius_))
+		m_shape(std::make_shared<Sphere>(radius_))
 	{
 		m_shape->addRecipe(Cookable::CookType::Solid, color_);
 	}

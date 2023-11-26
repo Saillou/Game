@@ -13,6 +13,7 @@ public:
 	Array(Array&&) = delete;
 
 	void bind();
+	void unbind();
 	unsigned int getId() const;
 
 protected:

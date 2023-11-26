@@ -17,6 +17,7 @@ public:
 		void bindData(const std::vector<T>& data);
 
 	void bindData(size_t size);
+	void unbind();
 
 	unsigned int getId() const;
 

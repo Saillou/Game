@@ -9,7 +9,7 @@
 struct Cookable : public Object {
     // Basic possibilities
     enum class CookType {
-        Solid, Border, Point
+        Solid, Border, Point, Batch
     };
 
     // Instance
@@ -18,11 +18,16 @@ struct Cookable : public Object {
     virtual Cookable* addRecipe(const CookType& type, const glm::vec4& color);
 
 protected:
-    void _set_shader_common(UShader& shader);
+    // Vertices
+    virtual void _set_shader_batch(UShader& shader);
+    virtual void _set_shader_single(UShader& shader);
 
-    virtual void _set_shader_solid(UShader&);
-    virtual void _set_shader_border(UShader&) = 0;
-    virtual void _set_shader_point(UShader&)  = 0;
+    // Geometry
+    virtual void _set_shader_border(UShader&);
+    virtual void _set_shader_point(UShader&);
+
+    // Fragment
+    virtual void _set_shader_light(UShader& shader);
 
     // Members
     std::vector<UShader> m_shaders;

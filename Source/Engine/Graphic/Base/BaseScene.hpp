@@ -23,7 +23,6 @@ protected:
     virtual void _init_gl_config(); // Override this to enable or disable some opengl functionalities. (eg PENCIL_TEST)
 
     // Members
-    CookableCollection m_shapes;
     Camera m_camera = {};
     std::vector<std::unique_ptr<Light>> m_lights;
 
