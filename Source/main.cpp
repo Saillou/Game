@@ -5,13 +5,19 @@
 #include "Engine/Physx/Physx.hpp"
 #include "Engine/Graphic/Window.hpp"
 
+// Options
+const bool FullScreen = 
+#ifdef _DEBUG
+        false;
+#else
+        true;
+#endif
+
 // -- Entry point --
 int main() {
-    const bool full_screen = false;
-
     // Create window
     GameManager::State gamestate;
-    Window window(1600, 900, "The Game", full_screen);
+    Window window(1600, 900, "The Game", FullScreen);
 
     // Main loop
     gamestate.sceneId = SceneId::Intro;
