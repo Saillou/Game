@@ -16,6 +16,8 @@ protected:
 private:
     void _on_key_left();
     void _on_key_right();
+    void _on_key_up();
+    void _on_key_down();
     void _on_key_space();
 
     // Members

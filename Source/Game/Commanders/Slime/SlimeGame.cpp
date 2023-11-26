@@ -129,16 +129,18 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
         case SlimeScene::Intro:
             scene->enable_2d_camera = false;
             scene->lightning(false);
+
             break;
         case SlimeScene::Game2D:
             scene->enable_2d_camera = true;
-
-            camera.position = glm::vec3(0.0f, 3.8f, +0.5f);
-            camera.direction = glm::vec3(0.0f, 0.0f, +0.5f);
+            scene->lightning(false);
 
             target.setType(Physx::BodyType::Dynamic);
             break;
         case SlimeScene::Game3D:
+            scene->enable_2d_camera = true;
+            scene->lightning(true);
+
             break;
         case SlimeScene::Game4D:
             break;
@@ -156,11 +158,8 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
     {
     case SlimeScene::Intro:
         {
-            scene->enable_2d_camera = false;
-            scene->lightning(false);
-
-            static const float beg_time = 0.0f;
-            static const float end_time = 2.0f;
+            static const float beg_time = SlimeScene::StartTime.at(SlimeScene::State::Intro);
+            static const float end_time = SlimeScene::StartTime.at(SlimeScene::State::Game2D);
             const float rel_time = (t_sec - beg_time) / (end_time - beg_time);
 
             float r = glm::clamp(1.0f - rel_time, 0.0f, 1.0f);
@@ -171,8 +170,34 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
         }
     case SlimeScene::State::Game2D: 
         {
+            static const float beg_time = SlimeScene::StartTime.at(SlimeScene::State::Game2D);
+            const float rel_time = 3.0f*(t_sec - beg_time);
+
+            float r = glm::clamp(1.0f - rel_time, 0.0f, 1.0f);
+
+            camera.direction = r * glm::vec3(0.0f, 0.0f, +1.0f) + (1.0f - r) * glm::vec3(0.0f, 0.0f, +0.5f);
+
             player.update();
             target.update();
+            break;
+        }
+    case SlimeScene::State::Game3D:
+        {
+            static const float beg_time = SlimeScene::StartTime.at(SlimeScene::State::Game3D);
+            const float rel_time = (t_sec - beg_time);
+
+            float r = glm::clamp(1.0f - rel_time, 0.0f, 1.0f);
+
+            camera.position = r * glm::vec3(0.0f, 3.8f, +0.5f) + (1.0f - r) * glm::vec3(0.0f, 5.0f, +2.0f);
+            camera.direction = r * glm::vec3(0.0f, 0.0f, +0.5f) + (1.0f - r) * glm::vec3(0.0f, 0.0f, +0.0f);
+
+            player.update();
+            target.update();
+
+            if (!scene->lights().empty()) {
+                scene->lights()[0]->position = target.body()->position;
+            }
+
             break;
         }
     }

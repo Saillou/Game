@@ -2,6 +2,13 @@
 
 #include <glm/gtx/string_cast.hpp>
 
+// Data
+const std::unordered_map<SlimeScene::State, float> SlimeScene::StartTime = {
+    {SlimeScene::State::Intro, 0.0f},
+    {SlimeScene::State::Game2D, 2.0f},
+    {SlimeScene::State::Game3D, 4.0f},
+};
+
 // Scene instance
 SlimeScene::SlimeScene() :
     BaseScene()
@@ -29,6 +36,7 @@ void SlimeScene::lightning(bool enable) {
     if (!enable)
         return;
 
+    // Default pose
     m_lights.push_back(std::make_unique<Light>(
         glm::vec3(0.0f, 0.0f, 1.5f),
         glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
