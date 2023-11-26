@@ -4,12 +4,13 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "../Common/BaseItem.hpp"
-#include "../../Scenes/SlimeScene.hpp"
+#include "../../Scenes/CrashScene.hpp"
 #include "../../../Engine/Physx/Physx.hpp"
 #include "../../../Utils/Timer.hpp"
 
-// ------------ Members ------------
-struct SlimeGame
+
+// ------------ Implementation ------------
+struct CrashGame
 {
     // ------------ Slime ------------
     class Slime : public BaseItem {
@@ -52,8 +53,8 @@ struct SlimeGame
     Ground ground;
     Target target;
 
-    SlimeGame();
+    CrashGame();
 
-    void useScene(std::shared_ptr<SlimeScene> scene);
+    void useScene(std::shared_ptr<CrashScene> scene);
     void update();
 };

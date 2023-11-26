@@ -1,15 +1,15 @@
-#include "SlimeGame.hpp"
+#include "CrashGame.hpp"
 
 using namespace reactphysics3d;
 
 
 // ------------------------ Slime ------------------------
-SlimeGame::Slime::Slime()
+CrashGame::Slime::Slime()
 {
     createBody();
 }
 
-void SlimeGame::Slime::update() {
+void CrashGame::Slime::update() {
     // Simulate gravity
     constexpr float epsilon = 1e-2f;
 
@@ -25,7 +25,7 @@ void SlimeGame::Slime::update() {
     }
 }
 
-void SlimeGame::Slime::move(glm::vec3& direction) {
+void CrashGame::Slime::move(glm::vec3& direction) {
     glm::vec3 total = _accel * direction;
     auto new_speed = _pbody->getLinearVelocity() + Vector3(total.x, total.y, total.z);
 
@@ -35,7 +35,7 @@ void SlimeGame::Slime::move(glm::vec3& direction) {
     _pbody->setLinearVelocity(new_speed);
 }
 
-void SlimeGame::Slime::jump() {
+void CrashGame::Slime::jump() {
     constexpr float epsilon = 1e-2f;
 
     if (_pbody->getTransform().getPosition().z > epsilon)
@@ -45,23 +45,23 @@ void SlimeGame::Slime::jump() {
     _pbody->setLinearVelocity(curr_velocity + _jump * Vector3(0, 0, 2.0f));
 }
 
-const BaseItem::sBody& SlimeGame::Slime::createBody() {
+const BaseItem::sBody& CrashGame::Slime::createBody() {
     _body = std::make_shared<SphereBody>(0.10f);
     return _body;
     
 }
 
-void SlimeGame::Slime::_onAdd() {
+void CrashGame::Slime::_onAdd() {
     _pbody->setLinearDamping(10.0f);
 }
 
 // ------------------------ Ground ------------------------
-SlimeGame::Ground::Ground()
+CrashGame::Ground::Ground()
 {
     createBody();
 }
 
-const BaseItem::sBody& SlimeGame::Ground::createBody() {
+const BaseItem::sBody& CrashGame::Ground::createBody() {
     const glm::vec3 dims(5.0f, 2.0f, 0.5f);
 
     _body = std::make_shared<BoxBody>(dims);
@@ -69,12 +69,12 @@ const BaseItem::sBody& SlimeGame::Ground::createBody() {
 }
 
 // ------------------------ Target ------------------------
-SlimeGame::Target::Target()
+CrashGame::Target::Target()
 {
     createBody();
 }
 
-void SlimeGame::Target::update() {
+void CrashGame::Target::update() {
     const auto& curr_transform = _pbody->getTransform();
     const auto& curr_position = curr_transform.getPosition();
     const auto& curr_velocity = _pbody->getLinearVelocity();
@@ -85,13 +85,13 @@ void SlimeGame::Target::update() {
     }
 }
 
-const BaseItem::sBody& SlimeGame::Target::createBody() {
+const BaseItem::sBody& CrashGame::Target::createBody() {
     _body = std::make_shared<SphereBody>(0.05f);
     return _body;
 }
 
 // ------------------------ Implementation ------------------------
-SlimeGame::SlimeGame() {
+CrashGame::CrashGame() {
     // Setup items
     ground.body()->position = glm::vec3(0, 0, -0.5f);
     target.body()->position = glm::vec3(0, 0, +1.0f);
@@ -99,7 +99,7 @@ SlimeGame::SlimeGame() {
     ennemy.body()->position = glm::vec3(-1.0f, 0, 0);
 }
 
-void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene) {
+void CrashGame::useScene(std::shared_ptr<CrashScene> scene) {
     ground.addTo(scene, Physx::BodyType::Static);
     ennemy.addTo(scene, Physx::BodyType::Static);
     player.addTo(scene, Physx::BodyType::Kinematic);
@@ -111,7 +111,7 @@ void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene) {
     scene->add(target.body());
 }
 
-void SlimeGame::update() {
+void CrashGame::update() {
     player.update();
     target.update();
 }
