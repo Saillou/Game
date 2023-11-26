@@ -6,21 +6,26 @@
 #include "Engine/Graphic/Window.hpp"
 
 // Options
-const bool FullScreen = 
 #ifdef _DEBUG
-        false;
+    const bool FullScreen = false;
+    const int Width       = 1600;
+    const int Height      = 900;
+    const SceneId StartId = SceneId::Slime;
 #else
-        true;
+    const bool FullScreen = true;
+    const int Width       = 1920;
+    const int Height      = 1080;
+    const SceneId StartId = SceneId::Intro;
 #endif
 
 // -- Entry point --
 int main() {
     // Create window
     GameManager::State gamestate;
-    Window window(1920, 1080, "The Game", FullScreen);
+    Window window(Width, Height, "The Game", FullScreen);
 
     // Main loop
-    gamestate.sceneId = SceneId::Intro;
+    gamestate.sceneId = StartId;
 
     Timer::Chronometre chrono;
     do {
