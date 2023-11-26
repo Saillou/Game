@@ -2,6 +2,7 @@
 
 #include "../../Engine/Physx/Physx.hpp"
 #include "../../Engine/Graphic/Base/BaseCommander.hpp"
+#include "../../Utils/Timer.hpp"
 #include "../Scenes/IntroScene.hpp"
 
 struct IntroCommander : public BaseCommander {
@@ -16,4 +17,5 @@ protected:
 private:
     // Members
     std::shared_ptr<IntroScene> m_scene;
+    Timer::Chronometre m_time;
 };

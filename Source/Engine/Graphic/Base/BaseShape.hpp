@@ -15,9 +15,11 @@ public:
 	virtual ~BaseShape() = default;
 
 	void createBatch(const std::vector<glm::mat4>& models);
+	void updateBatch(const std::vector<glm::mat4>& models);
 
 	virtual void bind();
 	virtual void unbind();
+
 	virtual void draw() = 0;
 
 	int indicesLength() const;
@@ -42,6 +44,7 @@ protected:
 	Buffer m_vbo_vertices;
 	Buffer m_vbo_normals;
 	Buffer m_ebo;
+	Buffer m_instances;
 
 	std::vector<unsigned int> m_indices;
 	std::vector<float> m_vertices;

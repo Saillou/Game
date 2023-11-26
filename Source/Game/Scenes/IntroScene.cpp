@@ -17,54 +17,61 @@ void SphereBatch::create() {
     object->shape()->createBatch(models);
 }
 
+void SphereBatch::update() {
+    object->shape()->updateBatch(models);
+}
+
 void SphereBatch::draw(const Camera& camera, const std::vector<std::unique_ptr<Light>>& lights) {
     object->drawBatch((int)models.size(), camera, lights);
 }
-
 
 // -- Scene instance --
 IntroScene::IntroScene() :
     BaseScene(),
     m_title(0.0125f),
-    m_decors(0.25f)
+    m_decors(0.25f),
+    m_next(1.0f)
 {
     // Camera
-    m_camera.position    = glm::vec3(0.0f, 5.0f, 0.0f);
-    m_camera.direction   = glm::vec3(0.0f, 0.0f, 0.0f);
+    m_camera.position    = glm::vec3(0.0f, 2.0f, 0.0f);
+    m_camera.direction   = glm::vec3(0.0f, 0.0, 0.0f);
     m_camera.fieldOfView = 45.0f;
 
     // - Generate batches
     // Random engine
     std::default_random_engine gen;
-    std::uniform_real_distribution<float> dstr(-5.0f, +5.0f);
+    std::uniform_real_distribution<float> dstr(-50.0f, +50.0f);
 
     // Draw decors
-    m_decors.models.resize(1000);
+    m_decors.models.resize(2000);
     std::generate(m_decors.models.begin(), m_decors.models.end(), [&]() -> glm::mat4 {
         return 
             glm::scale(
                 glm::translate(
                     glm::mat4(1.0f), 
-                    glm::vec3(dstr(gen), 0.0f, dstr(gen))
+                    glm::vec3(dstr(gen), dstr(gen), dstr(gen))
                 ),
                 0.05f * std::abs(dstr(gen)) * glm::vec3(1.0f, 1.0f, 1.0f)
             );
     });
 
     // Draw title
-    m_title.models.reserve(1000);
-    for (const auto& pt : _get_title_pos()) {
-        m_title.models.push_back(
-            glm::translate(
-                glm::mat4(1.0f), 
-                glm::vec3(0.5f-pt.x, dstr(gen), 0.5f - pt.y)
-            )
+    m_title.models.resize(_get_title_pos().size());
+    std::generate(m_title.models.begin(), m_title.models.end(), [&]() -> glm::mat4 {
+        return glm::translate(
+            glm::mat4(1.0f),
+            glm::vec3(dstr(gen), dstr(gen), dstr(gen))
         );
-    }
+    });
+
+    // Draw target
+    m_next.models.resize(1);
+    m_next.models[0] = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0, 50.0f));
 
     // Create batch
     m_title.create();
     m_decors.create();
+    m_next.create();
 }
 
 void IntroScene::resize(int width, int height) {
@@ -79,9 +86,24 @@ void IntroScene::draw() {
     // Camera
     _update_camera();
 
+    // Update
+    for (size_t i = 0; i < m_title.models.size(); i++) 
+    {
+        const auto _get_pos = _get_title_pos(i);
+        
+        const glm::vec2& pos = _get_pos[0];
+        glm::vec4& model_pos = m_title.models[i][3];
+
+        model_pos[0] = model_pos[0] * 0.99f + (0.5f - pos.x) * 0.01f;
+        model_pos[1] = model_pos[1] * 0.98f;
+        model_pos[2] = model_pos[2] * 0.99f + (0.5f - pos.y) * 0.01f;
+    }
+    m_title.update();
+
     // Draw universe
     m_title.draw(m_camera, m_lights);
     m_decors.draw(m_camera, m_lights);
+    m_next.draw(m_camera, m_lights);
 }
 
 void IntroScene::_update_camera() {
@@ -93,7 +115,7 @@ void IntroScene::_update_camera() {
 
 
 // ---
-const std::vector<glm::vec2> IntroScene::_get_title_pos() const {
+const std::vector<glm::vec2> IntroScene::_get_title_pos(size_t i) const {
     /* ~~~~ Memo ~~~~~~
         To change that: 
           - Draw the text you want, black on white
@@ -102,7 +124,8 @@ const std::vector<glm::vec2> IntroScene::_get_title_pos() const {
           - normalize coordinate
     ~~~~~~~~~~~~~~~~~~~~ */
 
-    return {
+    static const std::vector<glm::vec2> pos = 
+    {
         {0,0.346939},
         {0.0204082,0.346939},
         {0.0408163,0.346939},
@@ -260,4 +283,9 @@ const std::vector<glm::vec2> IntroScene::_get_title_pos() const {
         {0.387755,0.612245},
         {0.408163,0.612245}
     };
+
+    if(i >= 0 && i < pos.size())
+        return { pos[i] };
+
+    return pos;
 }

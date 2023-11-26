@@ -4,14 +4,14 @@
 BaseShape::BaseShape() : 
     m_vbo_vertices(GL_ARRAY_BUFFER), 
     m_vbo_normals(GL_ARRAY_BUFFER), 
-    m_ebo(GL_ELEMENT_ARRAY_BUFFER) 
+    m_ebo(GL_ELEMENT_ARRAY_BUFFER),
+    m_instances(GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW)
 {
     // ..
 }
 
 void BaseShape::createBatch(const std::vector<glm::mat4>& models) {
-    Buffer planets_buffer(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-    planets_buffer.bindData(models);
+    m_instances.bindData(models);
 
     bind();
 
@@ -33,6 +33,10 @@ void BaseShape::createBatch(const std::vector<glm::mat4>& models) {
     glVertexAttribDivisor(5, 1);
 
     unbind();
+}
+
+void BaseShape::updateBatch(const std::vector<glm::mat4>& models) {
+    m_instances.bindData(models);
 }
 
 void BaseShape::bind() {
