@@ -7,7 +7,7 @@
 #include "../Engine/Graphic/Base/BaseCommander.hpp"
 
 // Data
-enum class SceneId {
+enum SceneId {
     None = -1,
     Intro, Slime, Ending
 };
@@ -19,8 +19,10 @@ public:
         Close = 0, Ok, Refresh
     };
 
-    struct State {
+    struct State 
+    {
         SceneId sceneId = SceneId::None;
+        SceneId sceneDesired = SceneId::None;
         glm::vec2 mousePos = {};
         std::queue<int> keyPressed = {};
     };
@@ -36,7 +38,8 @@ private:
     std::unique_ptr<BaseCommander> _commander;
 
     // Instance Methods
-    ActionCode _validateState(const GameManager::State& state);
+    ActionCode _validateState(GameManager::State& state);
+
     void _on_scene_refresh(const CustomEvents::SceneRefresh& evt);
     void _on_scene_ended(const CustomEvents::SceneEnded& evt);
 	

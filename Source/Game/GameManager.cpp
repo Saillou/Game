@@ -12,19 +12,24 @@ GameManager::GameManager() {
 	_subscribe(&GameManager::_on_scene_ended);
 }
 
-GameManager::ActionCode GameManager::_validateState(const GameManager::State& state) {
-	if (state.sceneId != _curr_state.sceneId)
+GameManager::ActionCode GameManager::_validateState(GameManager::State& state) {
+	bool desireToChange = _curr_state.sceneDesired != SceneId::None;
+
+	if (desireToChange)
+		state.sceneId = _curr_state.sceneDesired;
+	
+	if (desireToChange || state.sceneId != _curr_state.sceneId)
 		return ActionCode::Refresh;
 
 	return ActionCode::Ok;
 }
 
 void GameManager::_on_scene_refresh(const CustomEvents::SceneRefresh& evt) {
-	std::cout << "Refresh" << std::endl;
+	_curr_state.sceneDesired = _curr_state.sceneId;
 }
 
 void GameManager::_on_scene_ended(const CustomEvents::SceneEnded& evt) {
-	std::cout << "Ended" << std::endl;
+	_curr_state.sceneDesired = (SceneId)(_curr_state.sceneId + 1);
 }
 
 GameManager& GameManager::_get() {
@@ -36,12 +41,9 @@ GameManager& GameManager::_get() {
 GameManager::ActionCode GameManager::UpdateState(GameManager::State& state) {
 	GameManager& game = _get();
 
-	// Stop/Refresh here, invalid state detected
-	ActionCode action = game._validateState(state);
-	if (action == ActionCode::Refresh)
-		goto Result;
-
 	// Emit events
+	Event::Emit(CustomEvents::UpdateGameState());
+
 	while (!state.keyPressed.empty()) {
 		int key = state.keyPressed.front();
 		state.keyPressed.pop();
@@ -53,9 +55,10 @@ GameManager::ActionCode GameManager::UpdateState(GameManager::State& state) {
 		Event::Emit(CustomEvents::MouseMoved((int)state.mousePos.x, (int)state.mousePos.y));
 	}
 
-Result:
+	// Stop/Refresh here, invalid state detected
+	ActionCode action = game._validateState(state);
+
 	game._curr_state = state;
-	Event::Emit(CustomEvents::UpdateGameState());
 	return action;
 }
 
@@ -66,9 +69,9 @@ void GameManager::Refresh(Window& window) {
 	window.scene(([&]() -> std::shared_ptr<BaseScene> {
 		switch (game._curr_state.sceneId) 
 		{
-			case SceneId::Intro:		return std::make_shared<IntroScene>();
-			case SceneId::Slime:		return std::make_shared<SlimeScene>();
-			case SceneId::Ending:		return std::make_shared<EndingScene>();
+			case SceneId::Intro:	return std::make_shared<IntroScene>();
+			case SceneId::Slime:	return std::make_shared<SlimeScene>();
+			case SceneId::Ending:	return std::make_shared<EndingScene>();
 
 			default: 
 				return std::make_shared<BaseScene>();
@@ -79,9 +82,9 @@ void GameManager::Refresh(Window& window) {
 	game._commander = ([&]() -> std::unique_ptr<BaseCommander> {
 		switch (game._curr_state.sceneId) 
 		{
-			case SceneId::Intro:		return std::make_unique<IntroCommander>(window.scene());
-			case SceneId::Slime:		return std::make_unique<SlimeCommander>(window.scene());
-			case SceneId::Ending:		return std::make_unique<EndingCommander>(window.scene());
+			case SceneId::Intro:	return std::make_unique<IntroCommander>(window.scene());
+			case SceneId::Slime:	return std::make_unique<SlimeCommander>(window.scene());
+			case SceneId::Ending:	return std::make_unique<EndingCommander>(window.scene());
 
 			default:
 				return std::make_unique<BaseCommander>(window.scene());

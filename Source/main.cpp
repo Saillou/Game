@@ -17,7 +17,7 @@ const bool FullScreen =
 int main() {
     // Create window
     GameManager::State gamestate;
-    Window window(1600, 900, "The Game", FullScreen);
+    Window window(1920, 1080, "The Game", FullScreen);
 
     // Main loop
     gamestate.sceneId = SceneId::Intro;

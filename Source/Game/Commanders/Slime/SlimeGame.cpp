@@ -145,7 +145,7 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
 
             break;
 
-        case SlimeScene::Ending:
+        case SlimeScene::Boss:
             scene->enable_2d_camera = true;
             scene->lightning(true);
             break;
@@ -204,9 +204,9 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
 
             break;
         }
-    case SlimeScene::State::Ending:
+    case SlimeScene::State::Boss:
     {
-        static const float beg_time = SlimeScene::StartTime.at(SlimeScene::State::Ending);
+        static const float beg_time = SlimeScene::StartTime.at(SlimeScene::State::Boss);
         const float rel_time = (t_sec - beg_time);
 
         float r = glm::clamp(1.0f - rel_time, 0.0f, 1.0f);

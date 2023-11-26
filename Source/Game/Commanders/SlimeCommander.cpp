@@ -44,8 +44,8 @@ void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& 
         auto curr_state = m_scene->state;
 
         // The end
-        if (curr_state == SlimeScene::State::Ending)
-            return SlimeScene::State::Ending;
+        if (curr_state == SlimeScene::State::End)
+            return SlimeScene::State::End;
 
         // Next
         SlimeScene::State next_state = (SlimeScene::State)(curr_state + 1);
@@ -57,6 +57,10 @@ void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& 
         // Nothing to do
         return curr_state;
     })());
+
+    // End
+    if(m_scene->state == SlimeScene::State::End)
+        Event::Emit(CustomEvents::SceneEnded());
 }
 
 void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
