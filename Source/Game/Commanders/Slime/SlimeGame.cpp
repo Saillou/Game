@@ -91,7 +91,7 @@ const BaseItem::sBody& SlimeGame::Target::createBody() {
 }
 
 // ------------------------ Implementation ------------------------
-SlimeGame::SlimeGame() {
+SlimeGame::SlimeGame() : scene(nullptr) {
     // Setup items
     ground.body()->position = glm::vec3(0, 0, -0.5f);
     target.body()->position = glm::vec3(0, 0, +1.0f);
@@ -99,11 +99,15 @@ SlimeGame::SlimeGame() {
     ennemy.body()->position = glm::vec3(-1.0f, 0, 0);
 }
 
-void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene) {
+void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene_) {
+    scene = scene_;
+    if (!scene)
+        throw "Kabooum";
+
     ground.addTo(scene, Physx::BodyType::Static);
-    ennemy.addTo(scene, Physx::BodyType::Static);
+    ennemy.addTo(scene, Physx::BodyType::Kinematic);
     player.addTo(scene, Physx::BodyType::Kinematic);
-    target.addTo(scene, Physx::BodyType::Dynamic);
+    target.addTo(scene, Physx::BodyType::Static);
 
     scene->add(ground.body());
     scene->add(ennemy.body());
@@ -111,7 +115,65 @@ void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene) {
     scene->add(target.body());
 }
 
-void SlimeGame::update() {
-    player.update();
-    target.update();
+void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
+    if (!scene)
+        return;
+
+    // Camera
+    Camera& camera = scene->camera();
+
+    // Changement
+    if (scene->state != desired_state) {
+        switch (desired_state)
+        {
+        case SlimeScene::Intro:
+            scene->enable_2d_camera = false;
+            scene->lightning(false);
+            break;
+        case SlimeScene::Game2D:
+            scene->enable_2d_camera = true;
+
+            camera.position = glm::vec3(0.0f, 3.8f, +0.5f);
+            camera.direction = glm::vec3(0.0f, 0.0f, +0.5f);
+
+            target.setType(Physx::BodyType::Dynamic);
+            break;
+        case SlimeScene::Game3D:
+            break;
+        case SlimeScene::Game4D:
+            break;
+        case SlimeScene::Ending:
+            break;
+        default:
+            break;
+        }
+        // Apply
+        scene->state = desired_state;
+    }
+
+    // Update
+    switch (scene->state)
+    {
+    case SlimeScene::Intro:
+        {
+            scene->enable_2d_camera = false;
+            scene->lightning(false);
+
+            static const float beg_time = 0.0f;
+            static const float end_time = 2.0f;
+            const float rel_time = (t_sec - beg_time) / (end_time - beg_time);
+
+            float r = glm::clamp(1.0f - rel_time, 0.0f, 1.0f);
+
+            camera.position = r * glm::vec3(0.0f, 0.1f, +1.0f) + (1.0f - r) * glm::vec3(0.0f, 3.8f, +0.5f);
+
+            break;
+        }
+    case SlimeScene::State::Game2D: 
+        {
+            player.update();
+            target.update();
+            break;
+        }
+    }
 }

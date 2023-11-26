@@ -10,6 +10,14 @@
 
 // -- Scene --
 struct SlimeScene : public BaseScene {
+    enum State {
+        Intro,
+        Game2D,
+        Game3D,
+        Game4D,
+        Ending
+    };
+
     SlimeScene();
 
     void draw() override;
@@ -19,6 +27,8 @@ struct SlimeScene : public BaseScene {
     void lightning(bool enable);
 
     bool enable_2d_camera = true;
+    State state = Intro;
+
 private:
     std::vector<std::shared_ptr<BaseBody>> _baseBodies;
     void _camera_update();

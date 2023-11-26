@@ -86,19 +86,37 @@ void IntroScene::draw() {
     // Camera
     _update_camera();
 
-    // Update
-    for (size_t i = 0; i < m_title.models.size(); i++) 
-    {
-        const auto _get_pos = _get_title_pos(i);
-        
-        const glm::vec2& pos = _get_pos[0];
-        glm::vec4& model_pos = m_title.models[i][3];
+    // Update text
+    //if (m_anime_text) {
+        for (size_t i = 0; i < m_title.models.size(); i++)
+        {
+            const auto _get_pos = _get_title_pos(i);
 
-        model_pos[0] = model_pos[0] * 0.99f + (0.5f - pos.x) * 0.01f;
-        model_pos[1] = model_pos[1] * 0.98f;
-        model_pos[2] = model_pos[2] * 0.99f + (0.5f - pos.y) * 0.01f;
-    }
+            const glm::vec2& pos = _get_pos[0];
+            glm::vec4& model_pos = m_title.models[i][3];
+
+            model_pos[0] = model_pos[0] * 0.95f + (0.5f - pos.x) * 0.05f;
+            model_pos[1] = model_pos[1] * 0.95f;
+            model_pos[2] = model_pos[2] * 0.95f + (0.5f - pos.y) * 0.05f;
+        }
+    //}
     m_title.update();
+
+    // Update particles
+    if (m_anime_brownian) {
+        for (size_t i = 0; i < m_decors.models.size(); i++)
+        {
+            const auto _get_pos = _get_title_pos(i);
+
+            const glm::vec2& pos = _get_pos[0];
+            glm::vec4& model_pos = m_decors.models[i][3];
+
+            model_pos[0] = model_pos[0] * 0.95f + (0.5f - pos.x) * 0.05f;
+            model_pos[1] = model_pos[1] * 0.95f;
+            model_pos[2] = model_pos[2] * 0.95f + (0.5f - pos.y) * 0.05f;
+        }
+    }
+    m_decors.update();
 
     // Draw universe
     m_title.draw(m_camera, m_lights);

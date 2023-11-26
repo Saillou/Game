@@ -27,6 +27,7 @@ public:
 
     // Methods
     void addTo(std::shared_ptr<BaseScene> scene, Physx::BodyType type);
+    void setType(Physx::BodyType type);
 
 private:
     virtual const sBody& createBody() = 0;

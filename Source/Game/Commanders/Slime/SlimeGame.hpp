@@ -51,9 +51,10 @@ struct SlimeGame
     Slime  ennemy;
     Ground ground;
     Target target;
+    std::shared_ptr<SlimeScene> scene;
 
     SlimeGame();
 
     void useScene(std::shared_ptr<SlimeScene> scene);
-    void update();
+    void update(float time_sec, SlimeScene::State desired_state);
 };
