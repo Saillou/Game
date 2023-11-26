@@ -57,7 +57,6 @@ void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& 
         // Nothing to do
         return curr_state;
     })());
-
 }
 
 void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
@@ -81,6 +80,11 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
         m_scene->enable_2d_camera = false;
         m_scene->lightning(true);
         reset_cam(m_scene);
+    }
+
+    // Other shortcut
+    if (evt.key == 'R') {
+        Event::Emit(CustomEvents::SceneRefresh());
     }
 }
 

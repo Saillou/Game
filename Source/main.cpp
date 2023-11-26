@@ -1,15 +1,17 @@
 #include <string>
 
-#include "Game/Game.hpp"
+#include "Game/GameManager.hpp"
 #include "Utils/Timer.hpp"
 #include "Engine/Physx/Physx.hpp"
 #include "Engine/Graphic/Window.hpp"
 
 // -- Entry point --
 int main() {
+    const bool full_screen = false;
+
     // Create window
-    Game::State gamestate;
-    Window window(1600, 900, "The Game");
+    GameManager::State gamestate;
+    Window window(1600, 900, "The Game", full_screen);
 
     // Main loop
     gamestate.sceneId = SceneId::Intro;
@@ -44,20 +46,20 @@ int main() {
         gamestate.mousePos = window.mousePos();
 
         // Compute world
-        switch (Game::UpdateState(gamestate)) {
+        switch (GameManager::UpdateState(gamestate)) {
             // Let's update
-            case Game::ActionCode::Ok:
+            case GameManager::ActionCode::Ok:
                 Physx::Compute(chrono.elapsed<Timer::microsecond>()/1000.0f);
                 chrono.tic();
                 break;
 
             // Create (or change) the scene
-            case Game::ActionCode::Refresh:
-                Game::Refresh(window);
+            case GameManager::ActionCode::Refresh:
+                GameManager::Refresh(window);
                 break;
 
             // Stop
-            case Game::ActionCode::Close:
+            case GameManager::ActionCode::Close:
                 window.close();
                 break;
         }

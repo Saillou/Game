@@ -131,21 +131,25 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
             scene->lightning(false);
 
             break;
+
         case SlimeScene::Game2D:
             scene->enable_2d_camera = true;
             scene->lightning(false);
 
             target.setType(Physx::BodyType::Dynamic);
             break;
+
         case SlimeScene::Game3D:
-            scene->enable_2d_camera = true;
+            scene->enable_2d_camera = false;
             scene->lightning(true);
 
             break;
-        case SlimeScene::Game4D:
-            break;
+
         case SlimeScene::Ending:
+            scene->enable_2d_camera = true;
+            scene->lightning(true);
             break;
+
         default:
             break;
         }
@@ -200,5 +204,21 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
 
             break;
         }
+    case SlimeScene::State::Ending:
+    {
+        static const float beg_time = SlimeScene::StartTime.at(SlimeScene::State::Ending);
+        const float rel_time = (t_sec - beg_time);
+
+        float r = glm::clamp(1.0f - rel_time, 0.0f, 1.0f);
+
+        player.update();
+        target.update();
+
+        if (!scene->lights().empty()) {
+            scene->lights()[0]->position = r * target.body()->position + (1.0f - r) * (target.body()->position + glm::vec3(0.0f, 0.0f, +.5f));
+        }
+
+        break;
+    }
     }
 }

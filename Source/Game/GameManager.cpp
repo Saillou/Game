@@ -1,4 +1,4 @@
-#include "Game.hpp"
+#include "GameManager.hpp"
 
 #include "../Engine/Events/CustomEvents.hpp"
 
@@ -7,26 +7,34 @@
 #include "Commanders/EndingCommander.hpp"
 
 // Private
-Game::ActionCode Game::_validateState(const Game::State& state) {
+GameManager::GameManager() {
+	_subscribe(&GameManager::_on_scene_refresh);
+	_subscribe(&GameManager::_on_scene_ended);
+}
+
+GameManager::ActionCode GameManager::_validateState(const GameManager::State& state) {
 	if (state.sceneId != _curr_state.sceneId)
 		return ActionCode::Refresh;
 
 	return ActionCode::Ok;
 }
 
-Game& Game::_get() {
-	static Game game;
+void GameManager::_on_scene_refresh(const CustomEvents::SceneRefresh& evt) {
+	std::cout << "Refresh" << std::endl;
+}
+
+void GameManager::_on_scene_ended(const CustomEvents::SceneEnded& evt) {
+	std::cout << "Ended" << std::endl;
+}
+
+GameManager& GameManager::_get() {
+	static GameManager game;
 	return game;
 }
 
 // Public (static)
-Game::ActionCode Game::UpdateState(Game::State& state) {
-	Game& game = _get();
-
-	// Next scene
-	if (game._commander && game._commander->ended()) {
-		state.sceneId = SceneId((int)game._curr_state.sceneId + 1);
-	}
+GameManager::ActionCode GameManager::UpdateState(GameManager::State& state) {
+	GameManager& game = _get();
 
 	// Stop/Refresh here, invalid state detected
 	ActionCode action = game._validateState(state);
@@ -51,8 +59,8 @@ Result:
 	return action;
 }
 
-void Game::Refresh(Window& window) {
-	Game& game = _get();
+void GameManager::Refresh(Window& window) {
+	GameManager& game = _get();
 
 	// Change view
 	window.scene(([&]() -> std::shared_ptr<BaseScene> {

@@ -23,3 +23,15 @@ CustomEvents::UpdateGameState::UpdateGameState() :
 {
 	// ..
 }
+
+CustomEvents::SceneEnded::SceneEnded() :
+	_Base(_Type::EventSceneEnded)
+{
+	// ..
+}
+
+CustomEvents::SceneRefresh::SceneRefresh() :
+	_Base(_Type::EventSceneRefresh)
+{
+	// ..
+}

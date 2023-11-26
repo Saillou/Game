@@ -10,7 +10,7 @@
 #include "Base/BaseScene.hpp"
 
 struct Window {
-    Window(int width, int height, const char* title);
+    Window(int width, int height, const char* title, bool start_fs = false);
     ~Window();
 
     bool update();

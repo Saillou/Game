@@ -3,10 +3,10 @@
 #include <vector>
 #include <memory>
 
-Window::Window(int width, int height, const char* title) : 
+Window::Window(int width, int height, const char* title, bool start_fs) : 
     m_width(width), 
     m_height(height),
-    m_is_fullscreen(false),
+    m_is_fullscreen(start_fs),
     m_title(title)
 {
     _init(title);
@@ -122,9 +122,11 @@ void Window::_init(const char* title) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
     glfwWindowHint(GLFW_SAMPLES, 32); // AA
 
-    m_window = glfwCreateWindow(m_width, m_height, title, nullptr, nullptr);
+    m_window = glfwCreateWindow(m_width, m_height, title, m_is_fullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
     if (!m_window)
         return; // Failure, will close
+
+    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     glfwMakeContextCurrent(m_window);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress); // Load gl entry points

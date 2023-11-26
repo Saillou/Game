@@ -37,7 +37,7 @@ void IntroCommander::_on_game_state_update(const CustomEvents::UpdateGameState& 
         m_scene->startBrownian();
     }
     else {
-        m_ended = true;
+        Event::Emit(CustomEvents::SceneEnded());
     }
 }
 

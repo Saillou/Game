@@ -13,7 +13,7 @@ enum class SceneId {
 };
 
 // Singleton
-class Game {
+class GameManager : public Event::Subscriber {
 public:
     enum class ActionCode {
         Close = 0, Ok, Refresh
@@ -25,22 +25,25 @@ public:
         std::queue<int> keyPressed = {};
     };
 
-    static ActionCode UpdateState(Game::State& state);
+    static ActionCode UpdateState(GameManager::State& state);
     static void Refresh(Window& window);
 
 private:
-    static Game& _get();
+    static GameManager& _get();
 
     // Instance members
-    Game::State _curr_state;
+    GameManager::State _curr_state;
     std::unique_ptr<BaseCommander> _commander;
 
-    ActionCode _validateState(const Game::State& state);
+    // Instance Methods
+    ActionCode _validateState(const GameManager::State& state);
+    void _on_scene_refresh(const CustomEvents::SceneRefresh& evt);
+    void _on_scene_ended(const CustomEvents::SceneEnded& evt);
 	
     // -- No copy --
-    Game() = default;
+    GameManager();
 
-    Game& operator=(const Game&) = delete;
-    Game(const Game&)            = delete;
-    Game(Game&&)                 = delete;
+    GameManager& operator=(const GameManager&) = delete;
+    GameManager(const GameManager&)            = delete;
+    GameManager(GameManager&&)                 = delete;
 };

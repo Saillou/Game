@@ -22,10 +22,22 @@ struct CustomEvents : public Event {
 		explicit UpdateGameState();
 	};
 
+	// -- Scene --
+	struct SceneEnded : public _Base {
+		explicit SceneEnded();
+	};
+	struct SceneRefresh : public _Base {
+		explicit SceneRefresh();
+	};
+
 private:
 	enum _Type : int {
 		EventKeyPressed,
 		EventMouseMoved,
-		EventUpdateGameState
+
+		EventUpdateGameState,
+
+		EventSceneEnded,
+		EventSceneRefresh,
 	};
 };

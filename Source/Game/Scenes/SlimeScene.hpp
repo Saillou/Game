@@ -15,7 +15,6 @@ struct SlimeScene : public BaseScene {
         Intro,
         Game2D,
         Game3D,
-        Game4D,
         Ending
     };
 

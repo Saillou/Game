@@ -4,9 +4,10 @@
 
 // Data
 const std::unordered_map<SlimeScene::State, float> SlimeScene::StartTime = {
-    {SlimeScene::State::Intro, 0.0f},
+    {SlimeScene::State::Intro,  0.0f},
     {SlimeScene::State::Game2D, 2.0f},
     {SlimeScene::State::Game3D, 4.0f},
+    {SlimeScene::State::Ending, 6.0f},
 };
 
 // Scene instance
