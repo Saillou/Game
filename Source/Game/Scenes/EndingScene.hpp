@@ -26,12 +26,8 @@ struct AnimatedText : public Drawable
     };
     
     // Methods
-    AnimatedText(const Data& start, const Data& end, float duration, Animator::Tweet::Type type = Animator::Tweet::Type::Linear);
+    AnimatedText(const Data& start, const Data& end, float start_offset, float duration, Animator::Tweet::Type type = Animator::Tweet::Type::Linear);
     void draw() override;
-
-    const Data& start() const;
-    const Data& end() const;
-    float duration() const;
 
 private:
     const Data _start;

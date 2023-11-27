@@ -5,23 +5,13 @@
 // Utils
 glm::vec2 AnimatedText::s_viewport_size = glm::vec2(800, 600);
 
-AnimatedText::AnimatedText(const Data& start, const Data& end, float duration, Animator::Tweet::Type type) :
+AnimatedText::AnimatedText(const Data& start, const Data& end, float start_offset, float duration, Animator::Tweet::Type type) :
     _start(start), 
     _end(end),
     _current(start),
-    _tweet(duration, type)
+    _tweet(start_offset, duration, type)
 {
     // ..
-}
-
-const AnimatedText::Data& AnimatedText::start() const {
-    return _start;
-}
-const AnimatedText::Data& AnimatedText::end() const {
-    return _end;
-}
-float AnimatedText::duration() const {
-    return _tweet.duration();
 }
 
 void AnimatedText::draw() {
@@ -59,14 +49,57 @@ void EndingScene::resize(int width, int height) {
 
 void EndingScene::_createScenario() 
 {
-    m_timeline.put(std::make_shared<AnimatedText>
-        (
-            AnimatedText::Data{ "Perspective", {0.45f, 0.80f}, 0.8f, glm::vec3(0.05f, 0.05f, 0.06f) },
-            AnimatedText::Data{ "Perspective", {0.45f, 0.80f}, 0.8f, glm::vec3(1.00f, 1.00f, 1.00f) },
-            2.0f,
-            Animator::Tweet::Type::Quadratic
-        ), 0.0f, 4.0f
-    );
+    // Common stuff
+    using ADText = AnimatedText::Data;
+
+    const auto text_color       = glm::vec3(1.0f, 1.0f, 1.0f);
+    const auto background_color = glm::vec3(0.05f, 0.05f, 0.06f);
+
+    // Helper functions
+    auto _fonduIn = [=](const ADText& state, float start_time, float duration) {
+        return std::make_shared<AnimatedText>
+            (
+                ADText{ state.text, state.pos, state.size, background_color },
+                state,
+                start_time, duration,
+                Animator::Tweet::Type::Quadratic
+            );
+    };
+
+    auto _fonduOut = [=](const ADText& state, float start_time, float duration) {
+        return std::make_shared<AnimatedText>
+            (
+                state,
+                ADText{ state.text, state.pos, state.size, background_color },
+                start_time, duration,
+                Animator::Tweet::Type::Quadratic
+            );
+    };
+
+    // Title | subtitle
+    const std::string title = "Perspective";
+    const std::string subtitle = "The Falling";
+
+    m_timeline
+        .put(_fonduIn(ADText    { title, {0.45f, 0.80f}, 0.8f, text_color }, 0.0f, 1.5f), 0.0f, 4.0f)
+        .put(_fonduOut(ADText   { title, {0.45f, 0.80f}, 0.8f, text_color }, 4.0f, 0.5f), 4.0f, 4.5f)
+        .put(_fonduIn(ADText    { subtitle, { 0.50f, 0.75f }, 0.6f, text_color }, 1.5f, 2.0f), 1.5f, 4.0f)
+        .put(_fonduOut(ADText   { subtitle, { 0.50f, 0.75f }, 0.6f, text_color }, 4.0f, 1.0f), 4.0f, 5.0f)
+    ;
+
+    // Special 'thanks'
+    const std::string thanks_name = "Special thanks to my wife,";
+    const std::string thanks_reason = "without whom this game would have been completed 2 weeks ago.";
+
+    m_timeline
+        .put(_fonduIn(ADText    { thanks_name, {0.55f, 0.80f}, 0.8f, text_color }, 5.0f, 1.5f), 5.0f, 7.0f)
+        .put(_fonduOut(ADText   { thanks_name, {0.55f, 0.80f}, 0.8f, text_color }, 7.0f, 0.5f), 7.0f, 9.0f)
+        .put(_fonduIn(ADText    { thanks_reason, {0.40f, 0.75f}, 0.6f, text_color }, 6.0f, 1.5f), 6.0f, 8.0f)
+        .put(_fonduOut(ADText   { thanks_reason, {0.40f, 0.75f}, 0.6f, text_color }, 8.0f, 1.5f), 8.0f, 9.5f)
+    ;
+
+    // Credit to an awesome man, who's genious is unrecognized
+
 }
 
 void EndingScene::draw() {
@@ -74,9 +107,4 @@ void EndingScene::draw() {
     for (auto& drawable : m_timeline.get()) {
         drawable->draw();
     }
-    //TextEngine::Write("Special thanks to my wife,", 10.0f, m_height - 20.0f, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
-    //TextEngine::Write("without whom this game would have been completed 2 weeks ago.", 50.0f, m_height - 40.0f, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
-
-    //TextEngine::Write("Perspective", m_width * 0.45f, m_height * 0.8f, 0.8f, glm::vec3(1.0f, 1.0f, 1.0f));
-    //TextEngine::Write("What are the other things hidden from the view?", m_width * 0.375f, m_height * 0.8f - 40.0f, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
 }

@@ -12,7 +12,7 @@ struct Animator {
 			Linear, Quadratic
 		};
 
-		Tweet(const float duration_sec, const Type type = Type::Linear);
+		Tweet(const float start_offset, const float duration_sec, const Type type = Type::Linear);
 
 		template <typename T> inline
 			T update(const T& start, const T& end);
@@ -23,6 +23,7 @@ struct Animator {
 		float _get_rel_time();
 
 		Timer::Chronometre m_time;
+		const float m_offset;
 		const float m_duration;
 		const Type m_type;
 	};

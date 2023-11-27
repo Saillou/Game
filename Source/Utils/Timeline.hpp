@@ -12,12 +12,17 @@
      -> space complexity, why keep items that are out of time already? preparing a zombie attack?
      -> time complexity, i mean, you can do better with a heap like tree .. 
             that whole stuff shall be amortized O(1) for put and get..
+
+    ... however ...
+
+     .. it's O(1) put, O(n) get, which isn't bad.... and there's at most 5 items lol
+     .. let's keep it simple.
 */
 
 template <typename T>
 struct Timeline 
 {
-    void put(std::shared_ptr<T> item, float tStart, float tEnd);
+    Timeline& put(std::shared_ptr<T> item, float tStart, float tEnd);
     std::vector<std::shared_ptr<T>> get();
 
 private:
@@ -37,9 +42,11 @@ private:
 
 // ---- Implementation ----
 template<typename T> inline 
-    void Timeline<T>::put(std::shared_ptr<T> item, float tStart, float tEnd)
+Timeline<T>& Timeline<T>::put(std::shared_ptr<T> item, float tStart, float tEnd)
 {
     m_container.push_back({ item, tStart, tEnd });
+    return *this;
+
 }
 
 template<typename T> inline 

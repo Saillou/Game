@@ -1,7 +1,8 @@
 #include "Animator.hpp"
 
-Animator::Tweet::Tweet(const float duration_sec, const Type type):
-	m_duration(duration_sec), 
+Animator::Tweet::Tweet(const float start_offset, const float duration_sec, const Type type):
+	m_offset(start_offset),
+	m_duration(duration_sec),
 	m_type(type)
 {
 	m_time.tic();
@@ -12,5 +13,8 @@ float Animator::Tweet::duration() const {
 }
 
 float Animator::Tweet::_get_rel_time() {
-	return glm::clamp((m_time.elapsed<Timer::millisecond>() / 1000.0f) / m_duration, 0.0f, 1.0f);
+	return glm::clamp(
+		(m_time.elapsed<Timer::millisecond>() / 1000.0f - m_offset) / m_duration,
+		0.0f, 1.0f
+	);
 }
