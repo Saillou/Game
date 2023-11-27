@@ -2,11 +2,17 @@
 
 #include "../../Engine/Graphic/Base/BaseScene.hpp"
 #include "../../Utils/Animator.hpp"
+#include "../../Utils/Timeline.hpp"
 
 #include <vector>
 
 // -- Utils --
-struct AnimatedText 
+struct Drawable {
+    virtual ~Drawable() = default;
+    virtual void draw() = 0;
+};
+
+struct AnimatedText : public Drawable
 {
     // Statics
     static glm::vec2 s_viewport_size;
@@ -21,14 +27,17 @@ struct AnimatedText
     
     // Methods
     AnimatedText(const Data& start, const Data& end, float duration, Animator::Tweet::Type type = Animator::Tweet::Type::Linear);
-    void draw();
+    void draw() override;
+
+    const Data& start() const;
+    const Data& end() const;
+    float duration() const;
 
 private:
     const Data _start;
     const Data _end;
     Data _current;
-
-    Animator::uTweet _tweet;
+    Animator::Tweet _tweet;
 };
 
 // -- Scene --
@@ -41,5 +50,5 @@ struct EndingScene : public BaseScene {
 private:
     void _createScenario();
 
-    std::vector<AnimatedText> m_texts;
+    Timeline<Drawable> m_timeline;
 };

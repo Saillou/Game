@@ -17,17 +17,15 @@ struct Animator {
 		template <typename T> inline
 			T update(const T& start, const T& end);
 
+		float duration() const;
+
 	private:
-		float _get_rel_time() {
-			return glm::clamp((m_time.elapsed<Timer::millisecond>() / 1000.0f) / m_duration, 0.0f, 1.0f);
-		}
+		float _get_rel_time();
 
 		Timer::Chronometre m_time;
 		const float m_duration;
 		const Type m_type;
 	};
-
-	typedef std::unique_ptr<Tweet> uTweet;
 };
 
 template<typename T>

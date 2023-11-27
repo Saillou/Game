@@ -9,16 +9,26 @@ AnimatedText::AnimatedText(const Data& start, const Data& end, float duration, A
     _start(start), 
     _end(end),
     _current(start),
-    _tweet(std::make_unique<Animator::Tweet>(duration, type))
+    _tweet(duration, type)
 {
     // ..
 }
 
+const AnimatedText::Data& AnimatedText::start() const {
+    return _start;
+}
+const AnimatedText::Data& AnimatedText::end() const {
+    return _end;
+}
+float AnimatedText::duration() const {
+    return _tweet.duration();
+}
+
 void AnimatedText::draw() {
-    _current.pos    = _tweet->update(_start.pos,   _end.pos);
-    _current.size   = _tweet->update(_start.size,  _end.size);
-    _current.color  = _tweet->update(_start.color, _end.color);
-    _current.text   = _tweet->update(_start.text,  _end.text);
+    _current.pos    = _tweet.update(_start.pos,   _end.pos);
+    _current.size   = _tweet.update(_start.size,  _end.size);
+    _current.color  = _tweet.update(_start.color, _end.color);
+    _current.text   = _tweet.update(_start.text,  _end.text);
 
     TextEngine::Write(
         _current.text,
@@ -47,18 +57,22 @@ void EndingScene::resize(int width, int height) {
     AnimatedText::s_viewport_size = glm::vec2(width, height);
 }
 
-void EndingScene::_createScenario() {
-    m_texts.push_back(AnimatedText(
-        { "Perspective", {0.45f, 0.80f}, 0.8f, glm::vec3(0.05f, 0.05f, 0.06f) },
-        { "Perspective", {0.45f, 0.80f}, 0.8f, glm::vec3(1.0f, 1.0f, 1.0f) },
-        2.0f, Animator::Tweet::Type::Quadratic
-    ));
+void EndingScene::_createScenario() 
+{
+    m_timeline.put(std::make_shared<AnimatedText>
+        (
+            AnimatedText::Data{ "Perspective", {0.45f, 0.80f}, 0.8f, glm::vec3(0.05f, 0.05f, 0.06f) },
+            AnimatedText::Data{ "Perspective", {0.45f, 0.80f}, 0.8f, glm::vec3(1.00f, 1.00f, 1.00f) },
+            2.0f,
+            Animator::Tweet::Type::Quadratic
+        ), 0.0f, 4.0f
+    );
 }
 
 void EndingScene::draw() {
     // Draw texts
-    for (auto& text : m_texts) {
-        text.draw();
+    for (auto& drawable : m_timeline.get()) {
+        drawable->draw();
     }
     //TextEngine::Write("Special thanks to my wife,", 10.0f, m_height - 20.0f, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
     //TextEngine::Write("without whom this game would have been completed 2 weeks ago.", 50.0f, m_height - 40.0f, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));

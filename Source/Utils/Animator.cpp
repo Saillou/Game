@@ -6,3 +6,11 @@ Animator::Tweet::Tweet(const float duration_sec, const Type type):
 {
 	m_time.tic();
 }
+
+float Animator::Tweet::duration() const {
+	return m_duration;
+}
+
+float Animator::Tweet::_get_rel_time() {
+	return glm::clamp((m_time.elapsed<Timer::millisecond>() / 1000.0f) / m_duration, 0.0f, 1.0f);
+}
