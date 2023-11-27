@@ -90,6 +90,25 @@ const BaseItem::sBody& SlimeGame::Target::createBody() {
     return _body;
 }
 
+// ------------------------ Ennemy ------------------------
+SlimeGame::Ennemy::Ennemy()
+{
+    createBody();
+}
+
+void SlimeGame::Ennemy::update() {
+    float t = _time.elapsed<Timer::millisecond>() / 1000.0f;
+    const float A = 0.5f; // Amplitude (pix/vp)
+    const float w = 0.2f; // Period (s^-1)
+
+    _pbody->setLinearVelocity(Vector3(0, 0, A*sin(2*glm::pi<float>()*w*t)));
+}
+
+const BaseItem::sBody& SlimeGame::Ennemy::createBody() {
+    _body = std::make_shared<BoxBody>(0.05f * glm::vec3(1.f, 1.f, 3.f));
+    return _body;
+}
+
 // ------------------------ Implementation ------------------------
 SlimeGame::SlimeGame() : scene(nullptr) {
     // Setup items
@@ -121,6 +140,21 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
 
     // Camera
     Camera& camera = scene->camera();
+
+    // -- test --
+    camera.position  = glm::vec3(0.0f, 3.8f, +0.5f);
+    camera.direction = glm::vec3(0.0f, 0.0f, +0.5f);
+
+    scene->enable_2d_camera = true;
+    scene->lightning(false);
+
+    target.setType(Physx::BodyType::Dynamic);
+
+    player.update();
+    target.update();
+    ennemy.update();
+    return;
+    // ----------
 
     // Changement
     if (scene->state != desired_state) {

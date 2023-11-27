@@ -46,9 +46,18 @@ struct SlimeGame
         const sBody& createBody() override;
     };
 
+    // ------------ Ennemy ------------
+    struct Ennemy : public BaseItem {
+        Ennemy();
+
+        void update();
+
+        const sBody& createBody() override;
+    };
+
     // ------------ Members ------------
     Slime  player;
-    Slime  ennemy;
+    Ennemy ennemy;
     Ground ground;
     Target target;
     std::shared_ptr<SlimeScene> scene;

@@ -45,12 +45,12 @@ TextEngine::TextEngine() {
         .link()
         .use();
 
-    // TODO: Font choice (here hardcoded Arial)
+    // TODO: Font choice (here hardcoded)
     FT_Library ft;
     FT_Init_FreeType(&ft);
 
     FT_Face face;
-    FT_New_Face(ft, "C:/Windows/Fonts/Arial.ttf", 0, &face);
+    FT_New_Face(ft, "C:/Windows/Fonts/Candara.ttf", 0, &face);
     FT_Set_Pixel_Sizes(face, 0, 48);
 
     // load first 128 characters of ASCII set and put them in gl_textures

@@ -4,27 +4,6 @@
 
 using namespace glm;
 
-// ------------ Helpers ------------
-static const auto reset_cam = [&](std::shared_ptr<SlimeScene> scene) {
-    scene->camera().position = glm::vec3(0.0f, 3.8f, +0.5f);
-    scene->camera().direction = glm::vec3(0.0f, 0.0f, +0.5f);
-    scene->camera().fieldOfView = 45.0f;
-    scene->camera().lookAt(glm::vec3(0, 0, 1));
-
-    if (scene->enable_2d_camera)
-        scene->camera().useOrtho(scene->width() / (float)scene->height());
-    else
-        scene->camera().usePerspective(scene->width() / (float)scene->height());
-};
-
-static const auto get_cam_angles = [&](std::shared_ptr<SlimeScene> scene) {
-    float theta_x = asin(scene->camera().position.x / 3.8f);
-    float theta_z = asin(scene->camera().position.z / 3.8f);
-    float theta_y = theta_x + theta_z;
-
-    return glm::vec3(theta_x, theta_y, theta_z);
-};
-
 // ------------ Instance ------------
 SlimeCommander::SlimeCommander(std::shared_ptr<BaseScene> scene):
     BaseCommander(scene),
@@ -76,17 +55,15 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
     if (evt.key == 'C') {
         m_scene->enable_2d_camera = true;
         m_scene->lightning(false);
-        reset_cam(m_scene);
     }
 
     // 3D world
     if (evt.key == 'V') {
         m_scene->enable_2d_camera = false;
         m_scene->lightning(true);
-        reset_cam(m_scene);
     }
 
-    // Other shortcut
+    // Refresh
     if (evt.key == 'R') {
         Event::Emit(CustomEvents::SceneRefresh());
     }
