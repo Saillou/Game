@@ -118,8 +118,6 @@ void EndingScene::moveSlime(float dx, float dy) {
 
 void EndingScene::draw() {
     float time = m_timeline.get_curr_time();
-    if (time > 30.0f)
-        return;
 
     // Conserve aspect ratio
     _update_camera();
