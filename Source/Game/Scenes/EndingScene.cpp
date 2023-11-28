@@ -42,7 +42,7 @@ EndingScene::EndingScene() :
 
     m_sand.models.resize(1000);
     std::generate(m_sand.models.begin(), m_sand.models.end(), [&]() -> glm::mat4 {
-        return glm::translate(glm::mat4(1.0f), glm::vec3(0.30f * dstr(gen), 0.0f, 2.5f + dstr(gen)));
+        return glm::translate(glm::mat4(1.0f), glm::vec3(0.30f * dstr(gen), 0.0f, 3.5f + dstr(gen)));
     });
     m_sand.create();
 
@@ -107,7 +107,7 @@ void EndingScene::draw() {
     m_sand.update();
 
     // Draw objects
-    if (time > 0.0f)
+    if (time < 9.0f)
         m_light->draw(m_camera, {});
 
     if (time > 6.0f)
@@ -118,7 +118,12 @@ void EndingScene::draw() {
 
     if (time > 10.0f) {
         m_sand.draw(m_camera, m_lights);
-        addSand();
+
+        // Bit of sand
+        static int i = 0;
+        i = (i + 1) % 3;
+        if(i == 0)
+            addSand();
     }
 }
 
