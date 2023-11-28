@@ -7,15 +7,41 @@
 #include <ctime>
 #include <random>
 
-struct EndGround : public BaseItem {
-    EndGround(const glm::vec3& dims) {
+using namespace reactphysics3d;
+
+struct Wall : public BaseItem {
+    Wall(const glm::vec3& dims) {
         _body = std::make_shared<BoxBody>(dims);
     };
 };
 
-struct EndSlime : public BaseItem {
-    EndSlime(const float radius) {
+struct Slime : public BaseItem {
+    Slime(const float radius) {
         _body = std::make_shared<SphereBody>(radius);
+    }
+
+    void move(float dx, float dy) {
+        glm::vec3 total = 0.5f * glm::vec3(dx, dy, 0.0f);
+        auto new_speed = _pbody->getLinearVelocity() + Vector3(total.x, total.y, total.z);
+
+        new_speed.x = glm::clamp(new_speed.x, -2.0f, 2.0f);
+        new_speed.y = glm::clamp(new_speed.y, -2.0f, 2.0f);
+
+        // Limits
+        if(
+            _body->position.x + new_speed.x / 30.0f < +0.6f && 
+            _body->position.y + new_speed.y / 30.0f < +0.6f && 
+            _body->position.x + new_speed.x / 30.0f > -0.6f && 
+            _body->position.y + new_speed.y / 30.0f > -0.6f
+        ) {
+            _pbody->setLinearVelocity(new_speed);
+        } else {
+            _pbody->setLinearVelocity(Vector3(0,0,0));
+        }
+    }
+
+    void _onAdd() override {
+        _pbody->setLinearDamping(15.0f);
     }
 };
 
@@ -23,9 +49,9 @@ struct EndSlime : public BaseItem {
 // Scene instance
 EndingScene::EndingScene() :
     BaseScene(),
-    m_sand(glm::vec3(0.01f, 0.01f, 0.01f)),
-    m_ground(std::make_shared<EndGround>(glm::vec3(0.5f, 0.5f, 0.05f))),
-    m_slime(std::make_shared<EndSlime>(0.05f)),
+    m_sand(0.0125f * glm::vec3(1,1,1)),
+    m_ground(std::make_shared<Wall>(glm::vec3(0.6f, 0.6f, 0.1f))),
+    m_slime(std::make_shared<Slime>(0.05f)),
     m_light(std::make_shared<SphereBody>(0.01f))
 {
     // Camera
@@ -40,7 +66,7 @@ EndingScene::EndingScene() :
     std::default_random_engine gen;
     std::uniform_real_distribution<float> dstr(-1.0f, +1.0f);
 
-    m_sand.models.resize(1000);
+    m_sand.models.resize(500);
     std::generate(m_sand.models.begin(), m_sand.models.end(), [&]() -> glm::mat4 {
         return glm::translate(glm::mat4(1.0f), glm::vec3(0.30f * dstr(gen), 0.0f, 3.5f + dstr(gen)));
     });
@@ -52,7 +78,7 @@ EndingScene::EndingScene() :
         glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
     ));
 
-    m_ground->body()->position = glm::vec3(0.0f, 0.0f, -0.1f);
+    m_slime->body()->position = glm::vec3(0.0f, 0.0f, 0.1f);
 }
 
 void EndingScene::resize(int width, int height) {
@@ -72,8 +98,6 @@ void EndingScene::createActors() {
 
 void EndingScene::addSand() {
     if (m_sand_bodies.size() >= m_sand.models.size()) {
-        m_slime->addAs(Physx::BodyType::Dynamic);
-        m_ground->addAs(Physx::BodyType::Dynamic);
         return;
     }
 
@@ -83,10 +107,19 @@ void EndingScene::addSand() {
     m_sand_bodies.push_back(
         Physx::Add(boxBody, Physx::BodyType::Dynamic)
     );
+
+    m_sand_bodies.back()->setLinearDamping(5.0f);
 }
+
+void EndingScene::moveSlime(float dx, float dy) {
+    ((Slime*)(m_slime.get()))->move(dx, dy);
+}
+
 
 void EndingScene::draw() {
     float time = m_timeline.get_curr_time();
+    if (time > 30.0f)
+        return;
 
     // Conserve aspect ratio
     _update_camera();
@@ -124,7 +157,7 @@ void EndingScene::draw() {
 
         // Bit of sand
         static int i = 0;
-        i = (i + 1) % 3;
+        i = (i + 1) % 5;
         if(i == 0)
             addSand();
     }

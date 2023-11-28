@@ -21,6 +21,8 @@ struct EndingScene : public BaseScene {
     void createActors();
     void addSand();
 
+    void moveSlime(float dx, float dy);
+
 private:
     void _update_camera();
     void _createScenario();

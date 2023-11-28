@@ -141,20 +141,20 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
     // Camera
     Camera& camera = scene->camera();
 
-    // -- test --
-    camera.position  = glm::vec3(0.0f, 3.8f, +0.5f);
-    camera.direction = glm::vec3(0.0f, 0.0f, +0.5f);
+    //// -- test --
+    //camera.position  = glm::vec3(0.0f, 3.8f, +0.5f);
+    //camera.direction = glm::vec3(0.0f, 0.0f, +0.5f);
 
-    scene->enable_2d_camera = true;
-    scene->lightning(false);
+    //scene->enable_2d_camera = true;
+    //scene->lightning(false);
 
-    target.setType(Physx::BodyType::Dynamic);
+    //target.setType(Physx::BodyType::Dynamic);
 
-    player.update();
-    target.update();
-    ennemy.update();
-    //return;
-    // ----------
+    //player.update();
+    //target.update();
+    //ennemy.update();
+    ////return;
+    //// ----------
 
     // Changement
     if (scene->state != desired_state) {
