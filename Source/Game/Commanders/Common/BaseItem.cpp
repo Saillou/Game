@@ -15,7 +15,7 @@ BaseItem::sBody BaseItem::body() const {
 }
 
 // Methods
-void BaseItem::addTo(std::shared_ptr<BaseScene> scene, Physx::BodyType type) {
+void BaseItem::addAs(Physx::BodyType type) {
     _pbody = Physx::Add(_body ? _body : createBody(), type);
     _onAdd();
 }

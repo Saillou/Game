@@ -123,10 +123,10 @@ void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene_) {
     if (!scene)
         throw "Kabooum";
 
-    ground.addTo(scene, Physx::BodyType::Static);
-    ennemy.addTo(scene, Physx::BodyType::Kinematic);
-    player.addTo(scene, Physx::BodyType::Kinematic);
-    target.addTo(scene, Physx::BodyType::Static);
+    ground.addAs(Physx::BodyType::Static);
+    ennemy.addAs(Physx::BodyType::Kinematic);
+    player.addAs(Physx::BodyType::Kinematic);
+    target.addAs(Physx::BodyType::Static);
 
     scene->add(ground.body());
     scene->add(ennemy.body());

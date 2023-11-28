@@ -1,20 +1,36 @@
 #include "EndingScene.hpp"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <vector>
 #include <algorithm>
 #include <ctime>
 #include <random>
 
+struct EndGround : public BaseItem {
+    EndGround(const glm::vec3& dims) {
+        _body = std::make_shared<BoxBody>(dims);
+    };
+};
+
+struct EndSlime : public BaseItem {
+    EndSlime(const float radius) {
+        _body = std::make_shared<SphereBody>(radius);
+    }
+};
+
+
 // Scene instance
 EndingScene::EndingScene() :
     BaseScene(),
     m_sand(glm::vec3(0.01f, 0.01f, 0.01f)),
-    m_ground(glm::vec3(0.5f, 0.5f, 0.05f)),
-    m_slime(0.1f)
+    m_ground(std::make_shared<EndGround>(glm::vec3(0.5f, 0.5f, 0.05f))),
+    m_slime(std::make_shared<EndSlime>(0.05f)),
+    m_light(std::make_shared<SphereBody>(0.01f))
 {
     // Camera
-    m_camera.position    = glm::vec3(-1.0f, 3.8f, 0.0f);
-    m_camera.direction   = glm::vec3(-1.0f, 0.0f, 0.0f);
+    m_camera.position    = glm::vec3(-1.0f, 3.8f, +0.7f);
+    m_camera.direction   = glm::vec3(-1.0f, 0.0f, +0.7f);
     m_camera.fieldOfView = 45.0f;
 
     // Scenario
@@ -24,11 +40,19 @@ EndingScene::EndingScene() :
     std::default_random_engine gen;
     std::uniform_real_distribution<float> dstr(-1.0f, +1.0f);
 
-    m_sand.models.resize(2000);
+    m_sand.models.resize(1000);
     std::generate(m_sand.models.begin(), m_sand.models.end(), [&]() -> glm::mat4 {
-        return glm::translate(glm::mat4(1.0f), glm::vec3(0.30f * dstr(gen), 0.0f, 1.5f + dstr(gen)));
+        return glm::translate(glm::mat4(1.0f), glm::vec3(0.30f * dstr(gen), 0.0f, 2.5f + dstr(gen)));
     });
     m_sand.create();
+
+    // Lightnings
+    m_lights.push_back(std::make_unique<Light>(
+        glm::vec3(0.0f, 0.0f, 1.5f),
+        glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
+    ));
+
+    m_ground->body()->position = glm::vec3(0.0f, 0.0f, -0.1f);
 }
 
 void EndingScene::resize(int width, int height) {
@@ -40,7 +64,28 @@ void EndingScene::resize(int width, int height) {
     _update_camera();
 }
 
+void EndingScene::createActors() {
+    // Physics
+    m_slime->addAs(Physx::BodyType::Kinematic);
+    m_ground->addAs(Physx::BodyType::Static);
+}
+
+void EndingScene::addSand() {
+    if (m_sand_bodies.size() >= m_sand.models.size())
+        return;
+
+    auto boxBody = std::make_shared<BoxBody>(glm::vec3(0.01f, 0.01f, 0.01f));
+    boxBody->position = m_sand.models[m_sand_bodies.size()][3];
+    
+    m_sand_bodies.push_back(
+        Physx::Add(boxBody, Physx::BodyType::Dynamic)
+    );
+}
+
 void EndingScene::draw() {
+    float time = m_timeline.get_curr_time();
+
+    // Conserve aspect ratio
     _update_camera();
 
     // Draw texts
@@ -48,10 +93,33 @@ void EndingScene::draw() {
         drawable->draw();
     }
 
+    // Move camera
+    m_camera.position = glm::vec3(-1.0f + 0.1f * sin(time), 3.8f, +0.7f + 0.1f * cos(time));
+
+    // Move light
+    m_light->position     = glm::vec3(-1.0f + cos(time)*1.5f, sin(time) * sin(time), 1.0f + sin(time)*1.0f);
+    m_lights[0]->position = m_light->position;
+
+    // Move objects
+    for (size_t i = 0; i < m_sand_bodies.size(); i++) {
+        m_sand_bodies[i]->getTransform().getOpenGLMatrix(glm::value_ptr(m_sand.models[i]));
+    }
+    m_sand.update();
+
     // Draw objects
-    m_ground.draw(m_camera, {}, {}, m_lights);
-    m_slime.draw(m_camera, {}, {}, m_lights);
-    m_sand.draw(m_camera, m_lights);
+    if (time > 0.0f)
+        m_light->draw(m_camera, {});
+
+    if (time > 6.0f)
+        m_ground->body()->draw(m_camera, m_lights);
+
+    if (time > 9.0f)
+        m_slime->body()->draw(m_camera, m_lights);
+
+    if (time > 10.0f) {
+        m_sand.draw(m_camera, m_lights);
+        addSand();
+    }
 }
 
 

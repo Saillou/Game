@@ -25,6 +25,10 @@ struct Timeline
     Timeline& put(std::shared_ptr<T> item, float tStart, float tEnd);
     std::vector<std::shared_ptr<T>> get();
 
+    float get_curr_time() {
+        return m_timer.elapsed<Timer::millisecond>() / 1000.0f;
+    }
+
 private:
     struct _Item {
         std::shared_ptr<T> data;
@@ -34,10 +38,6 @@ private:
 
     Timer::Chronometre m_timer;
     std::vector<_Item> m_container;
-
-    float _get_curr_time() {
-        return m_timer.elapsed<Timer::millisecond>() / 1000.0f;
-    }
 };
 
 // ---- Implementation ----
@@ -51,7 +51,7 @@ Timeline<T>& Timeline<T>::put(std::shared_ptr<T> item, float tStart, float tEnd)
 template<typename T> inline 
     std::vector<std::shared_ptr<T>> Timeline<T>::get()
 {
-    float t = _get_curr_time();
+    float t = get_curr_time();
 
     std::vector<std::shared_ptr<T>> results;
     for (const _Item& item : m_container) {
