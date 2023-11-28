@@ -153,7 +153,7 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
     player.update();
     target.update();
     ennemy.update();
-    return;
+    //return;
     // ----------
 
     // Changement

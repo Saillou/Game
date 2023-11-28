@@ -71,8 +71,11 @@ void EndingScene::createActors() {
 }
 
 void EndingScene::addSand() {
-    if (m_sand_bodies.size() >= m_sand.models.size())
+    if (m_sand_bodies.size() >= m_sand.models.size()) {
+        m_slime->addAs(Physx::BodyType::Dynamic);
+        m_ground->addAs(Physx::BodyType::Dynamic);
         return;
+    }
 
     auto boxBody = std::make_shared<BoxBody>(glm::vec3(0.01f, 0.01f, 0.01f));
     boxBody->position = m_sand.models[m_sand_bodies.size()][3];
@@ -107,7 +110,7 @@ void EndingScene::draw() {
     m_sand.update();
 
     // Draw objects
-    if (time < 9.0f)
+    if (time < 15.0f)
         m_light->draw(m_camera, {});
 
     if (time > 6.0f)
