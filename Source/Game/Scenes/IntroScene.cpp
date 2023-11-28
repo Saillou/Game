@@ -4,27 +4,6 @@
 #include <ctime>
 #include <random>
 
-#include <glm/gtx/string_cast.hpp>
-
-// -- Objects --
-SphereBatch::SphereBatch(float radius) :
-    object(std::make_unique<Sphere>(radius))
-{
-    object->addRecipe(Cookable::CookType::Batch, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-}
-
-void SphereBatch::create() {
-    object->shape()->createBatch(models);
-}
-
-void SphereBatch::update() {
-    object->shape()->updateBatch(models);
-}
-
-void SphereBatch::draw(const Camera& camera, const std::vector<std::unique_ptr<Light>>& lights) {
-    object->drawBatch((int)models.size(), camera, lights);
-}
-
 // -- Scene instance --
 IntroScene::IntroScene() :
     BaseScene(),

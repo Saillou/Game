@@ -6,7 +6,7 @@
 
 /*
     TODO: 
-        optimize your bullshit plz, i will poke my eyes if i see this vector traversal once more
+        optimize your bullshit plz, i will poke my eyes out if i see this vector traversal once more
 
     what's there to optimize you ask?
      -> space complexity, why keep items that are out of time already? preparing a zombie attack?
@@ -46,7 +46,6 @@ Timeline<T>& Timeline<T>::put(std::shared_ptr<T> item, float tStart, float tEnd)
 {
     m_container.push_back({ item, tStart, tEnd });
     return *this;
-
 }
 
 template<typename T> inline 

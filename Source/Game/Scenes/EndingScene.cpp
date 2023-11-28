@@ -1,92 +1,69 @@
 #include "EndingScene.hpp"
 
-#include <glm/gtx/string_cast.hpp>
-
-using ATextD = AnimatedText::Data;
-using uAText = std::shared_ptr<AnimatedText>;
-
-// Utils
-glm::vec2 AnimatedText::s_viewport_size = glm::vec2(800, 600);
-
-AnimatedText::AnimatedText(const Data& start, const Data& end, float start_offset, float duration, Animator::Tweet::Type type) :
-    _start(start), 
-    _end(end),
-    _current(start),
-    _tweet(start_offset, duration, type)
-{
-    // ..
-}
-
-void AnimatedText::draw() {
-    _current.pos    = _tweet.update(_start.pos,   _end.pos);
-    _current.size   = _tweet.update(_start.size,  _end.size);
-    _current.color  = _tweet.update(_start.color, _end.color);
-    _current.text   = _tweet.update(_start.text,  _end.text);
-
-    TextEngine::Write(
-        _current.text,
-        s_viewport_size.x * _current.pos.x, s_viewport_size.y * _current.pos.y,
-        _current.size,
-        _current.color
-    );
-}
-
-// Helper functions
-static uAText FadeIn(const ATextD& state, float start_time, float duration) {
-    const auto background_color = glm::vec3(0.05f, 0.05f, 0.06f);
-
-    return std::make_shared<AnimatedText>
-    (
-        ATextD{ state.text, state.pos, state.size, background_color },
-        state,
-        start_time, duration,
-        Animator::Tweet::Type::Quadratic
-    );
-};
-
-static uAText FadeOut(const ATextD& state, float start_time, float duration) {
-    const auto background_color = glm::vec3(0.05f, 0.05f, 0.06f);
-
-    return std::make_shared<AnimatedText>
-    (
-        state,
-        ATextD{ state.text, state.pos, state.size, background_color },
-        start_time, duration,
-        Animator::Tweet::Type::Quadratic
-    );
-};
-
-static uAText SlideTop(const ATextD& state, float start_time, float duration) {
-    return std::make_shared<AnimatedText>
-    (
-        state,
-        ATextD{ state.text, glm::vec2(state.pos.x, state.pos.y + 2.0f), state.size, state.color },
-        start_time, duration,
-        Animator::Tweet::Type::Linear
-    );
-};
+#include <vector>
+#include <algorithm>
+#include <ctime>
+#include <random>
 
 // Scene instance
 EndingScene::EndingScene() :
-    BaseScene()
+    BaseScene(),
+    m_sand(glm::vec3(0.01f, 0.01f, 0.01f)),
+    m_ground(glm::vec3(0.5f, 0.5f, 0.05f)),
+    m_slime(0.1f)
 {
     // Camera
-    m_camera.position    = glm::vec3(0.0f, 3.8f, 0.0f);
-    m_camera.direction   = glm::vec3(0.0f, 0.0f, 0.0f);
+    m_camera.position    = glm::vec3(-1.0f, 3.8f, 0.0f);
+    m_camera.direction   = glm::vec3(-1.0f, 0.0f, 0.0f);
     m_camera.fieldOfView = 45.0f;
 
     // Scenario
     _createScenario();
+
+    // Objects
+    std::default_random_engine gen;
+    std::uniform_real_distribution<float> dstr(-1.0f, +1.0f);
+
+    m_sand.models.resize(2000);
+    std::generate(m_sand.models.begin(), m_sand.models.end(), [&]() -> glm::mat4 {
+        return glm::translate(glm::mat4(1.0f), glm::vec3(0.30f * dstr(gen), 0.0f, 1.5f + dstr(gen)));
+    });
+    m_sand.create();
 }
 
 void EndingScene::resize(int width, int height) {
     // Update scene internal
     BaseScene::resize(width, height);
     AnimatedText::s_viewport_size = glm::vec2(width, height);
+
+    // Camera
+    _update_camera();
 }
 
-void EndingScene::_createScenario() 
-{
+void EndingScene::draw() {
+    _update_camera();
+
+    // Draw texts
+    for (auto& drawable : m_timeline.get()) {
+        drawable->draw();
+    }
+
+    // Draw objects
+    m_ground.draw(m_camera, {}, {}, m_lights);
+    m_slime.draw(m_camera, {}, {}, m_lights);
+    m_sand.draw(m_camera, m_lights);
+}
+
+
+// --- Private ---
+void EndingScene::_update_camera() {
+    float aspect = (float)m_width / m_height;
+
+    m_camera.lookAt(glm::vec3(0, 0, 1));
+    m_camera.usePerspective(aspect);
+}
+
+void EndingScene::_createScenario() {
     // Common stuff
     const auto text_color = glm::vec3(1.0f, 1.0f, 1.0f);
 
@@ -112,9 +89,8 @@ void EndingScene::_createScenario()
         .put(FadeOut(ATextD { thanks_reason, {0.40f, 0.75f}, 0.6f, text_color }, 8.0f, 1.5f), 8.0f, 9.5f)
     ;
 
-    // Credit to an awesome man, who's genious is unrecognized
-    float debug_off = 9.0f;
-    const std::string resource_name = "Remy Chauvin"; // if not obvious enough, it's a variable name troll: i shit on people calling their employees 'resources'.
+    // Credit to an awesome man, whose genious has yet to be recognized
+    const std::string resource_name = "Remy Chauvin"; // i shit on people calling their employees 'resources'.
     const std::vector<std::string> resource_job = 
     {
         "Lead Producer",
@@ -132,7 +108,8 @@ void EndingScene::_createScenario()
         "Coffee Maker",
         "Music Compositor",
         "Executive Joke Producer",
-        "Employee of the Month",
+        "Lead Dream Supplier",
+        "Employee of the Month",    // TODO: ask the HR lead director if this shall be renamed 'resource of the month'.
     };
 
     for (size_t i = 0; i < resource_job.size(); i++) 
@@ -141,15 +118,9 @@ void EndingScene::_createScenario()
             continue;
 
         m_timeline
-            .put(SlideTop(ATextD{ resource_job[i], {0.60f, -0.05f * i}, 0.7f, text_color }, 9.0f, 11.0f), 9.0f, 20.0f)
-            .put(SlideTop(ATextD{ resource_name,   {0.85f, -0.05f * i}, 0.5f, text_color }, 9.0f, 11.0f), 9.0f, 20.0f)
+            .put(SlideTop(ATextD{ resource_job[i], {0.60f, -0.05f * i}, 0.7f, text_color }, 9.0f, 21.0f), 9.0f, 30.0f)
+            .put(SlideTop(ATextD{ resource_name,   {0.85f, -0.05f * i}, 0.5f, text_color }, 9.0f, 21.0f), 9.0f, 30.0f)
         ;
     }
 }
 
-void EndingScene::draw() {
-    // Draw texts
-    for (auto& drawable : m_timeline.get()) {
-        drawable->draw();
-    }
-}

@@ -10,6 +10,24 @@ BaseShape::BaseShape() :
     // ..
 }
 
+void BaseShape::_bindArray() {
+    bind();
+
+    m_vbo_vertices.bindData(m_vertices);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
+
+    m_vbo_normals.bindData(m_normals);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(1);
+
+    m_ebo.bindData(m_indices);
+
+    // unbind arrays
+    m_vbo_vertices.unbind();
+    m_vbo_normals.unbind();
+}
+
 void BaseShape::createBatch(const std::vector<glm::mat4>& models) {
     m_instances.bindData(models);
 
@@ -57,24 +75,6 @@ int BaseShape::verticesLength() const {
 
 int BaseShape::normalsLength() const {
     return (int)m_normals.size();
-}
-
-void BaseShape::_bindArray() {
-    bind();
-
-    m_vbo_vertices.bindData(m_vertices);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-    glEnableVertexAttribArray(0);
-
-    m_vbo_normals.bindData(m_normals);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-    glEnableVertexAttribArray(1);
-
-    m_ebo.bindData(m_indices);
-
-    // unbind arrays
-    m_vbo_vertices.unbind();
-    m_vbo_normals.unbind();
 }
 
 // Helpers

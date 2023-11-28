@@ -4,19 +4,7 @@
 
 #include <vector>
 #include <memory>
-#include "Objects/Sphere.hpp"
-
-// -- Objects --
-struct SphereBatch {
-    SphereBatch(float radius);
-
-    void create();
-    void draw(const Camera& camera, const std::vector<std::unique_ptr<Light>>& lights);
-    void update();
-
-    std::unique_ptr<Sphere> object;
-    std::vector<glm::mat4>  models;
-};
+#include "Objects/SphereBatch.hpp"
 
 // -- Scene --
 struct IntroScene : public BaseScene {

@@ -16,6 +16,10 @@ EndingCommander::EndingCommander(std::shared_ptr<BaseScene> scene):
 }
 
 // Events
+void EndingCommander::_on_game_state_update(const CustomEvents::UpdateGameState& evt) {
+    // ..
+}
+
 void EndingCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
     // ..
 }
