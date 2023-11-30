@@ -2,6 +2,7 @@
 
 #include <glm/gtx/string_cast.hpp>
 
+#include "SlimeObjects.hpp"
 #include "../Common/BaseItem.hpp"
 #include "../../Scenes/SlimeScene.hpp"
 #include "../../../Engine/Physx/Physx.hpp"
@@ -10,65 +11,22 @@
 // ------------ Members ------------
 struct SlimeGame
 {
-    // ------------ Slime ------------
-    class Slime : public BaseItem {
-        float _maxSpeed = 2.0f; // unit/s
-        float _accel    = 0.2f; // unit/s^2
-        float _jump     = 5.0f; // idk
+    // Data
+    const float IntroDuration = 2.0f; // s
+    const float Game2DLimit = -4.0f;  // vp unit
+    const float Game3DLimit = -15.0f;
 
-    protected:
-        void _onAdd() override;
+    // Variables
+    enum State {
+        None,
+        Intro,
+        Game2D,
+        Game3D,
+        Boss,
+        End
+    } state = State::None;
 
-    public:
-        Slime();
-
-        void move(glm::vec3& direction);
-        void jump();
-        void update();
-
-        const sBody& createBody() override;
-    };
-
-    // ------------ Ground ------------
-    struct Ground : public BaseItem {
-        Ground(const glm::vec3& dims);
-
-        const sBody& createBody() override;
-
-    private:
-        glm::vec3 m_dims;
-    };
-
-    // ------------ Target ------------
-    struct Target : public BaseItem {
-        Target();
-
-        void update();
-
-        const sBody& createBody() override;
-
-    public:
-        bool enable_3d = false;
-    };
-
-    // ------------ Ennemy ------------
-    struct Ennemy : public BaseItem {
-        Ennemy(float amplitude, float pulse, float phase, const glm::vec3& dir, const glm::vec3& dims);
-
-        void update();
-
-        const sBody& createBody() override;
-
-    private:
-        glm::vec3 _dims;
-        glm::vec3 _moveDirection;
-        float _amplitude;
-        float _pulse;
-        float _phase;
-    };
-
-    // ------------ Members ------------
-    Slime  player;
+    Player player;
     Target target;
 
     std::vector<Ennemy> ennemies;
@@ -77,8 +35,17 @@ struct SlimeGame
 
     std::shared_ptr<SlimeScene> scene;
 
+    // Methods
     SlimeGame();
 
     void useScene(std::shared_ptr<SlimeScene> scene);
-    void update(float time_sec, SlimeScene::State desired_state);
+    void update(float time_sec, State desired_state);
+
+private:
+    void _change_state(State new_state);
+
+    void _update_intro(float time_sec);
+    void _update_game2d(float time_sec);
+    void _update_game3d(float time_sec);
+    void _update_boss(float time_sec);
 };

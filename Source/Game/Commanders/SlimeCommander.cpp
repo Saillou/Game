@@ -19,26 +19,28 @@ void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& 
     float t_sec = m_time.elapsed<Timer::millisecond>() / 1000.0f;
 
     // Get state
-    m_game->update(t_sec, ([=]() -> SlimeScene::State {
-        auto curr_state = m_scene->state;
+    m_game->update(t_sec, ([=]() -> SlimeGame::State {
+        if (m_game->state == SlimeGame::None)
+            return SlimeGame::State::Intro;
 
-        // The end
-        if (curr_state == SlimeScene::State::End)
-            return SlimeScene::State::End;
+        if (m_game->state == SlimeGame::Intro && t_sec >= m_game->IntroDuration)
+            return SlimeGame::State::Game2D;
 
-        // Next
-        SlimeScene::State next_state = (SlimeScene::State)(curr_state + 1);
-        
-        auto it_next = SlimeScene::StartTime.find(next_state);
-        if (it_next != SlimeScene::StartTime.cend() && it_next->second < t_sec)
-            return next_state;
+        if (m_game->state == SlimeGame::Game2D && m_game->target.body()->position.x <= m_game->Game2DLimit)
+            return SlimeGame::State::Game3D;
+
+        if (m_game->state == SlimeGame::State::Game3D && m_game->target.body()->position.x <= m_game->Game3DLimit)
+            return SlimeGame::State::Boss;
+
+        //if (m_game->state == SlimeGame::State::Boss)
+        //    return SlimeGame::State::End;
 
         // Nothing to do
-        return curr_state;
+        return m_game->state;
     })());
 
     // End
-    if(m_scene->state == SlimeScene::State::End)
+    if(m_game->state == SlimeGame::State::End)
         Event::Emit(CustomEvents::SceneEnded());
 }
 
@@ -49,18 +51,6 @@ void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
         case Key::ArrowUp:      _on_key_up();       break;
         case Key::ArrowDown:    _on_key_down();     break;
         case Key::Space:        _on_key_space();    break;
-    }
-
-    // 2D world
-    if (evt.key == 'C') {
-        m_scene->enable_2d_camera = true;
-        m_scene->lightning(false);
-    }
-
-    // 3D world
-    if (evt.key == 'V') {
-        m_scene->enable_2d_camera = false;
-        m_scene->lightning(true);
     }
 
     // Refresh
@@ -75,62 +65,39 @@ void SlimeCommander::_on_mouse_moved(const CustomEvents::MouseMoved& evt) {
 
 // Private
 void SlimeCommander::_on_key_left() {
-    // --- Intro ---
-    if (m_scene->state == SlimeScene::Intro) {
+    if (m_game->state == SlimeGame::Intro)
         return;
-    }
 
-    // --- Game ---
     m_game->player.move(vec3(+1.0f, 0, 0));
 }
 
 void SlimeCommander::_on_key_right() {
-    // --- Intro ---
-    if (m_scene->state == SlimeScene::Intro) {
+    if (m_game->state == SlimeGame::Intro)
         return;
-    }
 
-    // --- Game ---
     m_game->player.move(vec3(-1.0f, 0, 0));
 }
 
 
 void SlimeCommander::_on_key_up() {
-    // --- Intro ---
-    if (m_scene->state == SlimeScene::Intro) {
+    if (m_game->state != SlimeGame::Game3D)
         return;
-    }
 
-    // --- 2D ---
-    if (m_scene->state == SlimeScene::Game2D) {
-        return;
-    }
-
-    // --- Game ---
     m_game->player.move(vec3(0, -1.0f, 0));
 }
 void SlimeCommander::_on_key_down() {
-    // --- Intro ---
-    if (m_scene->state == SlimeScene::Intro) {
+    if (m_game->state != SlimeGame::Game3D)
         return;
-    }
 
-    // --- 2D ---
-    if (m_scene->state == SlimeScene::Game2D) {
-        return;
-    }
-
-    // --- Game ---
     m_game->player.move(vec3(0, +1.0f, 0));
 }
 
 void SlimeCommander::_on_key_space() {
-    // --- Intro ---
-    if (m_scene->state == SlimeScene::Intro) {
+    if (m_game->state != SlimeGame::Game2D && 
+        m_game->state != SlimeGame::Game3D) 
+    {
         return;
     }
 
-
-    // --- Game ---
     m_game->player.jump();
 }

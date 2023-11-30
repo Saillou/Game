@@ -27,6 +27,7 @@ private:
     void _update_camera();
     void _createScenario();
 
+    bool m_ended = false;
     Timeline<Drawable> m_timeline;
 
     BoxBatch m_sand;

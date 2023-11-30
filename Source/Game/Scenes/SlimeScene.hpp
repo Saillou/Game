@@ -10,15 +10,6 @@
 
 // -- Scene --
 struct SlimeScene : public BaseScene {
-    enum State {
-        None,
-        Intro,
-        Game2D,
-        Game3D,
-        Boss,
-        End
-    };
-
     SlimeScene();
 
     void draw() override;
@@ -28,10 +19,6 @@ struct SlimeScene : public BaseScene {
     void lightning(bool enable);
 
     bool enable_2d_camera = true;
-    State state = None;
-
-    // Data
-    static const std::unordered_map<SlimeScene::State, float> StartTime;
 
 private:
     std::vector<std::shared_ptr<BaseBody>> _baseBodies;

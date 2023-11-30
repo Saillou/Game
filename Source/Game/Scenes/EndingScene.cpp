@@ -66,7 +66,7 @@ EndingScene::EndingScene() :
     std::default_random_engine gen;
     std::uniform_real_distribution<float> dstr(-1.0f, +1.0f);
 
-    m_sand.models.resize(500);
+    m_sand.models.resize(200);
     std::generate(m_sand.models.begin(), m_sand.models.end(), [&]() -> glm::mat4 {
         return glm::translate(glm::mat4(1.0f), glm::vec3(0.30f * dstr(gen), 0.0f, 3.5f + dstr(gen)));
     });
@@ -98,6 +98,7 @@ void EndingScene::createActors() {
 
 void EndingScene::addSand() {
     if (m_sand_bodies.size() >= m_sand.models.size()) {
+        m_ended = true;
         return;
     }
 
@@ -141,17 +142,23 @@ void EndingScene::draw() {
     m_sand.update();
 
     // Draw objects
+    std::vector<std::unique_ptr<Light>> no_lights{};
+    auto& lights = m_ended ? no_lights : m_lights;
+
+    if (time > 45.0f) // End
+        return;
+
     if (time < 15.0f)
         m_light->draw(m_camera, {});
 
     if (time > 6.0f)
-        m_ground->body()->draw(m_camera, m_lights);
+        m_ground->body()->draw(m_camera, lights);
 
     if (time > 9.0f)
-        m_slime->body()->draw(m_camera, m_lights);
+        m_slime->body()->draw(m_camera, lights);
 
     if (time > 10.0f) {
-        m_sand.draw(m_camera, m_lights);
+        m_sand.draw(m_camera, lights);
 
         // Bit of sand
         static int i = 0;
