@@ -46,6 +46,9 @@ struct SlimeGame
         void update();
 
         const sBody& createBody() override;
+
+    public:
+        bool enable_3d = false;
     };
 
     // ------------ Ennemy ------------

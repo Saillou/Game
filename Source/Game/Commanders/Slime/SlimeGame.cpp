@@ -87,11 +87,13 @@ SlimeGame::Target::Target()
 void SlimeGame::Target::update() {
     const auto& curr_transform = _pbody->getTransform();
     const auto& curr_position = curr_transform.getPosition();
-    const auto& curr_velocity = _pbody->getLinearVelocity();
 
     // Force y-coordinate to 0
-    if (curr_position.y != 0.0f) {
-        _pbody->setTransform(Transform(Vector3(curr_position.x, 0.0f, curr_position.z), curr_transform.getOrientation()));
+    if (!enable_3d && curr_position.y != 0.0f) {
+        _pbody->setTransform(Transform(
+            Vector3(curr_position.x, 0.0f, curr_position.z), 
+            curr_transform.getOrientation())
+        );
     }
 }
 
@@ -138,8 +140,17 @@ SlimeGame::SlimeGame() :
         Ennemy(0.3f, 0.2f, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f), 0.05f * glm::vec3(1.f, 1.f, 3.f)),
         Ennemy(0.5f, 0.4f, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f), 0.05f * glm::vec3(1.f, 1.f, 3.f)),
         Ennemy(0.5f, 0.8f, 1.0f, glm::vec3(0.0f, 0.0f, 1.0f), 0.05f * glm::vec3(1.f, 1.f, 3.f)),
+
         Ennemy(0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.00f * glm::vec3(0.05f, 0.05f, 3.f)),
+
         Ennemy(0.0f, 0.0f, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1.00f * glm::vec3(0.05f, 0.35f, 10.f)),
+
+        Ennemy(0.5f, 0.4f, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f), 1.00f * glm::vec3(0.02f, 0.50f, 1.f)),
+        Ennemy(6.0f, 0.8f, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), 1.00f * glm::vec3(0.02f, 0.50f, 1.f)),
+        Ennemy(0.0f, 0.0f, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f), 1.00f * glm::vec3(0.02f, 0.35f, 1.f)),
+        Ennemy(0.0f, 0.0f, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f), 1.00f * glm::vec3(0.02f, 0.35f, 1.f)),
+
+        Ennemy(0.5f, 0.1f, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f), 1.00f * glm::vec3(0.01f, 2.00f, 0.4f)),
     })
 {
     // Setup items
@@ -153,8 +164,24 @@ SlimeGame::SlimeGame() :
     ennemies[0].body()->position = glm::vec3(-1.0f, 0, 0.4f);
     ennemies[1].body()->position = glm::vec3(-3.0f, 0, 0);
     ennemies[2].body()->position = glm::vec3(-3.3f, 0, 0);
+
     ennemies[3].body()->position = glm::vec3(-4.0f, 0, 0);
-    ennemies[4].body()->position = glm::vec3(-6.5f, 0, 0);
+
+    ennemies[4].body()->position = glm::vec3(-6.5f,  0.0f,  0);
+
+    ennemies[5].body()->position = glm::vec3(-8.0f, +1.4f,  0);
+    ennemies[6].body()->position = glm::vec3(-10.0f,  0.0f, 0);
+    ennemies[7].body()->position = glm::vec3(-12.0f, -1.0f, 0);
+    ennemies[8].body()->position = glm::vec3(-12.0f, +1.0f, 0);
+
+    ennemies[9].body()->position = glm::vec3(-14.0f, 0.0f,  +0.5f);
+
+    /* todo: 
+        detection of scene changes
+        add fall detection -> refresh if state < boss | else win
+        add boss arena -> make wall fall and boss appears
+        boss physics
+    */
 }
 
 void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene_) {
@@ -223,6 +250,7 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
             scene->enable_2d_camera = true;
             scene->lightning(false);
 
+            target.enable_3d = false;
             target.setType(Physx::BodyType::Dynamic);
             break;
 
@@ -230,6 +258,7 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
             scene->enable_2d_camera = false;
             scene->lightning(true);
 
+            target.enable_3d = true;
             break;
 
         case SlimeScene::Boss:
@@ -283,11 +312,15 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
     case SlimeScene::State::Game3D:
         {
             static const float beg_time = SlimeScene::StartTime.at(SlimeScene::State::Game3D);
+            const glm::vec3& player_pos = player.body()->position;
             const glm::vec3& target_pos = target.body()->position;
 
             float r = glm::clamp(1.0f - 0.5f*(t_sec - beg_time), 0.0f, 1.0f);
+            
+            double rho   = 1.0f;
+            double theta = 0.25f*player_pos.y * 6.28f;
 
-            camera.position = glm::vec3(target_pos.x, 4.0f, +0.5f);
+            camera.position = glm::vec3(target_pos.x + rho * cos(theta), target_pos.y + 4.0f + rho * sin(theta), +0.5f);
             camera.direction = glm::vec3(target_pos.x, 0.0f, +0.5f);
 
             player.update();
@@ -295,11 +328,10 @@ void SlimeGame::update(float t_sec,  SlimeScene::State desired_state) {
             for (Ennemy& ennemy : ennemies)
                 ennemy.update();
 
-
             if (r > 0)
-                scene->lights()[0]->position = 
-                    r *          target.body()->position + glm::vec3(0, 0, 0.5f) + 
-                    (1.0f - r) * player.body()->position + glm::vec3(0, 0, 0.5f);
+                scene->lights()[0]->position = glm::vec3(0, 0, 0.5f) +
+                    r *          target.body()->position +
+                    (1.0f - r) * player.body()->position;
             else
                 scene->lights()[0]->position = player.body()->position + glm::vec3(0, 0, 0.5f);
                 
