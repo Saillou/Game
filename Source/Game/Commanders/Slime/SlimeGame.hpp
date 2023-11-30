@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <glm/gtx/string_cast.hpp>
 
 #include "../Common/BaseItem.hpp"
@@ -14,7 +13,7 @@ struct SlimeGame
     // ------------ Slime ------------
     class Slime : public BaseItem {
         float _maxSpeed = 2.0f; // unit/s
-        float _accel    = 0.5f; // unit/s^2
+        float _accel    = 0.2f; // unit/s^2
         float _jump     = 5.0f; // idk
 
     protected:
@@ -32,9 +31,12 @@ struct SlimeGame
 
     // ------------ Ground ------------
     struct Ground : public BaseItem {
-        Ground();
+        Ground(const glm::vec3& dims);
 
         const sBody& createBody() override;
+
+    private:
+        glm::vec3 m_dims;
     };
 
     // ------------ Target ------------
@@ -48,18 +50,28 @@ struct SlimeGame
 
     // ------------ Ennemy ------------
     struct Ennemy : public BaseItem {
-        Ennemy();
+        Ennemy(float amplitude, float pulse, float phase, const glm::vec3& dir, const glm::vec3& dims);
 
         void update();
 
         const sBody& createBody() override;
+
+    private:
+        glm::vec3 _dims;
+        glm::vec3 _moveDirection;
+        float _amplitude;
+        float _pulse;
+        float _phase;
     };
 
     // ------------ Members ------------
     Slime  player;
-    Ennemy ennemy;
-    Ground ground;
     Target target;
+
+    std::vector<Ennemy> ennemies;
+    std::vector<Ground> groundMeshes;
+    std::vector<Ground> invisbleWalls;
+
     std::shared_ptr<SlimeScene> scene;
 
     SlimeGame();
