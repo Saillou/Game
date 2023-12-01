@@ -10,7 +10,7 @@
     const bool FullScreen = false;
     const int Width       = 1600;
     const int Height      = 900;
-    const SceneId StartId = SceneId::Slime;
+    const SceneId StartId = SceneId::Ending;
 #else
     const bool FullScreen = true;
     const int Width       = 1920;

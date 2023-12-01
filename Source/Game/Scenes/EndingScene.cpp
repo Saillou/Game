@@ -129,7 +129,13 @@ void EndingScene::draw() {
     }
 
     // Move camera
-    m_camera.position = glm::vec3(-1.0f + 0.1f * sin(time), 3.8f, +0.7f + 0.1f * cos(time));
+    if (!m_ended) {
+        m_camera.position = glm::vec3(-1.0f + 0.1f * sin(time), 3.8f, +0.7f + 0.1f * cos(time));
+    }
+    else {
+        m_camera.position += glm::vec3(0.0f, 0.0f, 0.005f);
+        m_camera.direction += glm::vec3(0.0f, 0.0f, 0.005f);
+    }
 
     // Move light
     m_light->position     = glm::vec3(-1.0f + cos(time)*1.5f, sin(time) * sin(time), 1.0f + sin(time)*1.0f);
@@ -142,23 +148,17 @@ void EndingScene::draw() {
     m_sand.update();
 
     // Draw objects
-    std::vector<std::unique_ptr<Light>> no_lights{};
-    auto& lights = m_ended ? no_lights : m_lights;
-
-    if (time > 45.0f) // End
-        return;
-
     if (time < 15.0f)
         m_light->draw(m_camera, {});
 
     if (time > 6.0f)
-        m_ground->body()->draw(m_camera, lights);
+        m_slime->body()->draw(m_camera, m_lights);
 
     if (time > 9.0f)
-        m_slime->body()->draw(m_camera, lights);
+        m_ground->body()->draw(m_camera, m_lights);
 
     if (time > 10.0f) {
-        m_sand.draw(m_camera, lights);
+        m_sand.draw(m_camera, m_lights);
 
         // Bit of sand
         static int i = 0;
