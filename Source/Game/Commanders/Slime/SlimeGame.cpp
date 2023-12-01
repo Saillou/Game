@@ -1,5 +1,7 @@
 #include "SlimeGame.hpp"
 
+#include <cmath>
+
 using namespace reactphysics3d;
 
 SlimeGame::SlimeGame() : 
@@ -279,7 +281,10 @@ void SlimeGame::_update_bossFight(float t_sec)
 
     auto _reflect = [=](const Vector3& u, const Vector3& n) -> Vector3
     {
-        auto v2 = Vector2(u.x, u.y) - 2 * (u.x * n.x + u.y * n.y) * Vector2(n.x, n.y);
+        Vector2 u2 = Vector2(u.x, u.y); u2.normalize();
+        Vector2 n2 = Vector2(n.x, n.y); n2.normalize();
+
+        auto v2 = u2 - 2 * (u.x * n.x + u.y * n.y) * n2;
         return Vector3(v2.x, v2.y, u.z);
     };
 
@@ -309,11 +314,19 @@ void SlimeGame::_update_bossFight(float t_sec)
 
     // Target/Players
     if (_collide(target_pos, target_size, zeboss_pos, zeboss_size)) {
-        target_speed = 1.1f * _reflect(target_speed, Vector3(+1.0f, 0.0f, 0.0f)); // boum
+        target_speed = 1.1f * _reflect(target_speed, Vector3(
+            std::cos(std::atan2(zeboss_pos.y - target_pos.y, zeboss_pos.x - target_pos.x)),
+            std::sin(std::atan2(zeboss_pos.y - target_pos.y, zeboss_pos.x - target_pos.x)),
+            0.0f)
+        ); // boum
     }
 
     if(_collide(target_pos, target_size, player_pos, player_size)) {
-        target_speed = 1.1f * _reflect(target_speed, Vector3(-1.0f, 0.0f, 0.0f)); // boum
+        target_speed = 1.1f * _reflect(target_speed, Vector3(
+            std::cos(std::atan2(player_pos.y - target_pos.y, player_pos.x - target_pos.x)), 
+            std::sin(std::atan2(player_pos.y - target_pos.y, player_pos.x - target_pos.x)), 
+            0.0f)
+        ); // boum
     }
 
     // Results
