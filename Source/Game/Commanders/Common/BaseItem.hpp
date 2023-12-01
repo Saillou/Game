@@ -28,6 +28,7 @@ public:
     // Methods
     void addAs(Physx::BodyType type);
     void setType(Physx::BodyType type);
+    void removePhysx();
 
 private:
     virtual const sBody& createBody() { return _body; };

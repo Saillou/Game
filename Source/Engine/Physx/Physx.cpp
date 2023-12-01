@@ -116,6 +116,18 @@ RigidBody* Physx::Add(std::shared_ptr<BaseBody> body, BodyType type) {
 	return phxBody;
 }
 
+void Physx::Remove(PBody pbody) {
+	auto& px = _get().p_impl;
+
+	for (auto& element : px->bodies) {
+		if (pbody == element->rigid) {
+			px->bodies.erase(element);
+			px->world->destroyRigidBody(pbody);
+			break;
+		}
+	}
+}
+
 void Physx::Clear() {
 	auto& px = _get().p_impl;
 	auto& world = px->world;

@@ -21,6 +21,9 @@ void BaseItem::addAs(Physx::BodyType type) {
 }
 
 void BaseItem::setType(Physx::BodyType type) {
+	if (!_pbody)
+		return;
+
     _pbody->setType(([=]() -> ::BodyType {
 		switch (type) {
 			case Physx::BodyType::Dynamic:   return ::BodyType::DYNAMIC;
@@ -29,6 +32,11 @@ void BaseItem::setType(Physx::BodyType type) {
 		}
 		return ::BodyType::STATIC;
 	})());
+}
+
+void BaseItem::removePhysx() {
+	Physx::Remove(_pbody);
+	_pbody = nullptr;
 }
 
 void BaseItem::_onAdd() {

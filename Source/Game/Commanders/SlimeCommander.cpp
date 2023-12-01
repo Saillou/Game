@@ -15,10 +15,8 @@ SlimeCommander::SlimeCommander(std::shared_ptr<BaseScene> scene):
 
 // Events
 void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& evt) {
-    // Timer
     float t_sec = m_time.elapsed<Timer::millisecond>() / 1000.0f;
 
-    // Get state
     m_game->update(t_sec, ([=]() -> SlimeGame::State {
         if (m_game->state == SlimeGame::None)
             return SlimeGame::State::Intro;
@@ -30,9 +28,11 @@ void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& 
             return SlimeGame::State::Game3D;
 
         if (m_game->state == SlimeGame::State::Game3D && m_game->target.body()->position.x <= m_game->Game3DLimit)
-            return SlimeGame::State::Boss;
+            return SlimeGame::State::BossIntro;
 
-        //if (m_game->state == SlimeGame::State::Boss)
+        // State Transition {BossIntro -> BossFight} is done inside the slimeGame instance; 
+
+        //if (m_game->state == SlimeGame::State::BossFight)
         //    return SlimeGame::State::End;
 
         // Nothing to do
@@ -65,17 +65,23 @@ void SlimeCommander::_on_mouse_moved(const CustomEvents::MouseMoved& evt) {
 
 // Private
 void SlimeCommander::_on_key_left() {
-    if (m_game->state == SlimeGame::Intro)
+    if (m_game->state == SlimeGame::Intro || m_game->state == SlimeGame::BossIntro)
         return;
 
-    m_game->player.move(vec3(+1.0f, 0, 0));
+    if(m_game->state == SlimeGame::BossFight)
+        m_game->player.move(vec3(0, -1.0f, 0));
+    else
+        m_game->player.move(vec3(+1.0f, 0, 0));
 }
 
 void SlimeCommander::_on_key_right() {
-    if (m_game->state == SlimeGame::Intro)
+    if (m_game->state == SlimeGame::Intro || m_game->state == SlimeGame::BossIntro)
         return;
 
-    m_game->player.move(vec3(-1.0f, 0, 0));
+    if (m_game->state == SlimeGame::BossFight)
+        m_game->player.move(vec3(0, +1.0f, 0));
+    else
+        m_game->player.move(vec3(-1.0f, 0, 0));
 }
 
 
@@ -93,11 +99,8 @@ void SlimeCommander::_on_key_down() {
 }
 
 void SlimeCommander::_on_key_space() {
-    if (m_game->state != SlimeGame::Game2D && 
-        m_game->state != SlimeGame::Game3D) 
-    {
+    if (m_game->state != SlimeGame::Game2D && m_game->state != SlimeGame::Game3D) 
         return;
-    }
 
     m_game->player.jump();
 }

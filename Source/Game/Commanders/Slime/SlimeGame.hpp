@@ -12,9 +12,9 @@
 struct SlimeGame
 {
     // Data
-    const float IntroDuration = 2.0f; // s
-    const float Game2DLimit = -4.0f;  // vp unit
-    const float Game3DLimit = -15.0f;
+    const float IntroDuration   = 2.0f; // s
+    const float Game2DLimit     = -4.0f;    // vp unit
+    const float Game3DLimit     = -15.0f;
 
     // Variables
     enum State {
@@ -22,7 +22,8 @@ struct SlimeGame
         Intro,
         Game2D,
         Game3D,
-        Boss,
+        BossIntro,
+        BossFight,
         End
     } state = State::None;
 
@@ -47,5 +48,8 @@ private:
     void _update_intro(float time_sec);
     void _update_game2d(float time_sec);
     void _update_game3d(float time_sec);
-    void _update_boss(float time_sec);
+    void _update_bossIntro(float time_sec);
+    void _update_bossFight(float time_sec);
+
+    float m_last_state_change = 0.0f;
 };
