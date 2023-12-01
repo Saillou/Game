@@ -41,6 +41,7 @@ struct Target : public BaseItem {
     Target();
 
     void update();
+    void manual_update();
 
     const sBody& createBody() override;
 

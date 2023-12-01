@@ -35,7 +35,7 @@ void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& 
 
         if (m_game->state == SlimeGame::State::BossFight && m_game->target.body()->position.z < -0.5f) {
             return 
-                m_game->target.body()->position.x < m_game->Game3DLimit ? 
+                m_game->target.body()->position.x < m_game->Game3DLimit - 2.0f ? 
                 SlimeGame::State::End : 
                 SlimeGame::State::None;
         }

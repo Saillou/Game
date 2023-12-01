@@ -59,6 +59,10 @@ SlimeGame::SlimeGame() :
     ennemies[8].body()->position = glm::vec3(-12.0f, +1.0f, 0);
 
     ennemies[9].body()->position = glm::vec3(Game3DLimit, 0.0f, +0.5f);
+
+    // debug
+    target.body()->position = glm::vec3(Game3DLimit, 0, +1.0f);
+    player.body()->position = glm::vec3(Game3DLimit +1.0f, 0, 0);
 }
 
 void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene_) {
@@ -153,14 +157,11 @@ void SlimeGame::_change_state(State new_state) {
         break;
 
     case BossFight:
-        target.addAs(Physx::BodyType::Dynamic);
         player.addAs(Physx::BodyType::Kinematic);
         zeboss.addAs(Physx::BodyType::Kinematic);
+        target.addAs(Physx::BodyType::Kinematic);
 
-        target.pbody()->applyWorldForceAtCenterOfMass(Vector3(-70.0f, 0.0f, 0.0f));
-        target.pbody()->setLinearDamping(0.0f);
-        target.pbody()->setAngularDamping(0.0f);
-        target.pbody()->setMass(0.1f);
+        target.pbody()->setLinearVelocity(Vector3(+1.0f, +1.5f, 0.0f));
         break;
     }
 
@@ -250,13 +251,60 @@ void SlimeGame::_update_bossFight(float t_sec)
 {
     Camera& camera = scene->camera();
 
-    const auto& A = player.body()->position + glm::vec3(5.0f, 0.0f, 4.0f);
-    const auto& B = target.body()->position;
-
-    camera.position  = A;
-    camera.direction = B;
+    camera.position  = player.body()->position + glm::vec3(5.0f, 0.0f, 4.0f);
+    camera.direction = target.body()->position;
 
     player.update();
     zeboss.update();
     target.update();
+
+    // Helpers
+    auto _Vector3 = [=](const glm::vec3& v3) -> Vector3 
+    {
+        return Vector3(v3.x, v3.y, v3.z);
+    };
+
+    auto _collide = [=](const Vector3& pos, const float size, const Vector3& squarePos, const float dims) -> bool
+    {
+        if (pos.x + size < squarePos.x - dims) return false;
+        if (pos.x - size > squarePos.x + dims) return false;
+        if (pos.y + size < squarePos.y - dims) return false;
+        if (pos.y - size > squarePos.y + dims) return false;
+
+        return true;
+    };
+
+    // - Compute physx 2d manually ('cause i'm shit with the lib) -
+    Vector3 target_speed    = target.pbody()->getLinearVelocity();
+    Vector3 target_pos      = target.pbody()->getTransform().getPosition();
+    Vector3 target_npos     = target_pos + target_speed / 60.0f;
+    float target_size       = 0.05f;
+
+    Vector3 zeboss_speed    = zeboss.pbody()->getLinearVelocity();
+    Vector3 zeboss_pos      = zeboss.pbody()->getTransform().getPosition();
+    Vector3 zeboss_npos     = zeboss_pos + zeboss_speed / 60.0f;
+    float zeboss_size       = 0.10f;
+
+    Vector3 player_speed    = player.pbody()->getLinearVelocity();
+    Vector3 player_pos      = player.pbody()->getTransform().getPosition();
+    Vector3 player_npos     = player_pos + player_speed / 60.0f;
+    float player_size       = 0.10f;
+
+    Vector3 ground_center   = _Vector3(groundMeshes[1].body()->position);
+    float ground_size       = 2.0f;
+
+    // Target/Ground
+    Vector3 uGravity(0.0f, 0.0f, -10.0f);
+    if(!_collide(target_pos, target_size, ground_center, ground_size))
+        target_speed += uGravity/60.0f; // falling
+
+    // Target/Players
+    if (_collide(target_pos, target_size, zeboss_pos, zeboss_size) ||
+        _collide(target_pos, target_size, player_pos, player_size)) 
+    {
+        target_speed *= -1.2f; // boum
+    }
+
+    // Results
+    target.pbody()->setLinearVelocity(target_speed);
 }

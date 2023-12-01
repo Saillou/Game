@@ -30,7 +30,7 @@ void Player::update() {
         }
     }
 
-    // tunnel
+    // tunnel - Stopping
     {
         const auto& curr_velocity       = _pbody->getLinearVelocity();
         const auto& curr_transform      = _pbody->getTransform();
@@ -122,6 +122,9 @@ Target::Target()
 }
 
 void Target::update() {
+    if (!_pbody)
+        return;
+
     // Force y-coordinate to 0
     {
         const auto& curr_transform = _pbody->getTransform();
@@ -135,7 +138,7 @@ void Target::update() {
         }
     }
 
-    // tunnel
+    // tunnel - bouncing
     {
         const auto& curr_velocity = _pbody->getLinearVelocity();
         const auto& curr_transform = _pbody->getTransform();
@@ -143,15 +146,19 @@ void Target::update() {
         const auto& curr_orientation = curr_transform.getOrientation();
 
         if (curr_position.y + curr_velocity.y / 60.0f > 1.9f) {
-            _pbody->setLinearVelocity(Vector3(curr_velocity.x, 0.0f, curr_velocity.z));
+            _pbody->setLinearVelocity(Vector3(curr_velocity.x, -curr_velocity.y, curr_velocity.z));
             _pbody->setTransform(Transform(Vector3(curr_position.x, 1.9f, curr_position.z), curr_orientation));
         }
 
         if (curr_position.y + curr_velocity.y / 60.0f < -1.9f) {
-            _pbody->setLinearVelocity(Vector3(curr_velocity.x, 0.0f, curr_velocity.z));
+            _pbody->setLinearVelocity(Vector3(curr_velocity.x, -curr_velocity.y, curr_velocity.z));
             _pbody->setTransform(Transform(Vector3(curr_position.x, -1.9f, curr_position.z), curr_orientation));
         }
     }
+}
+
+void Target::manual_update() {
+    update();
 }
 
 const BaseItem::sBody& Target::createBody() {
