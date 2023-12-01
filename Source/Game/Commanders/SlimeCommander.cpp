@@ -33,15 +33,23 @@ void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& 
         if (m_game->state == SlimeGame::State::BossIntro && (t_sec - m_game->last_state_change) > m_game->IntroDuration)
             return SlimeGame::State::BossFight;
 
-        //if (m_game->state == SlimeGame::State::BossFight)
-        //    return SlimeGame::State::End;
+        if (m_game->state == SlimeGame::State::BossFight && m_game->target.body()->position.z < -0.5f) {
+            return 
+                m_game->target.body()->position.x < m_game->Game3DLimit ? 
+                SlimeGame::State::End : 
+                SlimeGame::State::None;
+        }
 
         // Nothing to do
         return m_game->state;
     })());
 
+    // Redo
+    if (m_game->state == SlimeGame::State::None)
+        Event::Emit(CustomEvents::SceneRefresh());
+
     // End
-    if(m_game->state == SlimeGame::State::End)
+    if (m_game->state == SlimeGame::State::End)
         Event::Emit(CustomEvents::SceneEnded());
 }
 

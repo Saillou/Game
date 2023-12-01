@@ -24,6 +24,7 @@ public:
 
     // Getters
     sBody body() const;
+    Physx::PBody pbody() const;
 
     // Methods
     void addAs(Physx::BodyType type);

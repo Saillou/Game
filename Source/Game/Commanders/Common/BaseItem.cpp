@@ -14,6 +14,10 @@ BaseItem::sBody BaseItem::body() const {
     return _body;
 }
 
+Physx::PBody BaseItem::pbody() const {
+	return _pbody;
+}
+
 // Methods
 void BaseItem::addAs(Physx::BodyType type) {
     _pbody = Physx::Add(_body ? _body : createBody(), type);

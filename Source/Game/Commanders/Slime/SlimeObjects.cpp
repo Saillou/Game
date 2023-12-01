@@ -14,17 +14,38 @@ void Player::update() {
         return;
 
     // Simulate gravity
-    constexpr float epsilon = 1e-2f;
+    {
+        constexpr float epsilon = 1e-2f;
 
-    const auto& curr_transform = _pbody->getTransform();
-    const auto& curr_position = curr_transform.getPosition();
-    const auto& curr_velocity = _pbody->getLinearVelocity();
+        const auto& curr_velocity       = _pbody->getLinearVelocity();
+        const auto& curr_transform      = _pbody->getTransform();
+        const auto& curr_position       = curr_transform.getPosition();
+        const auto& curr_orientation    = curr_transform.getOrientation();
 
-    if (curr_position.z > epsilon) {
-        _pbody->setLinearVelocity(curr_velocity - _jump * Vector3(0, 0, 1e-1f));
+        if (curr_position.z > epsilon) {
+            _pbody->setLinearVelocity(curr_velocity - _jump * Vector3(0, 0, 1e-1f));
+        }
+        else if (curr_position.z != 0.0f) {
+            _pbody->setTransform(Transform(Vector3(curr_position.x, curr_position.y, 0.0f), curr_orientation));
+        }
     }
-    else if (curr_position.z != 0.0f) {
-        _pbody->setTransform(Transform(Vector3(curr_position.x, curr_position.y, 0.0f), curr_transform.getOrientation()));
+
+    // tunnel
+    {
+        const auto& curr_velocity       = _pbody->getLinearVelocity();
+        const auto& curr_transform      = _pbody->getTransform();
+        const auto& curr_position       = curr_transform.getPosition();
+        const auto& curr_orientation    = curr_transform.getOrientation();
+
+        if (curr_position.y + curr_velocity.y/60.0f > 1.9f) {
+            _pbody->setLinearVelocity(Vector3(curr_velocity.x, 0.0f, curr_velocity.z));
+            _pbody->setTransform(Transform(Vector3(curr_position.x, 1.9f, curr_position.z), curr_orientation));
+        }
+
+        if (curr_position.y + curr_velocity.y/60.0f < -1.9f) {
+            _pbody->setLinearVelocity(Vector3(curr_velocity.x, 0.0f, curr_velocity.z));
+            _pbody->setTransform(Transform(Vector3(curr_position.x, -1.9f, curr_position.z), curr_orientation));
+        }
     }
 }
 
@@ -101,15 +122,35 @@ Target::Target()
 }
 
 void Target::update() {
-    const auto& curr_transform = _pbody->getTransform();
-    const auto& curr_position = curr_transform.getPosition();
-
     // Force y-coordinate to 0
-    if (!enable_3d && curr_position.y != 0.0f) {
-        _pbody->setTransform(Transform(
-            Vector3(curr_position.x, 0.0f, curr_position.z),
-            curr_transform.getOrientation())
-        );
+    {
+        const auto& curr_transform = _pbody->getTransform();
+        const auto& curr_position = curr_transform.getPosition();
+
+        if (!enable_3d && curr_position.y != 0.0f) {
+            _pbody->setTransform(Transform(
+                Vector3(curr_position.x, 0.0f, curr_position.z),
+                curr_transform.getOrientation())
+            );
+        }
+    }
+
+    // tunnel
+    {
+        const auto& curr_velocity = _pbody->getLinearVelocity();
+        const auto& curr_transform = _pbody->getTransform();
+        const auto& curr_position = curr_transform.getPosition();
+        const auto& curr_orientation = curr_transform.getOrientation();
+
+        if (curr_position.y + curr_velocity.y / 60.0f > 1.9f) {
+            _pbody->setLinearVelocity(Vector3(curr_velocity.x, 0.0f, curr_velocity.z));
+            _pbody->setTransform(Transform(Vector3(curr_position.x, 1.9f, curr_position.z), curr_orientation));
+        }
+
+        if (curr_position.y + curr_velocity.y / 60.0f < -1.9f) {
+            _pbody->setLinearVelocity(Vector3(curr_velocity.x, 0.0f, curr_velocity.z));
+            _pbody->setTransform(Transform(Vector3(curr_position.x, -1.9f, curr_position.z), curr_orientation));
+        }
     }
 }
 

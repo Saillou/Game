@@ -27,8 +27,9 @@ struct SlimeGame
         End
     } state = State::None;
 
-    Player player;
-    Target target;
+    Player  player;
+    Player  zeboss;
+    Target  target;
 
     std::vector<Ennemy> ennemies;
     std::vector<Ground> groundMeshes;
@@ -53,4 +54,11 @@ private:
     void _update_bossIntro(float time_sec);
     void _update_bossFight(float time_sec);
 
+    struct _last_state_position {
+        glm::vec3 target;
+        glm::vec3 player;
+        glm::vec3 light;
+        glm::vec3 cam_pos;
+        glm::vec3 cam_dir;
+    } m_last;
 };
