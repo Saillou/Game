@@ -29,7 +29,8 @@ SlimeGame::SlimeGame() :
         Ennemy(0.0f, 0.0f, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f), 1.00f * glm::vec3(0.02f, 0.35f, 1.f)),
 
         Ennemy(0.5f, 0.1f, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f), 1.00f * glm::vec3(0.01f, 2.00f, 0.4f)),
-    })
+    }),
+    m_last({})
 {
     // Setup items
     groundMeshes[0].body()->position = glm::vec3(-6.0f, 0, -0.5f);
@@ -59,9 +60,9 @@ SlimeGame::SlimeGame() :
 
     ennemies[9].body()->position = glm::vec3(Game3DLimit, 0.0f, +0.5f);
 
-    // debug
-    target.body()->position = glm::vec3(-13.0f, 0, +1.0f);
-    player.body()->position = glm::vec3(-12.0f, 0, 0);
+    //// debug
+    //target.body()->position = glm::vec3(-13.0f, 0, +1.0f);
+    //player.body()->position = glm::vec3(-12.0f, 0, 0);
 }
 
 void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene_) {
