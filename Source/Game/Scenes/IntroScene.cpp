@@ -68,7 +68,7 @@ void IntroScene::draw() {
             const glm::vec2& pos = _get_pos[0];
             glm::vec4& model_pos = m_title.models[i][3];
 
-            const float sp = 0.05f;
+            const float sp = 0.1f;
 
             model_pos[0] = model_pos[0] * (1.0f-sp) + (0.5f - pos.x) * sp;
             model_pos[1] = model_pos[1] * (1.0f-sp);

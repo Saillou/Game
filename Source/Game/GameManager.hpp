@@ -5,6 +5,7 @@
 
 #include "../Engine/Graphic/Window.hpp"
 #include "../Engine/Graphic/Base/BaseCommander.hpp"
+#include "../Engine/Sound/Player.hpp"
 
 // Data
 enum SceneId {

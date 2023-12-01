@@ -4,13 +4,14 @@
 #include "Utils/Timer.hpp"
 #include "Engine/Physx/Physx.hpp"
 #include "Engine/Graphic/Window.hpp"
+#include "Engine/Sound/Player.hpp"
 
 // Options
 #ifdef _DEBUG
     const bool FullScreen = false;
     const int Width       = 1600;
     const int Height      = 900;
-    const SceneId StartId = SceneId::Slime;
+    const SceneId StartId = SceneId::Intro;
 #else
     const bool FullScreen = true;
     const int Width       = 1920;
@@ -20,7 +21,8 @@
 
 // -- Entry point --
 int main() {
-    // Create window
+    // Alloc
+    SoundPlayer::Create();
     GameManager::State gamestate;
     Window window(Width, Height, "The Game", FullScreen);
 
@@ -79,5 +81,6 @@ int main() {
     } while (window.update());
 
     // Clean up
+    SoundPlayer::Destroy();
     return 0;
 }

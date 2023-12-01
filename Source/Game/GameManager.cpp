@@ -90,4 +90,12 @@ void GameManager::Refresh(Window& window) {
 				return std::make_unique<BaseCommander>(window.scene());
 		}
 	})();
+
+	// Change sound
+	switch (game._curr_state.sceneId)
+	{
+		case SceneId::Intro:  SoundPlayer::PlayLoop("Resources/Intro.wav"); break;
+		case SceneId::Slime:  SoundPlayer::PlayLoop("Resources/Slime.wav"); break;
+		case SceneId::Ending: SoundPlayer::PlayLoop("Resources/Ending.wav"); break;
+	}
 }
