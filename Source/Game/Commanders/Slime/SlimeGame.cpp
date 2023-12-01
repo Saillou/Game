@@ -61,10 +61,6 @@ SlimeGame::SlimeGame() :
     ennemies[8].body()->position = glm::vec3(-12.0f, +1.0f, 0);
 
     ennemies[9].body()->position = glm::vec3(Game3DLimit, 0.0f, +0.5f);
-
-    // debug
-    target.body()->position = glm::vec3(Game3DLimit, 0, +1.0f);
-    player.body()->position = glm::vec3(Game3DLimit +1.0f, 0, 0);
 }
 
 void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene_) {
@@ -291,6 +287,7 @@ void SlimeGame::_update_bossFight(float t_sec)
     // Get data
     Vector3 target_speed    = target.pbody()->getLinearVelocity();
     Vector3 target_pos      = target.pbody()->getTransform().getPosition();
+    Quaternion target_ori   = target.pbody()->getTransform().getOrientation();
     Vector3 target_npos     = target_pos + target_speed / 60.0f;
     float target_size       = 0.05f;
 
@@ -330,13 +327,16 @@ void SlimeGame::_update_bossFight(float t_sec)
     }
 
     // Results
-    target.pbody()->setLinearVelocity(target_speed);
+    float lambda = (float)target_speed.length();
+    if (lambda > 10.0f)
+        lambda = 10.0f;
 
+    target_speed.normalize();
+    target_speed *= lambda;
+
+    target.pbody()->setLinearVelocity(target_speed);
+    target.pbody()->setTransform(Transform(Vector3(target_pos.x, target_pos.y, target_pos.z), target_ori));
 
     // - IA -
-    if (target_pos.y > zeboss_npos.y)
-        zeboss.move(glm::vec3(0, +0.2f, 0));
-
-    if (target_pos.y < zeboss_npos.y)
-        zeboss.move(glm::vec3(0, -0.2f, 0));
+    zeboss.move(glm::vec3(0, target_pos.y > zeboss_pos.y ? 1.0f : -1.0f, 0));
 }
