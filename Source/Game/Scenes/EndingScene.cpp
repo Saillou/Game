@@ -166,6 +166,9 @@ void EndingScene::draw() {
         if(i == 0)
             addSand();
     }
+
+    if (time > 45.0f && m_ended)
+        exit(0);
 }
 
 
