@@ -249,15 +249,18 @@ void SlimeGame::_update_bossIntro(float t_sec)
 
 void SlimeGame::_update_bossFight(float t_sec)
 {
+    // - Style -
     Camera& camera = scene->camera();
 
     camera.position  = player.body()->position + glm::vec3(5.0f, 0.0f, 4.0f);
     camera.direction = target.body()->position;
 
+    // - Move rules -
     player.update();
     zeboss.update();
     target.update();
 
+    // - Compute physx 2d manually ('cause i'm shit with the lib) -
     // Helpers
     auto _Vector3 = [=](const glm::vec3& v3) -> Vector3 
     {
@@ -280,7 +283,7 @@ void SlimeGame::_update_bossFight(float t_sec)
         return Vector3(v2.x, v2.y, u.z);
     };
 
-    // - Compute physx 2d manually ('cause i'm shit with the lib) -
+    // Get data
     Vector3 target_speed    = target.pbody()->getLinearVelocity();
     Vector3 target_pos      = target.pbody()->getTransform().getPosition();
     Vector3 target_npos     = target_pos + target_speed / 60.0f;
@@ -306,13 +309,21 @@ void SlimeGame::_update_bossFight(float t_sec)
 
     // Target/Players
     if (_collide(target_pos, target_size, zeboss_pos, zeboss_size)) {
-        target_speed = _reflect(target_speed, Vector3(+1.0f, 0.0f, 0.0f)); // boum
+        target_speed = 1.1f * _reflect(target_speed, Vector3(+1.0f, 0.0f, 0.0f)); // boum
     }
 
     if(_collide(target_pos, target_size, player_pos, player_size)) {
-        target_speed = _reflect(target_speed, Vector3(-1.0f, 0.0f, 0.0f)); // boum
+        target_speed = 1.1f * _reflect(target_speed, Vector3(-1.0f, 0.0f, 0.0f)); // boum
     }
 
     // Results
     target.pbody()->setLinearVelocity(target_speed);
+
+
+    // - IA -
+    if (target_pos.y > zeboss_npos.y)
+        zeboss.move(glm::vec3(0, +0.2f, 0));
+
+    if (target_pos.y < zeboss_npos.y)
+        zeboss.move(glm::vec3(0, -0.2f, 0));
 }
