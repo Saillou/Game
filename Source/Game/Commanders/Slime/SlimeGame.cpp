@@ -59,10 +59,6 @@ SlimeGame::SlimeGame() :
     ennemies[8].body()->position = glm::vec3(-12.0f, +1.0f, 0);
 
     ennemies[9].body()->position = glm::vec3(Game3DLimit, 0.0f, +0.5f);
-
-    //// debug
-    //target.body()->position = glm::vec3(-13.0f, 0, +1.0f);
-    //player.body()->position = glm::vec3(-12.0f, 0, 0);
 }
 
 void SlimeGame::useScene(std::shared_ptr<SlimeScene> scene_) {
