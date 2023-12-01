@@ -96,6 +96,6 @@ void GameManager::Refresh(Window& window) {
 	{
 		case SceneId::Intro:  SoundPlayer::PlayLoop("Resources/Intro.wav"); break;
 		case SceneId::Slime:  SoundPlayer::PlayLoop("Resources/Slime.wav"); break;
-		case SceneId::Ending: SoundPlayer::PlayLoop("Resources/Ending.wav"); break;
+		case SceneId::Ending: SoundPlayer::PlayLoop("Resources/Intro.wav"); break;
 	}
 }
