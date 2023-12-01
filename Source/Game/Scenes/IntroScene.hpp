@@ -26,7 +26,6 @@ private:
 
     SphereBatch m_decors;
     SphereBatch m_title;
-    SphereBatch m_next;
 
     bool m_anime_text = false;
     bool m_anime_brownian = false;

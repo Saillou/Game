@@ -8,8 +8,7 @@
 IntroScene::IntroScene() :
     BaseScene(),
     m_title(0.0125f),
-    m_decors(0.25f),
-    m_next(1.0f)
+    m_decors(0.25f)
 {
     // Camera
     m_camera.position    = glm::vec3(0.0f, 2.0f, 0.0f);
@@ -43,14 +42,9 @@ IntroScene::IntroScene() :
         );
     });
 
-    // Draw target
-    m_next.models.resize(1);
-    m_next.models[0] = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0, 50.0f));
-
     // Create batch
     m_title.create();
     m_decors.create();
-    m_next.create();
 }
 
 void IntroScene::resize(int width, int height) {
@@ -74,7 +68,7 @@ void IntroScene::draw() {
             const glm::vec2& pos = _get_pos[0];
             glm::vec4& model_pos = m_title.models[i][3];
 
-            const float sp = 0.03f;
+            const float sp = 0.05f;
 
             model_pos[0] = model_pos[0] * (1.0f-sp) + (0.5f - pos.x) * sp;
             model_pos[1] = model_pos[1] * (1.0f-sp);
@@ -102,7 +96,6 @@ void IntroScene::draw() {
     // Draw universe
     m_title.draw(m_camera, m_lights);
     m_decors.draw(m_camera, m_lights);
-    m_next.draw(m_camera, m_lights);
 }
 
 void IntroScene::_update_camera() {
