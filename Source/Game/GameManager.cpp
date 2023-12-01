@@ -94,8 +94,6 @@ void GameManager::Refresh(Window& window) {
 	// Change sound
 	switch (game._curr_state.sceneId)
 	{
-		case SceneId::Intro:  SoundPlayer::PlayLoop("Resources/Intro.wav"); break;
-		case SceneId::Slime:  SoundPlayer::PlayLoop("Resources/Slime.wav"); break;
-		case SceneId::Ending: SoundPlayer::PlayLoop("Resources/Intro.wav"); break;
+		case SceneId::Intro:  SoundPlayer::PlayLoop("Resources/Slime.wav"); break;
 	}
 }
