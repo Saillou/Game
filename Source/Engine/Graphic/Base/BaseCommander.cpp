@@ -4,8 +4,7 @@
 #include <iostream>
 
 BaseCommander::BaseCommander(std::shared_ptr<BaseScene> scene) : 
-    m_scene(scene), 
-    m_ended(false) 
+    m_scene(scene) 
 {
     // Root events
     _subscribe(&BaseCommander::_on_game_state_update);
@@ -14,10 +13,6 @@ BaseCommander::BaseCommander(std::shared_ptr<BaseScene> scene) :
 
     // Clean physx
     Physx::Clear();
-}
-
-bool BaseCommander::ended() const {
-    return m_ended;
 }
 
 void BaseCommander::_on_game_state_update(const CustomEvents::UpdateGameState& evt) {

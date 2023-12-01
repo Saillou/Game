@@ -15,94 +15,101 @@ SlimeCommander::SlimeCommander(std::shared_ptr<BaseScene> scene):
 
 // Events
 void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& evt) {
-    m_game->update();
+    float t_sec = m_time.elapsed<Timer::millisecond>() / 1000.0f;
+
+    m_game->update(t_sec, ([=]() -> SlimeGame::State {
+        if (m_game->state == SlimeGame::None)
+            return SlimeGame::State::Intro;
+
+        if (m_game->state == SlimeGame::Intro && t_sec >= m_game->IntroDuration)
+            return SlimeGame::State::Game2D;
+
+        if (m_game->state == SlimeGame::Game2D && m_game->target.body()->position.x <= m_game->Game2DLimit)
+            return SlimeGame::State::Game3D;
+
+        if (m_game->state == SlimeGame::State::Game3D && m_game->target.body()->position.x <= m_game->Game3DLimit)
+            return SlimeGame::State::BossIntro;
+
+        if (m_game->state == SlimeGame::State::BossIntro && (t_sec - m_game->last_state_change) > m_game->IntroDuration)
+            return SlimeGame::State::BossFight;
+
+        if (m_game->state == SlimeGame::State::BossFight && m_game->target.body()->position.z < -0.5f) {
+            return 
+                m_game->target.body()->position.x < m_game->Game3DLimit - 2.0f ? 
+                SlimeGame::State::End : 
+                SlimeGame::State::None;
+        }
+
+        // Nothing to do
+        return m_game->state;
+    })());
+
+    // Redo
+    if (m_game->state == SlimeGame::State::None)
+        Event::Emit(CustomEvents::SceneRefresh());
+
+    // End
+    if (m_game->state == SlimeGame::State::End)
+        Event::Emit(CustomEvents::SceneEnded());
 }
 
 void SlimeCommander::_on_key_pressed(const CustomEvents::KeyPressed& evt) {
     switch (evt.key) {
-        case Key::ArrowRight:
-            m_game->player.move(vec3(-1.0f, 0, 0));
-            break;
-
-        case Key::ArrowLeft:
-            m_game->player.move(vec3(+1.0f, 0, 0));
-            break;
-
-        case Key::Space:
-            m_game->player.jump();
-            break;
+        case Key::ArrowRight:   _on_key_right();    break;
+        case Key::ArrowLeft:    _on_key_left();     break;
+        case Key::ArrowUp:      _on_key_up();       break;
+        case Key::ArrowDown:    _on_key_down();     break;
+        case Key::Space:        _on_key_space();    break;
     }
 
-    // -- Camera movements -- 
-    static const auto reset_cam = [&]() {
-        m_scene->camera().position  = glm::vec3(0.0f, 3.8f, +0.5f);
-        m_scene->camera().direction = glm::vec3(0.0f, 0.0f, +0.5f);
-        m_scene->camera().fieldOfView = 45.0f;
-        m_scene->camera().lookAt(glm::vec3(0, 0, 1));
-
-        if (m_scene->enable_2d_camera)
-            m_scene->camera().useOrtho(m_scene->width() / (float)m_scene->height());
-        else
-            m_scene->camera().usePerspective(m_scene->width() / (float)m_scene->height());
-    };
-
-    static const auto get_cam_angles = [&]() {
-        float theta_x = asin(m_scene->camera().position.x / 3.8f);
-        float theta_z = asin(m_scene->camera().position.z / 3.8f);
-        float theta_y = theta_x + theta_z;
-
-        return glm::vec3(theta_x, theta_y, theta_z);
-    };
-
-    // -- 
-    constexpr float speed_cam = 0.04f;
-    const glm::vec3 angles = get_cam_angles();
-
-    if (evt.key == Key::ArrowLeft) {
-        if (m_scene->enable_2d_camera) {
-            m_scene->camera().position += glm::vec3(speed_cam, 0.0f, 0.0f);
-            m_scene->camera().direction += glm::vec3(speed_cam, 0.0f, 0.0f);
-        }
-        else {
-            m_scene->camera().direction = m_game->player.body()->position;
-            m_scene->camera().position = 3.8f * glm::vec3(
-                sin(glm::clamp(angles.x - speed_cam, -1.0f, +1.0f)),
-                cos(glm::clamp(angles.y - speed_cam, -1.0f, +1.0f)),
-                sin(angles.z)
-            );
-        }
-    }
-
-    if (evt.key == Key::ArrowRight) {
-        if (m_scene->enable_2d_camera) {
-            m_scene->camera().position -= glm::vec3(speed_cam, 0.0f, 0.0f);
-            m_scene->camera().direction -= glm::vec3(speed_cam, 0.0f, 0.0f);
-        }
-        else {
-            m_scene->camera().direction = m_game->player.body()->position;
-            m_scene->camera().position = 3.8f * glm::vec3(
-                sin(glm::clamp(angles.x + speed_cam, -1.0f, +1.0f)),
-                cos(glm::clamp(angles.y + speed_cam, -1.0f, +1.0f)),
-                sin(angles.z)
-            );
-        }
-    }
-
-    // 2D world
-    if (evt.key == 'C') {
-        m_scene->enable_2d_camera = true;
-        m_scene->lightning(false);
-        reset_cam();
-    }
-
-    // 3D world
-    if (evt.key == 'V') {
-        m_scene->enable_2d_camera = false;
-        m_scene->lightning(true);
-        reset_cam();
+    // Refresh
+    if (evt.key == 'R') {
+        Event::Emit(CustomEvents::SceneRefresh());
     }
 }
 
 void SlimeCommander::_on_mouse_moved(const CustomEvents::MouseMoved& evt) {
     // ..
+}
+
+// Private
+void SlimeCommander::_on_key_left() {
+    if (m_game->state == SlimeGame::Intro || m_game->state == SlimeGame::BossIntro)
+        return;
+
+    if(m_game->state == SlimeGame::BossFight)
+        m_game->player.move(vec3(0, -1.0f, 0));
+    else
+        m_game->player.move(vec3(+1.0f, 0, 0));
+}
+
+void SlimeCommander::_on_key_right() {
+    if (m_game->state == SlimeGame::Intro || m_game->state == SlimeGame::BossIntro)
+        return;
+
+    if (m_game->state == SlimeGame::BossFight)
+        m_game->player.move(vec3(0, +1.0f, 0));
+    else
+        m_game->player.move(vec3(-1.0f, 0, 0));
+}
+
+
+void SlimeCommander::_on_key_up() {
+    if (m_game->state != SlimeGame::Game3D)
+        return;
+
+    m_game->player.move(vec3(0, -1.0f, 0));
+}
+void SlimeCommander::_on_key_down() {
+    if (m_game->state != SlimeGame::Game3D)
+        return;
+
+    m_game->player.move(vec3(0, +1.0f, 0));
+}
+
+void SlimeCommander::_on_key_space() {
+    if (m_game->state != SlimeGame::Game2D && m_game->state != SlimeGame::Game3D) 
+        return;
+
+    m_game->player.jump();
 }

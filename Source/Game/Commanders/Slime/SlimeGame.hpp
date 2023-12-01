@@ -1,82 +1,64 @@
 #pragma once
 
-
 #include <glm/gtx/string_cast.hpp>
 
+#include "SlimeObjects.hpp"
+#include "../Common/BaseItem.hpp"
 #include "../../Scenes/SlimeScene.hpp"
 #include "../../../Engine/Physx/Physx.hpp"
 #include "../../../Utils/Timer.hpp"
 
-// ------------ Base ------------
-class BaseItem {
-protected:
-    using sBody = std::shared_ptr<BaseBody>;
-
-    Timer::Chronometre  _time;
-    sBody               _body;
-    Physx::PBody        _pbody;
-
-    virtual void _onAdd();
-
-public:
-    explicit BaseItem();
-    virtual ~BaseItem() = default;
-
-    // Getters
-    sBody body() const;
-
-    // Methods
-    void addTo(std::shared_ptr<SlimeScene> scene, Physx::BodyType type);
-
-private:
-    virtual const sBody& createBody() = 0;
-};
-
-// ------------ Slime ------------
-class Slime : public BaseItem {
-    float _maxSpeed = 2.0f; // unit/s
-    float _accel    = 0.5f; // unit/s^2
-    float _jump     = 5.0f; // idk
-
-protected:
-    void _onAdd() override;
-
-public:
-    Slime();
-
-    void move(glm::vec3& direction);
-    void jump();
-    void update();
-
-    const sBody& createBody() override;
-};
-
-// ------------ Ground ------------
-struct Ground : public BaseItem {
-    Ground();
-
-    const sBody& createBody() override;
-};
-
-// ------------ Target ------------
-struct Target : public BaseItem {
-    Target();
-
-    void update();
-
-    const sBody& createBody() override;
-};
-
-// ------------ Implementation ------------
+// ------------ Members ------------
 struct SlimeGame
 {
-    Slime  player;
-    Slime  ennemy;
-    Ground ground;
-    Target target;
+    // Data
+    const float IntroDuration   = 2.0f; // s
+    const float Game2DLimit     = -4.0f;    // vp unit
+    const float Game3DLimit     = -15.0f;
 
+    // Variables
+    enum State {
+        None,
+        Intro,
+        Game2D,
+        Game3D,
+        BossIntro,
+        BossFight,
+        End
+    } state = State::None;
+
+    Player  player;
+    Player  zeboss;
+    Target  target;
+
+    std::vector<Ennemy> ennemies;
+    std::vector<Ground> groundMeshes;
+    std::vector<Ground> invisbleWalls;
+
+    std::shared_ptr<SlimeScene> scene;
+
+    float last_state_change = 0.0f;
+
+    // Methods
     SlimeGame();
 
     void useScene(std::shared_ptr<SlimeScene> scene);
-    void update();
+    void update(float time_sec, State desired_state);
+
+private:
+    void _change_state(State new_state);
+
+    void _update_intro(float time_sec);
+    void _update_game2d(float time_sec);
+    void _update_game3d(float time_sec);
+    void _update_bossIntro(float time_sec);
+    void _update_bossFight(float time_sec);
+
+    struct _last_state_position {
+        glm::vec3 target;
+        glm::vec3 player;
+        glm::vec3 light;
+        glm::vec3 cam_pos;
+        glm::vec3 cam_dir;
+    } m_last;
 };

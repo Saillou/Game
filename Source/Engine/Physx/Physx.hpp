@@ -16,6 +16,8 @@ public:
     };
 
     static PBody Add(std::shared_ptr<BaseBody> body, BodyType type = BodyType::Static);
+    static void Remove(PBody pbody);
+
     static void Clear();
     static void Compute(float delta_time_ms);
 

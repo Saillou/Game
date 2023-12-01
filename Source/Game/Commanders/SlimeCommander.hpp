@@ -14,8 +14,15 @@ protected:
     void _on_mouse_moved(const CustomEvents::MouseMoved& evt) override;
 
 private:
+    void _on_key_left();
+    void _on_key_right();
+    void _on_key_up();
+    void _on_key_down();
+    void _on_key_space();
 
     // Members
     std::unique_ptr<SlimeGame> m_game;
     std::shared_ptr<SlimeScene> m_scene;
+
+    Timer::Chronometre m_time;
 };
