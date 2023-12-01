@@ -161,7 +161,7 @@ void SlimeGame::_change_state(State new_state) {
         zeboss.addAs(Physx::BodyType::Kinematic);
         target.addAs(Physx::BodyType::Kinematic);
 
-        target.pbody()->setLinearVelocity(Vector3(+1.0f, +1.5f, 0.0f));
+        target.pbody()->setLinearVelocity(Vector3(+1.0f, 0.1f, 0.0f));
         break;
     }
 
@@ -274,6 +274,12 @@ void SlimeGame::_update_bossFight(float t_sec)
         return true;
     };
 
+    auto _reflect = [=](const Vector3& u, const Vector3& n) -> Vector3
+    {
+        auto v2 = Vector2(u.x, u.y) - 2 * (u.x * n.x + u.y * n.y) * Vector2(n.x, n.y);
+        return Vector3(v2.x, v2.y, u.z);
+    };
+
     // - Compute physx 2d manually ('cause i'm shit with the lib) -
     Vector3 target_speed    = target.pbody()->getLinearVelocity();
     Vector3 target_pos      = target.pbody()->getTransform().getPosition();
@@ -299,10 +305,12 @@ void SlimeGame::_update_bossFight(float t_sec)
         target_speed += uGravity/60.0f; // falling
 
     // Target/Players
-    if (_collide(target_pos, target_size, zeboss_pos, zeboss_size) ||
-        _collide(target_pos, target_size, player_pos, player_size)) 
-    {
-        target_speed *= -1.2f; // boum
+    if (_collide(target_pos, target_size, zeboss_pos, zeboss_size)) {
+        target_speed = _reflect(target_speed, Vector3(+1.0f, 0.0f, 0.0f)); // boum
+    }
+
+    if(_collide(target_pos, target_size, player_pos, player_size)) {
+        target_speed = _reflect(target_speed, Vector3(-1.0f, 0.0f, 0.0f)); // boum
     }
 
     // Results
