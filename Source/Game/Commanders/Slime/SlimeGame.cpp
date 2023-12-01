@@ -89,7 +89,7 @@ void SlimeGame::update(float t_sec, State desired_state) {
     // State change
     if (state != desired_state) {
         _change_state(desired_state);
-        m_last_state_change = t_sec;
+        last_state_change = t_sec;
     }
 
     // Update scene
@@ -213,7 +213,7 @@ void SlimeGame::_update_bossIntro(float t_sec)
     Camera& camera = scene->camera();
 
     const glm::vec3 center = groundMeshes[1].body()->position;
-    const float r = (t_sec - m_last_state_change) / IntroDuration;
+    const float r = (t_sec - last_state_change) / IntroDuration;
 
     // Animation
     groundMeshes[0].body()->position += glm::vec3(0.02f, 0.0f, 0.0f);
@@ -222,10 +222,6 @@ void SlimeGame::_update_bossIntro(float t_sec)
 
     camera.position = player.body()->position + glm::vec3(5.0f, 0.0f, 4.0f);
     camera.direction = target.body()->position;
-
-    // End
-    if (r > 1.0f)
-        state = BossFight;
 }
 
 void SlimeGame::_update_bossFight(float t_sec)

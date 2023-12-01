@@ -36,6 +36,8 @@ struct SlimeGame
 
     std::shared_ptr<SlimeScene> scene;
 
+    float last_state_change = 0.0f;
+
     // Methods
     SlimeGame();
 
@@ -51,5 +53,4 @@ private:
     void _update_bossIntro(float time_sec);
     void _update_bossFight(float time_sec);
 
-    float m_last_state_change = 0.0f;
 };

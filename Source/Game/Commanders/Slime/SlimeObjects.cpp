@@ -10,6 +10,9 @@ Player::Player()
 }
 
 void Player::update() {
+    if (!_pbody)
+        return;
+
     // Simulate gravity
     constexpr float epsilon = 1e-2f;
 
@@ -26,6 +29,9 @@ void Player::update() {
 }
 
 void Player::move(glm::vec3& direction) {
+    if (!_pbody)
+        return;
+
     const auto& curr_transform = _pbody->getTransform();
     const auto& curr_position = curr_transform.getPosition();
     const auto& curr_velocity = _pbody->getLinearVelocity();
@@ -47,6 +53,9 @@ void Player::move(glm::vec3& direction) {
 }
 
 void Player::jump() {
+    if (!_pbody)
+        return;
+
     constexpr float epsilon = 1e-2f;
 
     if (_pbody->getTransform().getPosition().z > epsilon)
@@ -63,6 +72,9 @@ const BaseItem::sBody& Player::createBody() {
 }
 
 void Player::_onAdd() {
+    if (!_pbody)
+        return;
+
     _pbody->setLinearDamping(5.0f);
 }
 
@@ -121,6 +133,9 @@ Ennemy::Ennemy(float amplitude, float pulse, float phase, const glm::vec3& dir, 
 }
 
 void Ennemy::update() {
+    if (!_pbody)
+        return;
+
     float t = _time.elapsed<Timer::millisecond>() / 1000.0f;
     _pbody->setLinearVelocity
     (

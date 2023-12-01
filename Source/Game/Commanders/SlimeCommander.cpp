@@ -30,7 +30,8 @@ void SlimeCommander::_on_game_state_update(const CustomEvents::UpdateGameState& 
         if (m_game->state == SlimeGame::State::Game3D && m_game->target.body()->position.x <= m_game->Game3DLimit)
             return SlimeGame::State::BossIntro;
 
-        // State Transition {BossIntro -> BossFight} is done inside the slimeGame instance; 
+        if (m_game->state == SlimeGame::State::BossIntro && (t_sec - m_game->last_state_change) > m_game->IntroDuration)
+            return SlimeGame::State::BossFight;
 
         //if (m_game->state == SlimeGame::State::BossFight)
         //    return SlimeGame::State::End;
